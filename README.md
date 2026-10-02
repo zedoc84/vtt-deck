@@ -1,3 +1,94 @@
+# VTT Deck — Stream Deck for Foundry VTT (v13 / v14)
+
+Two pieces work together:
+
+| Piece | File | Where to install it |
+|---|---|---|
+| Foundry module | `vtt-deck-1.0.0.zip` | in Foundry (`Data/modules/vtt-deck`) |
+| Stream Deck plugin | `com.vttdeck.foundry.streamDeckPlugin` | on the computer the Stream Deck is plugged into |
+
+The plugin opens a small local server (`127.0.0.1:3006`). The browser (or the Foundry app) displaying your game connects to it, draws the keys and runs the key presses.
+
+## 1. Install the Stream Deck plugin
+
+1. If the old **Material Deck** plugin is installed, you can keep it or remove it (they don't use the same port).
+2. Double-click `com.vttdeck.foundry.streamDeckPlugin`: the Stream Deck app installs it.
+3. A **VTT Deck** category appears on the right with 6 actions: Macro, Scene (Scène), Token (Jeton), Combat, Music & sounds (Musique & sons), System (Système).
+4. Test: open http://127.0.0.1:3006 in your browser. The plugin should reply `VTT Deck bridge 1.0.0 — OK`.
+
+Requirements: Stream Deck app 6.9 or later, macOS 12+ or Windows 10+.
+
+## 2. Install the Foundry module
+
+1. Shut down the world (no need to quit Foundry).
+2. Unzip `vtt-deck-1.0.0.zip` into Foundry's `Data/modules/` folder.
+   On Mac: `~/Library/Application Support/FoundryVTT/Data/modules/vtt-deck/` (the folder must contain `module.json` directly).
+   If Foundry runs on another computer or a NAS, copy the folder to the same location there.
+3. Restart the world and enable **VTT Deck — Stream Deck** in *Manage Modules*.
+4. *Settings* → *Module Settings* → **Show status**: the dot should be green.
+
+Foundry-side settings (per browser):
+
+- **Connection**: *Auto* = only the GM connects (recommended); *Always*; *Never*.
+- **Address / port**: `127.0.0.1` and `3006` by default. The port must match the plugin's port, which you can set at the bottom of any key's inspector, in the "Foundry connection" section (labelled *Connexion Foundry*).
+
+## 3. Configure the keys
+
+Drag an action onto a key, then configure it in the inspector at the bottom. The lists (macros, scenes, playlists, statuses, tables, tools) come straight from your world, so Foundry must be open and connected. The ↻ button reloads a list.
+
+**Leave the Stream Deck app's "Title" field empty**: Foundry writes the text into the image. A title typed in Stream Deck would be displayed on top of it.
+
+**Appearance** section (*Apparence*), common to all actions:
+
+- **Text** (*Texte*): replaces the automatic text. `|` = line break. Variables: `{name}`, `{value}`, `{max}`, `{round}`. Example: `HP {value}/{max}`.
+- **Hide** (*Masquer*): no text at all.
+- **Image**: path to a Foundry image (e.g. `icons/svg/sun.svg`) that replaces the automatic image.
+- **Background** (*Fond*): background colour (↺ = default colour).
+
+### The 6 actions
+
+**Macro** — runs the chosen macro (the macro's image and name appear on the key).
+
+**Scene** — view it yourself, activate it for everyone (GM), open its configuration, or show/hide it in the navigation bar. Green border = active scene, blue = the scene you are viewing.
+
+**Token** — target: selected token, a specific character, or the active combatant. Shows the name, bar 1 (HP), bar 2 or any attribute (e.g. `system.attributes.ac.value`). The gauge comes from the token's **bar 1**, which works with every system, including homebrew ones. On press: select + centre, centre, open the sheet, target, hide (GM), toggle a status, change bar 1 by ±N, add to/remove from combat.
+
+**Combat** — next or previous turn / round, start (creates the combat from the selected tokens if there isn't one), end, roll initiative for everyone or for NPCs, round display, active combatant, and **Combatant #X**.
+Tip: put 6 to 8 "Combatant #1, 2, 3…" keys in a row to have the initiative tracker at your fingertips. Yellow border = their turn, ☠ = defeated, initiative in the top-left corner.
+
+**Music & sounds** — start/stop a playlist or a track (green border = playing), play an audio file as a sound effect (for all players or just for you), stop everything.
+
+**System** — pause (red border while the game is paused), scene tool (e.g. Tokens → Target), sidebar tab, dice roll (chat mode, public, GM, private), roll on a table, chat message (optionally whispered to the GMs), scene darkness level.
+
+## 4. Troubleshooting
+
+- **The dot stays red**: is the Stream Deck app running? Does http://127.0.0.1:3006 respond? Is the port the same on both sides? Use the **Reconnect** button in the status window.
+- **Chrome / Edge asks to "access devices on your local network"**: accept. This is the browser allowing the Foundry page to talk to the plugin on your computer.
+- **Foundry over HTTPS in Safari**: Safari may block the local `ws://` connection. Use Chrome, Firefox or the Foundry app.
+- **"Another Foundry window controls the Stream Deck"**: only one window at a time controls the Stream Deck (the most recently connected one). Close the other tab, then click *Reconnect*.
+- **A key shows ⚠**: the action failed. The reason appears in a Foundry notification (deleted macro, GM-only action…).
+- **Missing token images**: images hosted on another site without CORS permission. The key is then shown without an image.
+- **Plugin logs**: on Mac, `~/Library/Application Support/com.elgato.StreamDeck/Plugins/com.vttdeck.foundry.sdPlugin/logs/`.
+
+## 5. Modifying the plugin
+
+The plugin sources are in `vtt-deck-streamdeck-source.zip` (Node.js 20 or later):
+
+```bash
+npm install
+npm run build      # rebuilds bin/plugin.js
+npm run pack       # recreates the .streamDeckPlugin in dist/
+```
+
+All the game logic lives in the Foundry module (`scripts/actions.js`). Adding a feature usually doesn't require touching the plugin: just add the option in `ui/pi.js` (inspector) and its handling in `actions.js`.
+
+Protocol (JSON over WebSocket):
+
+- Plugin → Foundry: `hello`, `willAppear`, `willDisappear`, `settings`, `keyDown`, `keyUp`, `piRequest`, `device`, `replaced`.
+- Foundry → plugin: `hello`, `renderBatch` (144×144 PNG images as data URLs), `feedback`, `piData`.
+
+----------------------------------------------------------------------------------
+
 # VTT Deck — Stream Deck pour Foundry VTT (v13 / v14)
 
 Deux pièces vont ensemble :
