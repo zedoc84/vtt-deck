@@ -1,0 +1,17 @@
+{
+  "id": "vtt-deck",
+  "title": "VTT Deck — Stream Deck",
+  "description": "Pilotez Foundry VTT depuis un Elgato Stream Deck : macros, scènes, jetons (PV, états), combat, playlists, pause, outils, dés, tables… Nécessite le plugin Stream Deck « VTT Deck » (com.vttdeck.foundry).",
+  "version": "1.0.0",
+  "authors": [{ "name": "Paul" }],
+  "compatibility": {
+    "minimum": "13",
+    "verified": "14"
+  },
+  "esmodules": ["scripts/main.js"],
+  "styles": ["styles/vtt-deck.css"],
+  "languages": [
+    { "lang": "fr", "name": "Français", "path": "lang/fr.json" },
+    { "lang": "en", "name": "English", "path": "lang/en.json" }
+  ]
+}

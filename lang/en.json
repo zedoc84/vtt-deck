@@ -1,0 +1,121 @@
+{
+  "VTTDECK": {
+    "Settings": {
+      "Status": {
+        "Name": "Stream Deck status",
+        "Label": "Show status",
+        "Hint": "Plugin connection, detected devices, active keys."
+      },
+      "Enabled": {
+        "Name": "Connect to the Stream Deck from this browser",
+        "Hint": "The Stream Deck must be plugged into the computer displaying Foundry. \"Auto\": only the GM connects (avoids a browser local-network permission prompt for players).",
+        "auto": "Auto (GM only)",
+        "on": "Always",
+        "off": "Never"
+      },
+      "Host": {
+        "Name": "Plugin address",
+        "Hint": "Keep 127.0.0.1 if the Stream Deck is on this computer."
+      },
+      "Port": {
+        "Name": "Plugin port",
+        "Hint": "Must match the port set in the Stream Deck plugin (3006 by default)."
+      },
+      "Notify": {
+        "Name": "Connection notifications",
+        "Hint": "Show a message when the Stream Deck connects or disconnects."
+      }
+    },
+    "Status": {
+      "Title": "VTT Deck — Stream Deck status",
+      "NotReady": "The module is not ready yet.",
+      "Connected": "Connected to the Stream Deck plugin",
+      "Disabled": "Connection disabled in this browser",
+      "Replaced": "Another Foundry window controls the Stream Deck",
+      "Waiting": "Waiting for the Stream Deck plugin…",
+      "Address": "Address",
+      "Mode": "Mode",
+      "Plugin": "Plugin",
+      "Devices": "Devices",
+      "Keys": "Keys",
+      "Help": "Make sure the Stream Deck app is running and the \"VTT Deck\" plugin is installed. Test: open http://127.0.0.1:3006 in the browser, the plugin should answer \"OK\".",
+      "Reconnect": "Reconnect",
+      "Redraw": "Redraw keys"
+    },
+    "Actions": {
+      "macro": "Macro",
+      "scene": "Scene",
+      "token": "Token",
+      "combat": "Combat",
+      "playlist": "Music",
+      "system": "System"
+    },
+    "Notify": {
+      "Connected": "VTT Deck: Stream Deck connected.",
+      "Disconnected": "VTT Deck: Stream Deck disconnected.",
+      "Replaced": "VTT Deck: another Foundry window took control of the Stream Deck. Use \"Reconnect\" in the module settings to take it back."
+    },
+    "Errors": {
+      "Generic": "VTT Deck: error — {msg}",
+      "GMOnly": "VTT Deck: GM only.",
+      "NoTokenOnScene": "VTT Deck: no matching token on the scene.",
+      "NoToken": "VTT Deck: no token / character.",
+      "ChooseStatus": "VTT Deck: pick a status in the Stream Deck app.",
+      "NoBar": "VTT Deck: this token has no bar 1 configured.",
+      "MacroMissing": "VTT Deck: macro not found.",
+      "MacroNoPermission": "VTT Deck: you may not execute \"{name}\".",
+      "SceneMissing": "VTT Deck: scene not found.",
+      "NoSelection": "VTT Deck: select one or more tokens first.",
+      "NoCombatNoSelection": "VTT Deck: no combat. Select the tokens to add to combat.",
+      "NoCombat": "VTT Deck: no active combat.",
+      "ChooseFile": "VTT Deck: pick an audio file.",
+      "PlaylistMissing": "VTT Deck: playlist not found.",
+      "SoundMissing": "VTT Deck: track not found.",
+      "ChooseControl": "VTT Deck: pick a control.",
+      "TableMissing": "VTT Deck: table not found."
+    },
+    "Keys": {
+      "ChooseMacro": "Macro?",
+      "MacroMissing": "Not found",
+      "ChooseScene": "Scene?",
+      "NoToken": "No token",
+      "NoCombatant": "Nobody",
+      "NextTurn": "Next turn",
+      "PrevTurn": "Prev. turn",
+      "NextRound": "Next round",
+      "PrevRound": "Prev. round",
+      "StartCombat": "Fight!",
+      "EndCombat": "End combat",
+      "RollAll": "Init. all",
+      "RollNPC": "Init. NPC",
+      "ToggleCombat": "Combat ±",
+      "NoCombat": "No combat",
+      "TurnOf": "Turn {n}/{total}",
+      "NotStarted": "Not started",
+      "StopAll": "Stop music",
+      "ChooseFile": "File?",
+      "ChoosePlaylist": "Playlist?",
+      "ChooseSound": "Track?",
+      "Pause": "Pause",
+      "Resume": "Resume",
+      "ChooseControl": "Tool?",
+      "ChooseFormula": "Formula?",
+      "ChooseTable": "Table?",
+      "ChooseMessage": "Message?"
+    },
+    "Tabs": {
+      "chat": "Chat",
+      "combat": "Combat",
+      "scenes": "Scenes",
+      "actors": "Actors",
+      "items": "Items",
+      "journal": "Journal",
+      "tables": "Tables",
+      "cards": "Cards",
+      "macros": "Macros",
+      "playlists": "Music",
+      "compendium": "Compendiums",
+      "settings": "Settings"
+    }
+  }
+}
