@@ -1,4 +1,4 @@
-import { MODULE_ID, t } from "./constants.js";
+import { MODULE_ID, PRO_URL, t } from "./constants.js";
 
 const { ApplicationV2 } = foundry.applications.api;
 const esc = (s) => foundry.utils.escapeHTML?.(String(s ?? "")) ?? String(s ?? "").replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
@@ -23,8 +23,12 @@ export class StatusApp extends ApplicationV2 {
 	};
 
 	async _renderHTML() {
-		const deck = game.modules.get(MODULE_ID)?.api;
+		const api = game.modules.get(MODULE_ID)?.api;
+		const deck = api?.deck;
 		if (!deck) return `<p>${t("Status.NotReady")}</p>`;
+		const pro = api.pro
+			? `<span class="ok">${t("Status.ProActive", { version: esc(api.pro.version) })}</span>`
+			: `${t("Status.ProMissing")}${PRO_URL ? ` — <a href="${esc(PRO_URL)}" target="_blank" rel="noopener">${t("Status.ProGet")}</a>` : ""}`;
 		const b = deck.bridge;
 		const mode = game.settings.get(MODULE_ID, "enabled");
 		let state;
@@ -49,6 +53,7 @@ export class StatusApp extends ApplicationV2 {
 				<dt>${t("Status.Address")}</dt><dd><code>${esc(b.url)}</code></dd>
 				<dt>${t("Status.Mode")}</dt><dd>${esc(t(`Settings.Enabled.${mode}`))}</dd>
 				${deck.plugin ? `<dt>${t("Status.Plugin")}</dt><dd>${esc(deck.plugin.version)}</dd>` : ""}
+				<dt>${t("Status.Pro")}</dt><dd>${pro}</dd>
 				${devices ? `<dt>${t("Status.Devices")}</dt><dd><ul>${devices}</ul></dd>` : ""}
 				${keys ? `<dt>${t("Status.Keys")}</dt><dd>${keys}</dd>` : ""}
 			</dl>
@@ -65,12 +70,12 @@ export class StatusApp extends ApplicationV2 {
 	}
 
 	static #onReconnect() {
-		game.modules.get(MODULE_ID)?.api?.restart();
+		game.modules.get(MODULE_ID)?.api?.deck?.restart();
 		this.render();
 	}
 
 	static #onRedraw() {
-		const deck = game.modules.get(MODULE_ID)?.api;
+		const deck = game.modules.get(MODULE_ID)?.api?.deck;
 		if (!deck) return;
 		deck.signatures.clear();
 		deck.renderer.clearCache();

@@ -3,6 +3,8 @@
  * Relie Foundry au plugin Stream Deck « VTT Deck » (com.vttdeck.foundry).
  */
 import { MODULE_ID } from "./constants.js";
+import { createApi } from "./api.js";
+import { BUILTIN_ACTIONS } from "./actions.js";
 import { Deck } from "./deck.js";
 import { StatusApp } from "./status-app.js";
 
@@ -61,12 +63,18 @@ Hooks.once("init", () => {
 		type: Boolean,
 		default: true
 	});
+
+	// API disponible dès l'init, pour que les extensions puissent s'y greffer
+	const api = createApi(BUILTIN_ACTIONS);
+	game.modules.get(MODULE_ID).api = api;
+	Hooks.callAll("vttDeck.init", api);
 });
 
 Hooks.once("ready", () => {
-	const deck = new Deck();
-	const mod = game.modules.get(MODULE_ID);
-	mod.api = deck;
-	deck.start();
-	console.log(`VTT Deck | prêt (v${mod.version}) — connexion ${deck.shouldConnect ? "activée" : "désactivée"} sur ce navigateur`);
+	const api = game.modules.get(MODULE_ID).api;
+	api.deck = new Deck(api);
+	api.deck.start();
+	console.log(
+		`VTT Deck | prêt (v${api.version}${api.pro ? `, Pro ${api.pro.version}` : ""}) — connexion ${api.deck.shouldConnect ? "activée" : "désactivée"} sur ce navigateur`
+	);
 });

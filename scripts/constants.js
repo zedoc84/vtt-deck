@@ -1,5 +1,8 @@
 export const MODULE_ID = "vtt-deck";
 export const PROTOCOL = 1;
+export const PRO_ID = "vtt-deck-pro";
+/** Page de vente de VTT Deck Pro (à remplir : itch.io, Patreon…). Vide = pas de lien. */
+export const PRO_URL = "";
 
 /** Couleurs de fond par défaut (identiques aux icônes du plugin) */
 export const COLORS = {

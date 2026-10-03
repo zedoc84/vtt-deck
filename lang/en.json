@@ -40,7 +40,11 @@
       "Keys": "Keys",
       "Help": "Make sure the Stream Deck app is running and the \"VTT Deck\" plugin is installed. Test: open http://127.0.0.1:3006 in the browser, the plugin should answer \"OK\".",
       "Reconnect": "Reconnect",
-      "Redraw": "Redraw keys"
+      "Redraw": "Redraw keys",
+      "Pro": "VTT Deck Pro",
+      "ProActive": "active (v{version})",
+      "ProMissing": "not installed",
+      "ProGet": "learn more"
     },
     "Actions": {
       "macro": "Macro",
@@ -116,6 +120,10 @@
       "playlists": "Music",
       "compendium": "Compendiums",
       "settings": "Settings"
+    },
+    "Pro": {
+      "Locked": "Pro version",
+      "Required": "VTT Deck: this feature is part of VTT Deck Pro."
     }
   }
 }

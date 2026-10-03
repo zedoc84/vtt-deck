@@ -1,132 +1,18 @@
 /**
- * Logique des 6 actions du Stream Deck.
+ * Actions de la version gratuite.
  * Chaque action expose :
  *   render(settings, key) -> spec (voir renderer.js)
  *   press(settings, key)  -> exécute l'action dans Foundry
+ *   needsPro(settings)    -> true si les réglages demandent une fonction de VTT Deck Pro
  *   hooks: noms de hooks Foundry qui doivent rafraîchir ce type de touche
+ *
+ * VTT Deck Pro remplace les actions « token » et « combat » par des versions complètes
+ * (voir api.js → registerAction).
  */
-import { COLORS, BORDER, t } from "./constants.js";
-
-const getProperty = (o, p) => foundry.utils.getProperty(o, p);
-const loc = (s) => (s ? game.i18n.localize(s) : "");
-const list = (x) => (Array.isArray(x) ? x : Object.values(x ?? {}));
-
-class UserError extends Error {}
-const fail = (key, data) => {
-	throw new UserError(t(key, data));
-};
-const requireGM = () => {
-	if (!game.user.isGM) fail("Errors.GMOnly");
-};
-const canvasReady = () => !!globalThis.canvas?.ready;
-
-/* ------------------------------------------------------------------ */
-/*  Outils jetons / acteurs                                            */
-/* ------------------------------------------------------------------ */
-function canObserve(actor) {
-	if (game.user.isGM) return true;
-	return actor?.testUserPermission?.(game.user, "OBSERVER") ?? false;
-}
-
-/** Infos de barre (bar1/bar2) quel que soit le système */
-function barInfo(tokenDoc, actor, bar = "bar1") {
-	try {
-		const b = tokenDoc?.getBarAttribute?.(bar);
-		if (b) return b;
-	} catch {
-		/* jeton sans barre */
-	}
-	const attr = actor?.prototypeToken?.[bar]?.attribute;
-	if (!attr) return null;
-	const v = getProperty(actor.system, attr);
-	if (v && typeof v === "object" && "value" in v)
-		return { type: "bar", attribute: attr, value: Number(v.value), max: Number(v.max) };
-	if (v !== undefined) return { type: "value", attribute: attr, value: v };
-	return null;
-}
-
-function barText(b) {
-	if (!b) return null;
-	if (b.type === "bar" && Number.isFinite(Number(b.max))) return `${b.value ?? "?"}/${b.max}`;
-	return `${b.value ?? "?"}`;
-}
-
-function attrValue(actor, path) {
-	if (!actor || !path) return null;
-	let v = getProperty(actor, path);
-	if (v === undefined) v = getProperty(actor.system ?? {}, path);
-	if (v && typeof v === "object") v = "value" in v ? v.value : "total" in v ? v.total : JSON.stringify(v);
-	return v ?? null;
-}
-
-function resolveToken(s) {
-	const target = s.target ?? "selected";
-	if (target === "turn") {
-		const c = game.combat?.combatant;
-		return { token: c?.token?.object ?? null, doc: c?.token ?? null, actor: c?.actor ?? null };
-	}
-	if (target === "actor") {
-		const base = game.actors.get(s.actorId) ?? (s.actorIdName ? game.actors.getName(s.actorIdName) : null);
-		let token = null;
-		if (canvasReady() && base) {
-			const all = canvas.tokens.placeables.filter((tk) => tk.actor?.id === base.id);
-			token = all.find((tk) => tk.controlled) ?? all[0] ?? null;
-		}
-		return { token, doc: token?.document ?? null, actor: token?.actor ?? base };
-	}
-	const token = canvasReady() ? canvas.tokens.controlled[0] ?? null : null;
-	return { token, doc: token?.document ?? null, actor: token?.actor ?? null };
-}
-
-function tokenImage(doc, actor) {
-	return doc?.texture?.src || actor?.img || null;
-}
-
-function panTo(token) {
-	if (!token || !canvasReady()) return;
-	const { x, y } = token.center;
-	canvas.animatePan({ x, y, duration: 250 });
-}
-
-function selectAndPan(token) {
-	if (!token) fail("Errors.NoTokenOnScene");
-	token.control({ releaseOthers: true });
-	panTo(token);
-}
-
-function toggleSheet(actor) {
-	const sheet = actor?.sheet;
-	if (!sheet) return;
-	if (sheet.rendered) sheet.close();
-	else sheet.render(true);
-}
-
-/** Spec d'un combattant / jeton (image, nom ou PV, jauge) */
-function figureSpec({ doc, actor, name, img, display, showBar }) {
-	const visible = canObserve(actor);
-	const b1 = barInfo(doc, actor, "bar1");
-	let line;
-	switch (display) {
-		case "bar1":
-			line = visible ? barText(b1) ?? name : name;
-			break;
-		case "bar2":
-			line = visible ? barText(barInfo(doc, actor, "bar2")) ?? name : name;
-			break;
-		case "none":
-			line = null;
-			break;
-		default:
-			line = name;
-	}
-	return {
-		image: img,
-		fit: "cover",
-		text: [line],
-		bar: showBar !== false && visible && b1?.type === "bar" ? { value: b1.value, max: b1.max } : null,
-		vars: { name, value: b1?.value, max: b1?.max }
-	};
-}
+import {
+	BORDER, COLORS, t, loc, list, fail, requireGM, canvasReady, tokenImage, panTo, selectAndPan,
+	toggleSheet, toggleCombat, visibleTurns, lockedSpec, failPro
+} from "./helpers.js";
 
 /* ------------------------------------------------------------------ */
 /*  MACRO                                                              */
@@ -189,77 +75,38 @@ const sceneAction = {
 	}
 };
 
+
 /* ------------------------------------------------------------------ */
-/*  JETON                                                              */
+/*  JETON (version gratuite : jeton sélectionné, nom, sélection/fiche)  */
 /* ------------------------------------------------------------------ */
-const TOKEN_HOOKS = [
-	"controlToken", "updateToken", "createToken", "deleteToken", "updateActor", "targetToken", "canvasReady",
-	"createActiveEffect", "updateActiveEffect", "deleteActiveEffect",
-	"updateCombat", "deleteCombat", "createCombatant", "updateCombatant", "deleteCombatant"
-];
+const FREE_TOKEN = {
+	target: ["selected"],
+	display: ["name", "none"],
+	onPress: ["select", "pan", "sheet", "none"]
+};
 
 const tokenAction = {
-	hooks: TOKEN_HOOKS,
+	hooks: ["controlToken", "updateToken", "createToken", "deleteToken", "updateActor", "canvasReady"],
+	needsPro(s) {
+		return Object.entries(FREE_TOKEN).some(([k, ok]) => s[k] !== undefined && s[k] !== "" && !ok.includes(s[k]));
+	},
 	render(s) {
-		const { token, doc, actor } = resolveToken(s);
-		if (!token && !actor) {
-			const label = (s.target ?? "selected") === "turn" ? t("Keys.NoCombatant") : t("Keys.NoToken");
-			return { icon: "👤", text: [label], dim: true };
-		}
-		const name = doc?.name ?? actor?.name ?? "?";
-		const display = s.display ?? "name";
-		const spec = figureSpec({
-			doc,
-			actor,
-			name,
-			img: tokenImage(doc, actor),
-			display: display === "path" ? "none" : display,
-			showBar: s.showBar
-		});
-		if (display === "path") {
-			const v = canObserve(actor) ? attrValue(actor, s.path) : null;
-			spec.text = [v === null ? name : `${v}`];
-			spec.vars.value = v;
-		}
-		if (doc?.hidden) spec.dim = true;
-		if (token?.controlled && (s.target ?? "selected") !== "selected") spec.border = BORDER.selected;
-
-		switch (s.onPress ?? "select") {
-			case "status": {
-				const eff = CONFIG.statusEffects.find((e) => e.id === s.statusId);
-				const active = !!actor?.statuses?.has(s.statusId);
-				if (eff) {
-					spec.image = eff.img ?? eff.icon;
-					spec.fit = "contain";
-					spec.text = [loc(eff.name ?? eff.label), display === "none" ? null : name];
-				}
-				spec.dim = !active;
-				spec.border = active ? BORDER.selected : null;
-				spec.bar = null;
-				break;
-			}
-			case "target":
-				if (token?.isTargeted) spec.border = BORDER.alert;
-				spec.badge = "🎯";
-				break;
-			case "hp": {
-				const d = Number(s.delta ?? -1);
-				spec.badge = d > 0 ? `+${d}` : `${d}`;
-				spec.badgeColor = d > 0 ? "rgba(40,140,60,.9)" : "rgba(170,40,40,.9)";
-				break;
-			}
-			case "combat":
-				if (doc?.inCombat) spec.border = BORDER.current;
-				spec.badge = "⚔";
-				break;
-			case "hide":
-				spec.badge = doc?.hidden ? "🙈" : "👁";
-				break;
-		}
-		return spec;
+		if (this.needsPro(s)) return lockedSpec();
+		const token = canvasReady() ? canvas.tokens.controlled[0] ?? null : null;
+		if (!token) return { icon: "👤", text: [t("Keys.NoToken")], dim: true };
+		const doc = token.document;
+		const name = doc.name ?? token.actor?.name ?? "?";
+		return {
+			image: tokenImage(doc, token.actor),
+			fit: "cover",
+			text: [(s.display ?? "name") === "none" ? null : name],
+			dim: !!doc.hidden,
+			vars: { name }
+		};
 	},
 	async press(s) {
-		const { token, doc, actor } = resolveToken(s);
+		if (this.needsPro(s)) failPro();
+		const token = canvasReady() ? canvas.tokens.controlled[0] ?? null : null;
 		switch (s.onPress ?? "select") {
 			case "select":
 				return selectAndPan(token);
@@ -267,48 +114,14 @@ const tokenAction = {
 				if (!token) fail("Errors.NoTokenOnScene");
 				return panTo(token);
 			case "sheet":
-				if (!actor) fail("Errors.NoToken");
-				return toggleSheet(actor);
-			case "target":
-				if (!token) fail("Errors.NoTokenOnScene");
-				return token.setTarget(!token.isTargeted, { releaseOthers: false });
-			case "hide":
-				requireGM();
-				if (!doc) fail("Errors.NoTokenOnScene");
-				return doc.update({ hidden: !doc.hidden });
-			case "status":
-				if (!actor) fail("Errors.NoToken");
-				if (!s.statusId) fail("Errors.ChooseStatus");
-				return actor.toggleStatusEffect(s.statusId);
-			case "hp": {
-				if (!actor) fail("Errors.NoToken");
-				const b = barInfo(doc, actor, "bar1");
-				if (!b?.attribute) fail("Errors.NoBar");
-				return actor.modifyTokenAttribute(b.attribute, Number(s.delta ?? -1), true, true);
-			}
-			case "combat":
-				if (!doc) fail("Errors.NoTokenOnScene");
-				return toggleCombat([doc]);
+				if (!token?.actor) fail("Errors.NoToken");
+				return toggleSheet(token.actor);
 		}
 	}
 };
 
-async function toggleCombat(docs) {
-	const cls = docs[0]?.constructor;
-	const inCombat = docs.filter((d) => d.inCombat);
-	const out = docs.filter((d) => !d.inCombat);
-	if (inCombat.length) {
-		if (cls?.deleteCombatants) await cls.deleteCombatants(inCombat);
-		else for (const d of inCombat) await d.toggleCombatant?.();
-	}
-	if (out.length) {
-		if (cls?.createCombatants) await cls.createCombatants(out);
-		else for (const d of out) await d.toggleCombatant?.();
-	}
-}
-
 /* ------------------------------------------------------------------ */
-/*  COMBAT                                                             */
+/*  COMBAT (version gratuite : pilotage du suivi de combat)            */
 /* ------------------------------------------------------------------ */
 const COMBAT_FN = {
 	next: { icon: "⏭️", key: "Keys.NextTurn", gm: false },
@@ -318,53 +131,19 @@ const COMBAT_FN = {
 	start: { icon: "⚔️", key: "Keys.StartCombat", gm: true },
 	end: { icon: "🏁", key: "Keys.EndCombat", gm: true },
 	rollAll: { icon: "🎲", key: "Keys.RollAll", gm: true },
-	rollNPC: { icon: "🎲", key: "Keys.RollNPC", gm: true },
-	toggleCombat: { icon: "⚔️", key: "Keys.ToggleCombat", gm: false }
+	rollNPC: { icon: "🎲", key: "Keys.RollNPC", gm: true }
 };
 
-function visibleTurns(combat) {
-	return (combat?.turns ?? []).filter((c) => game.user.isGM || c.visible);
-}
-
-function combatantSpec(c, s, combat) {
-	const spec = figureSpec({
-		doc: c.token,
-		actor: c.actor,
-		name: c.name,
-		img: c.img || c.token?.texture?.src || c.actor?.img,
-		display: s.display === "init" ? "none" : s.display ?? "name",
-		showBar: s.showBar
-	});
-	if (s.display === "init") spec.text = [c.initiative ?? "—"];
-	else spec.badgeLeft = c.initiative ?? "";
-	if (combat?.combatant?.id === c.id && combat.started) spec.border = BORDER.current;
-	if (c.isDefeated ?? c.defeated) (spec.dim = true), (spec.badge = "☠");
-	else if (c.hidden) spec.badge = "🙈";
-	spec.vars.round = combat?.round;
-	return spec;
-}
-
-function combatantPress(c, s) {
-	const token = c?.token?.object;
-	switch (s.slotPress ?? "select") {
-		case "pan":
-			return panTo(token);
-		case "sheet":
-			return toggleSheet(c?.actor);
-		case "none":
-			return;
-		default:
-			if (!token) fail("Errors.NoTokenOnScene");
-			return selectAndPan(token);
-	}
-}
-
 const combatAction = {
-	hooks: [
-		"createCombat", "updateCombat", "deleteCombat", "combatStart", "combatTurnChange",
-		"createCombatant", "updateCombatant", "deleteCombatant", "updateToken", "updateActor", "canvasReady", "controlToken"
-	],
+	hooks: ["createCombat", "updateCombat", "deleteCombat", "combatStart", "combatTurnChange", "createCombatant", "deleteCombatant"],
+	/** Fonctions de base, réutilisables par VTT Deck Pro */
+	FUNCTIONS: COMBAT_FN,
+	needsPro(s) {
+		const fn = s.fn ?? "next";
+		return fn !== "round" && !(fn in COMBAT_FN);
+	},
 	render(s) {
+		if (this.needsPro(s)) return lockedSpec();
 		const combat = game.combat;
 		const fn = s.fn ?? "next";
 		if (fn === "round") {
@@ -377,19 +156,7 @@ const combatAction = {
 				vars: { round: combat.round, turn: idx }
 			};
 		}
-		if (fn === "turn") {
-			const c = combat?.started ? combat.combatant : null;
-			if (!c) return { icon: "⌛", text: [t("Keys.NoCombatant")], dim: true };
-			if (!game.user.isGM && !c.visible) return { icon: "❔", text: ["???"] };
-			return combatantSpec(c, s, combat);
-		}
-		if (fn === "slot") {
-			const n = Math.max(1, Number(s.slot ?? 1));
-			const c = visibleTurns(combat)[n - 1];
-			if (!c) return { big: `${n}`, text: [], dim: true };
-			return combatantSpec(c, s, combat);
-		}
-		const def = COMBAT_FN[fn] ?? COMBAT_FN.next;
+		const def = COMBAT_FN[fn];
 		let dim = false;
 		if (["next", "prev", "nextRound", "prevRound", "end"].includes(fn)) dim = !combat?.started;
 		if (fn === "start") dim = !!combat?.started;
@@ -397,22 +164,12 @@ const combatAction = {
 		return { icon: def.icon, text: [t(def.key)], dim, vars: { round: combat?.round } };
 	},
 	async press(s) {
+		if (this.needsPro(s)) failPro();
 		const fn = s.fn ?? "next";
 		let combat = game.combat;
-		if (fn === "slot") {
-			const c = visibleTurns(combat)[Math.max(1, Number(s.slot ?? 1)) - 1];
-			if (c) return combatantPress(c, s);
-			return;
-		}
-		if (fn === "turn") return combatantPress(combat?.combatant, s);
 		if (fn === "round") {
 			ui.sidebar?.expand?.();
 			return ui.sidebar?.changeTab?.("combat", "primary");
-		}
-		if (fn === "toggleCombat") {
-			const docs = canvasReady() ? canvas.tokens.controlled.map((tk) => tk.document) : [];
-			if (!docs.length) fail("Errors.NoSelection");
-			return toggleCombat(docs);
 		}
 		if (COMBAT_FN[fn]?.gm) requireGM();
 		if (fn === "start") {
@@ -642,8 +399,10 @@ const systemAction = {
 	}
 };
 
+
 /* ------------------------------------------------------------------ */
-export const ACTIONS = {
+/** Actions intégrées (VTT Deck Pro peut en remplacer certaines) */
+export const BUILTIN_ACTIONS = {
 	macro: macroAction,
 	scene: sceneAction,
 	token: tokenAction,
@@ -652,10 +411,7 @@ export const ACTIONS = {
 	system: systemAction
 };
 
-export { UserError };
-
-/** Données pour les listes déroulantes de l'inspecteur Stream Deck */
-export function piData(what) {
+export function piData(what, api) {
 	const byName = (a, b) => a.name.localeCompare(b.name, game.i18n.lang);
 	switch (what) {
 		case "macros":
@@ -687,6 +443,8 @@ export function piData(what) {
 				name: loc(c.title) || c.name,
 				tools: list(c.tools).map((x) => ({ id: x.name, name: loc(x.title) || x.name }))
 			}));
+		case "features":
+			return { pro: !!api?.pro, proVersion: api?.pro?.version ?? null, version: api?.version };
 		case "tables":
 			return game.tables.contents.map((x) => ({ id: x.id, name: x.name, group: x.folder?.name })).sort(byName);
 	}

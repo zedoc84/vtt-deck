@@ -40,7 +40,11 @@
       "Keys": "Touches",
       "Help": "Vérifiez que l'application Stream Deck est lancée et que le plugin « VTT Deck » est installé. Test : ouvrez http://127.0.0.1:3006 dans le navigateur, le plugin doit répondre « OK ».",
       "Reconnect": "Reconnecter",
-      "Redraw": "Redessiner les touches"
+      "Redraw": "Redessiner les touches",
+      "Pro": "VTT Deck Pro",
+      "ProActive": "activé (v{version})",
+      "ProMissing": "non installé",
+      "ProGet": "en savoir plus"
     },
     "Actions": {
       "macro": "Macro",
@@ -116,6 +120,10 @@
       "playlists": "Musique",
       "compendium": "Compendiums",
       "settings": "Paramètres"
+    },
+    "Pro": {
+      "Locked": "Version Pro",
+      "Required": "VTT Deck : cette fonction fait partie de VTT Deck Pro."
     }
   }
 }

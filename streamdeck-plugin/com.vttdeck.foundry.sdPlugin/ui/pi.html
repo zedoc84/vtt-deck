@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>VTT Deck</title>
+	<link rel="stylesheet" href="pi.css" />
+</head>
+<body>
+	<div id="status" class="status off"><span class="dot"></span><span class="txt">Connexion au plugin…</span></div>
+	<p id="help" class="help"></p>
+	<form id="form" onsubmit="return false"></form>
+
+	<details id="connection">
+		<summary>Connexion Foundry</summary>
+		<div class="row">
+			<label for="port">Port</label>
+			<input id="port" type="number" min="1024" max="65535" value="3006" />
+		</div>
+		<div class="row">
+			<label for="allowRemote">Réseau</label>
+			<span class="check"><input id="allowRemote" type="checkbox" /> <span>accepter les connexions d'autres machines</span></span>
+		</div>
+		<div class="row">
+			<label></label>
+			<button id="applyConn" type="button">Appliquer</button>
+		</div>
+		<p class="help small">Le port doit être identique à celui réglé dans Foundry (Paramètres du module « VTT Deck »). Le réglage s'applique à tout le plugin.</p>
+	</details>
+
+	<script src="pi.js"></script>
+</body>
+</html>

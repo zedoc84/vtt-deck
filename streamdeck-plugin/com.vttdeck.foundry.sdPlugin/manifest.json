@@ -1,0 +1,134 @@
+{
+  "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+  "Name": "VTT Deck",
+  "Version": "1.1.0.0",
+  "Author": "Paul",
+  "Description": "Pilote Foundry VTT (v13/v14) depuis un Stream Deck : macros, scènes, jetons, combat, musique… Nécessite le module Foundry « VTT Deck ».",
+  "UUID": "com.vttdeck.foundry",
+  "Category": "VTT Deck",
+  "CategoryIcon": "imgs/plugin/category",
+  "Icon": "imgs/plugin/marketplace",
+  "CodePath": "bin/plugin.js",
+  "PropertyInspectorPath": "ui/pi.html",
+  "SDKVersion": 3,
+  "Software": {
+    "MinimumVersion": "6.9"
+  },
+  "OS": [
+    {
+      "Platform": "mac",
+      "MinimumVersion": "12"
+    },
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+  "Nodejs": {
+    "Version": "20"
+  },
+  "Actions": [
+    {
+      "UUID": "com.vttdeck.foundry.macro",
+      "Name": "Macro",
+      "Tooltip": "Exécute une macro Foundry",
+      "Icon": "imgs/actions/macro",
+      "Controllers": [
+        "Keypad"
+      ],
+      "SupportedInMultiActions": true,
+      "States": [
+        {
+          "Image": "imgs/keys/macro",
+          "TitleAlignment": "bottom",
+          "ShowTitle": true
+        }
+      ]
+    },
+    {
+      "UUID": "com.vttdeck.foundry.scene",
+      "Name": "Scène",
+      "Tooltip": "Affiche / active une scène",
+      "Icon": "imgs/actions/scene",
+      "Controllers": [
+        "Keypad"
+      ],
+      "SupportedInMultiActions": true,
+      "States": [
+        {
+          "Image": "imgs/keys/scene",
+          "TitleAlignment": "bottom",
+          "ShowTitle": true
+        }
+      ]
+    },
+    {
+      "UUID": "com.vttdeck.foundry.token",
+      "Name": "Jeton",
+      "Tooltip": "Affiche un jeton (PV, image) et agit dessus",
+      "Icon": "imgs/actions/token",
+      "Controllers": [
+        "Keypad"
+      ],
+      "SupportedInMultiActions": true,
+      "States": [
+        {
+          "Image": "imgs/keys/token",
+          "TitleAlignment": "bottom",
+          "ShowTitle": true
+        }
+      ]
+    },
+    {
+      "UUID": "com.vttdeck.foundry.combat",
+      "Name": "Combat",
+      "Tooltip": "Pilote le suivi de combat et affiche les combattants",
+      "Icon": "imgs/actions/combat",
+      "Controllers": [
+        "Keypad"
+      ],
+      "SupportedInMultiActions": true,
+      "States": [
+        {
+          "Image": "imgs/keys/combat",
+          "TitleAlignment": "bottom",
+          "ShowTitle": true
+        }
+      ]
+    },
+    {
+      "UUID": "com.vttdeck.foundry.playlist",
+      "Name": "Musique & sons",
+      "Tooltip": "Lance / arrête playlists, pistes et effets sonores",
+      "Icon": "imgs/actions/playlist",
+      "Controllers": [
+        "Keypad"
+      ],
+      "SupportedInMultiActions": true,
+      "States": [
+        {
+          "Image": "imgs/keys/playlist",
+          "TitleAlignment": "bottom",
+          "ShowTitle": true
+        }
+      ]
+    },
+    {
+      "UUID": "com.vttdeck.foundry.system",
+      "Name": "Système",
+      "Tooltip": "Pause, outils, barre latérale, dés, tables, chat, obscurité",
+      "Icon": "imgs/actions/system",
+      "Controllers": [
+        "Keypad"
+      ],
+      "SupportedInMultiActions": true,
+      "States": [
+        {
+          "Image": "imgs/keys/system",
+          "TitleAlignment": "bottom",
+          "ShowTitle": true
+        }
+      ]
+    }
+  ]
+}

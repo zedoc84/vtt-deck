@@ -1,7 +1,8 @@
 import { MODULE_ID, t } from "./constants.js";
 import { Bridge } from "./bridge.js";
 import { KeyRenderer } from "./renderer.js";
-import { ACTIONS, UserError, piData, defaultColor } from "./actions.js";
+import { piData, defaultColor } from "./actions.js";
+import { UserError } from "./helpers.js";
 
 /**
  * Cœur du module : registre des touches visibles, file de rendu,
@@ -19,7 +20,8 @@ export class Deck {
 	#flushing = false;
 	#hookIds = [];
 
-	constructor() {
+	constructor(api) {
+		this.api = api;
 		this.renderer = new KeyRenderer();
 		this.bridge = new Bridge(
 			(msg) => this.#onMessage(msg),
@@ -115,7 +117,7 @@ export class Deck {
 
 	#safePiData(what) {
 		try {
-			return piData(what);
+			return piData(what, this.api);
 		} catch (err) {
 			console.error("VTT Deck | données inspecteur", what, err);
 			return [];
@@ -129,7 +131,7 @@ export class Deck {
 		const key = this.keys.get(msg.context) ?? msg;
 		const settings = msg.settings ?? key.settings ?? {};
 		key.settings = settings;
-		const handler = ACTIONS[msg.action ?? key.action];
+		const handler = this.api.getAction(msg.action ?? key.action);
 		if (!handler) return;
 		try {
 			await handler.press(settings, key);
@@ -195,9 +197,14 @@ export class Deck {
 
 	async #spec(key) {
 		const s = key.settings ?? {};
-		const handler = ACTIONS[key.action];
+		const handler = this.api.getAction(key.action);
 		let spec = handler ? await handler.render(s, key) : { icon: "❓", text: [key.action] };
 		spec = { ...spec };
+		// Touche verrouillée (fonction Pro) : on ignore la personnalisation pour qu'elle reste reconnaissable
+		if (spec.locked) {
+			delete spec.vars;
+			return spec;
+		}
 		spec.bg = s.bgColor || spec.bg || defaultColor(key.action);
 		if (s.customImage) {
 			spec.image = s.customImage;
@@ -217,9 +224,18 @@ export class Deck {
 	/*  Hooks Foundry                                                    */
 	/* ---------------------------------------------------------------- */
 	#registerHooks() {
+		this.rebuildHooks();
+		// Changement de scène : les images peuvent changer, on vide le cache
+		Hooks.on("canvasReady", () => this.renderer.clearCache());
+	}
+
+	/** (Ré)inscrit les hooks Foundry nécessaires aux actions enregistrées */
+	rebuildHooks() {
+		for (const [hook, id] of this.#hookIds) Hooks.off(hook, id);
+		this.#hookIds = [];
 		/** hook -> Set(types d'action) */
 		const map = new Map();
-		for (const [type, handler] of Object.entries(ACTIONS)) {
+		for (const [type, handler] of this.api.actions) {
 			for (const hook of handler.hooks ?? []) {
 				if (!map.has(hook)) map.set(hook, new Set());
 				map.get(hook).add(type);
@@ -228,8 +244,8 @@ export class Deck {
 		for (const [hook, types] of map) {
 			this.#hookIds.push([hook, Hooks.on(hook, () => this.queueType(types))]);
 		}
-		// Changement de scène : les images peuvent changer, on vide le cache
-		Hooks.on("canvasReady", () => this.renderer.clearCache());
+		this.signatures.clear();
+		this.queueAll();
 	}
 
 	#refreshStatusApp() {
