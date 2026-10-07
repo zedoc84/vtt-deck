@@ -9,6 +9,137 @@ const data = {}; // what -> items
 const offline = {}; // what -> bool
 
 /* ------------------------------------------------------------------ */
+/*  Langue : anglais par défaut, français si Stream Deck est en français */
+/* ------------------------------------------------------------------ */
+let LANG = "en";
+/** Textes anglais, indexés par le texte français d'origine */
+const EN = {
+	"Messages": "Chat",
+	"Scènes": "Scenes",
+	"Acteurs": "Actors",
+	"Objets": "Items",
+	"Journaux": "Journal",
+	"Cartes": "Cards",
+	"Musique": "Music",
+	"Paramètres": "Settings",
+	"Exécute la macro choisie. L'image et le nom de la macro s'affichent sur la touche.": "Runs the chosen macro. The macro's image and name are shown on the key.",
+	"Bordure verte = scène active pour les joueurs, bleue = scène que vous regardez.": "Green border = scene active for the players, blue = the scene you are viewing.",
+	"Scène": "Scene",
+	"Appui": "On press",
+	"Afficher (pour moi)": "View (for me)",
+	"Activer (pour tous)": "Activate (for everyone)",
+	"Ouvrir la configuration": "Open configuration",
+	"Afficher/masquer dans la navigation": "Show/hide in navigation",
+	"Gratuit : le jeton sélectionné (image, nom, sélection, fiche). ★ Pro : personnages précis, PV et jauge (barre 1 du jeton, tous systèmes), états, ±PV, cibler, cacher.": "Free: the selected token (image, name, select, sheet). ★ Pro: specific characters, HP and gauge (token bar 1, any system), conditions, ±HP, target, hide.",
+	"Jeton": "Token",
+	"Jeton sélectionné": "Selected token",
+	"Personnage précis": "Specific character",
+	"Combattant actif": "Active combatant",
+	"Personnage": "Character",
+	"Afficher": "Display",
+	"Nom": "Name",
+	"Barre 1 (PV)": "Bar 1 (HP)",
+	"Barre 2": "Bar 2",
+	"Attribut…": "Attribute…",
+	"Rien": "Nothing",
+	"Attribut": "Attribute",
+	"ex. system.attributes.ac.value": "e.g. system.attributes.ac.value",
+	"Jauge PV": "HP gauge",
+	"dessiner la jauge de la barre 1": "draw the bar 1 gauge",
+	"Sélectionner + centrer": "Select + centre",
+	"Centrer la vue": "Centre the view",
+	"Ouvrir/fermer la fiche": "Open/close sheet",
+	"Cibler": "Target",
+	"Cacher/montrer (MJ)": "Hide/show (GM)",
+	"Basculer un état": "Toggle a condition",
+	"Modifier la barre 1": "Change bar 1",
+	"Ajouter/retirer du combat": "Add to/remove from combat",
+	"État": "Condition",
+	"Variation": "Change by",
+	"ex. -1, -5, +2": "e.g. -1, -5, +2",
+	"Pilotage du combat. ★ Pro : une touche « Combattant n° » par place construit une rangée d'initiative.": "Combat controls. ★ Pro: one \"Combatant #\" key per place builds an initiative row.",
+	"Fonction": "Function",
+	"Tour suivant": "Next turn",
+	"Tour précédent": "Previous turn",
+	"Round suivant": "Next round",
+	"Round précédent": "Previous round",
+	"Commencer le combat": "Start combat",
+	"Terminer le combat": "End combat",
+	"Initiative : tous": "Initiative: everyone",
+	"Initiative : PNJ": "Initiative: NPCs",
+	"Afficher round / tour": "Show round / turn",
+	"Combattant n°…": "Combatant #…",
+	"Ajouter/retirer les jetons sélectionnés": "Add/remove selected tokens",
+	"Place n°": "Place #",
+	"dessiner la jauge": "draw the gauge",
+	"Ouvrir la fiche": "Open sheet",
+	"Bordure verte = en cours de lecture.": "Green border = playing.",
+	"Playlist entière": "Whole playlist",
+	"Piste d'une playlist": "Playlist track",
+	"Fichier audio (effet)": "Audio file (effect)",
+	"Tout arrêter": "Stop all",
+	"Piste": "Track",
+	"Fichier": "File",
+	"ex. sounds/doors/wood/open.ogg": "e.g. sounds/doors/wood/open.ogg",
+	"Diffusion": "Broadcast",
+	"jouer chez tous les joueurs": "play for all players",
+	"Fonctions générales de Foundry.": "General Foundry functions.",
+	"Outil de la scène": "Scene tool",
+	"Onglet de la barre latérale": "Sidebar tab",
+	"Lancer de dés": "Dice roll",
+	"Tirer dans une table": "Draw from a table",
+	"Message dans le chat": "Chat message",
+	"Obscurité de la scène": "Scene darkness",
+	"Contrôle": "Control",
+	"Outil": "Tool",
+	"Onglet": "Tab",
+	"Formule": "Formula",
+	"ex. 1d20+5": "e.g. 1d20+5",
+	"Visibilité": "Visibility",
+	"Mode actuel du chat": "Current chat mode",
+	"Privé (MJ)": "Private (GM)",
+	"Pour moi seul": "Only me",
+	"Texte à envoyer": "Text to send",
+	"Chuchoter": "Whisper",
+	"au(x) MJ uniquement": "to the GM(s) only",
+	"Obscurité": "Darkness",
+	"0 = plein jour, 100 = nuit noire": "0 = daylight, 100 = pitch black",
+	"Apparence": "Appearance",
+	"Texte": "Text",
+	"(automatique)": "(automatic)",
+	"| = retour à la ligne · {name} {value} {max} {round}": "| = line break · {name} {value} {max} {round}",
+	"Masquer": "Hide",
+	"ne pas écrire de texte": "don't write any text",
+	"chemin Foundry (optionnel)": "Foundry path (optional)",
+	"Fond": "Background",
+	"— choisir —": "— choose —",
+	"Recharger depuis Foundry": "Reload from Foundry",
+	"Couleur par défaut": "Default colour",
+	"défaut": "default",
+	"Fonction de VTT Deck Pro : sans lui, la touche affichera 🔒.": "VTT Deck Pro feature: without it, the key shows 🔒.",
+	"Foundry non connecté : liste indisponible.": "Foundry not connected: list unavailable.",
+	"hors ligne": "offline",
+	"inconnu": "unknown",
+	"Action inconnue": "Unknown action",
+	"Connecté à Foundry": "Connected to Foundry",
+	"Connexion au plugin…": "Connecting to the plugin…",
+	"indisponible : changez-le ci-dessous.": "unavailable: change it below.",
+	"En attente de Foundry": "Waiting for Foundry",
+	"Connexion Foundry": "Foundry connection",
+	"Réseau": "Network",
+	"accepter les connexions d'autres machines": "accept connections from other computers",
+	"Appliquer": "Apply",
+	"Le port doit être identique à celui réglé dans Foundry (Paramètres du module « VTT Deck »). Le réglage s'applique à tout le plugin.": "The port must match the one set in Foundry (\"VTT Deck\" module settings). This setting applies to the whole plugin."
+};
+const tr = (s) => (s == null || LANG === "fr" ? s : EN[s] ?? s);
+
+/** Traduit les éléments statiques de pi.html marqués data-t */
+function translateStatic() {
+	document.documentElement.lang = LANG;
+	document.querySelectorAll("[data-t]").forEach((e) => (e.textContent = tr(e.dataset.t)));
+}
+
+/* ------------------------------------------------------------------ */
 /*  Schémas des réglages par action                                    */
 /* ------------------------------------------------------------------ */
 /** Options : [valeur, libellé, estPro] */
@@ -148,11 +279,11 @@ function el(tag, attrs = {}, children = []) {
 
 function buildSelect(f, value) {
 	const sel = el("select", { id: f.key });
-	sel.append(el("option", { value: "", text: f.options ? "—" : "— choisir —" }));
+	sel.append(el("option", { value: "", text: f.options ? "—" : tr("— choisir —") }));
 	let found = false;
 	if (f.options) {
 		for (const o of f.options) {
-			const op = el("option", { value: o.value, text: o.label + (o.pro && proState() !== "yes" ? " ★ Pro" : "") });
+			const op = el("option", { value: o.value, text: tr(o.label) + (o.pro && proState() !== "yes" ? " ★ Pro" : "") });
 			if (o.value === value) (op.selected = true), (found = true);
 			sel.append(op);
 		}
@@ -175,7 +306,7 @@ function buildSelect(f, value) {
 		}
 	}
 	if (value && !found) {
-		const label = settings[`${f.key}Name`] ? `${settings[`${f.key}Name`]} (hors ligne)` : `${value} (inconnu)`;
+		const label = settings[`${f.key}Name`] ? `${settings[`${f.key}Name`]} (${tr("hors ligne")})` : `${value} (${tr("inconnu")})`;
 		sel.append(el("option", { value, text: label, selected: true }));
 	}
 	sel.addEventListener("change", () => {
@@ -193,7 +324,7 @@ function buildSelect(f, value) {
 }
 
 function buildField(f) {
-	if (f.sep) return el("div", { class: "sep", text: f.sep });
+	if (f.sep) return el("div", { class: "sep", text: tr(f.sep) });
 	if (f.show && !f.show(settings)) return null;
 	const value = valueOf(f);
 	let input;
@@ -202,14 +333,14 @@ function buildField(f) {
 		case "select":
 			input = buildSelect(f, value);
 			if (f.source) {
-				extra.push(el("button", { type: "button", class: "icon", title: "Recharger depuis Foundry", text: "↻", onclick: () => request(realSource(f.source)) }));
+				extra.push(el("button", { type: "button", class: "icon", title: tr("Recharger depuis Foundry"), text: "↻", onclick: () => request(realSource(f.source)) }));
 			}
 			break;
 		case "checkbox": {
 			const cb = el("input", { id: f.key, type: "checkbox" });
 			cb.checked = !!value;
 			cb.addEventListener("change", () => (set(f.key, cb.checked), save(), render()));
-			input = el("span", { class: "check" }, [cb, el("span", { text: (f.text ?? "") + (f.pro && proState() !== "yes" ? " (Pro)" : "") })]);
+			input = el("span", { class: "check" }, [cb, el("span", { text: tr(f.text ?? "") + (f.pro && proState() !== "yes" ? " (Pro)" : "") })]);
 			break;
 		}
 		case "number": {
@@ -234,24 +365,24 @@ function buildField(f) {
 			const c = el("input", { id: f.key, type: "color", value: value || "#333333" });
 			c.addEventListener("change", () => (set(f.key, c.value), save()));
 			input = c;
-			extra.push(el("button", { type: "button", class: "icon", title: "Couleur par défaut", text: "↺", onclick: () => (set(f.key, undefined), save(), render()) }));
-			if (!value) extra.push(el("span", { class: "help small", text: "défaut" }));
+			extra.push(el("button", { type: "button", class: "icon", title: tr("Couleur par défaut"), text: "↺", onclick: () => (set(f.key, undefined), save(), render()) }));
+			if (!value) extra.push(el("span", { class: "help small", text: tr("défaut") }));
 			break;
 		}
 		default: {
-			input = el("input", { id: f.key, type: "text", value: value ?? "", placeholder: f.placeholder ?? "" });
+			input = el("input", { id: f.key, type: "text", value: value ?? "", placeholder: tr(f.placeholder ?? "") });
 			input.addEventListener("change", () => (set(f.key, input.value.trim() || undefined), save()));
 		}
 	}
-	const row = el("div", { class: "row" }, [el("label", { for: f.key, text: f.label }), el("div", { class: "val" }, [input, ...extra])]);
+	const row = el("div", { class: "row" }, [el("label", { for: f.key, text: tr(f.label) }), el("div", { class: "val" }, [input, ...extra])]);
 	const frag = document.createDocumentFragment();
 	frag.append(row);
-	if (f.note) frag.append(el("div", { class: "note", text: f.note }));
+	if (f.note) frag.append(el("div", { class: "note", text: tr(f.note) }));
 	if (f.options && proState() === "no" && f.options.find((o) => o.value === value)?.pro) {
-		frag.append(el("div", { class: "note pro", text: "Fonction de VTT Deck Pro : sans lui, la touche affichera 🔒." }));
+		frag.append(el("div", { class: "note pro", text: tr("Fonction de VTT Deck Pro : sans lui, la touche affichera 🔒.") }));
 	}
 	if (f.source && offline[realSource(f.source)] && !itemsFor(f.source).length) {
-		frag.append(el("div", { class: "note", text: "Foundry non connecté : liste indisponible." }));
+		frag.append(el("div", { class: "note", text: tr("Foundry non connecté : liste indisponible.") }));
 	}
 	return frag;
 }
@@ -261,10 +392,10 @@ function render() {
 	const form = $("#form");
 	form.replaceChildren();
 	if (!schema) {
-		form.append(el("p", { class: "help", text: `Action inconnue : ${actionUUID}` }));
+		form.append(el("p", { class: "help", text: `${tr("Action inconnue")}: ${actionUUID}` }));
 		return;
 	}
-	$("#help").textContent = schema.help ?? "";
+	$("#help").textContent = tr(schema.help ?? "");
 	for (const f of [...schema.fields, ...COMMON]) {
 		const node = buildField(f);
 		if (node) form.append(node);
@@ -277,11 +408,11 @@ function renderStatus(s) {
 	const txt = box.querySelector(".txt");
 	if (s.connected) {
 		const f = s.foundry ?? {};
-		txt.textContent = `Connecté à Foundry${f.world ? ` — ${f.world}` : ""}${f.user ? ` (${f.user})` : ""}`;
+		txt.textContent = `${tr("Connecté à Foundry")}${f.world ? ` — ${f.world}` : ""}${f.user ? ` (${f.user})` : ""}`;
 	} else if (!s.listening) {
-		txt.textContent = `Port ${s.port} indisponible : changez-le ci-dessous.`;
+		txt.textContent = `Port ${s.port} ${tr("indisponible : changez-le ci-dessous.")}`;
 	} else {
-		txt.textContent = `En attente de Foundry (port ${s.port})…`;
+		txt.textContent = `${tr("En attente de Foundry")} (port ${s.port})…`;
 	}
 	$("#port").value = s.port;
 	$("#allowRemote").checked = !!s.allowRemote;
@@ -326,6 +457,13 @@ function onPluginMessage(p) {
 // Point d'entrée appelé par l'application Stream Deck
 window.connectElgatoStreamDeckSocket = function (port, uuid, registerEvent, info, actionInfo) {
 	piUUID = uuid;
+	try {
+		const lang = JSON.parse(info)?.application?.language ?? "en";
+		LANG = String(lang).toLowerCase().startsWith("fr") ? "fr" : "en";
+	} catch {
+		LANG = "en";
+	}
+	translateStatic();
 	try {
 		const ai = JSON.parse(actionInfo);
 		actionUUID = ai.action;

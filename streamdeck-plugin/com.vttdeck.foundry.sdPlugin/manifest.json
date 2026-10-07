@@ -1,9 +1,9 @@
 {
   "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
   "Name": "VTT Deck",
-  "Version": "1.1.0.0",
+  "Version": "1.2.0.0",
   "Author": "Paul",
-  "Description": "Pilote Foundry VTT (v13/v14) depuis un Stream Deck : macros, scènes, jetons, combat, musique… Nécessite le module Foundry « VTT Deck ».",
+  "Description": "Control Foundry VTT (v13/v14) from your Stream Deck: macros, scenes, tokens, combat, music and more. Requires the free \"VTT Deck\" Foundry VTT module.",
   "UUID": "com.vttdeck.foundry",
   "Category": "VTT Deck",
   "CategoryIcon": "imgs/plugin/category",
@@ -31,7 +31,7 @@
     {
       "UUID": "com.vttdeck.foundry.macro",
       "Name": "Macro",
-      "Tooltip": "Exécute une macro Foundry",
+      "Tooltip": "Run a Foundry VTT macro",
       "Icon": "imgs/actions/macro",
       "Controllers": [
         "Keypad"
@@ -47,8 +47,8 @@
     },
     {
       "UUID": "com.vttdeck.foundry.scene",
-      "Name": "Scène",
-      "Tooltip": "Affiche / active une scène",
+      "Name": "Scene",
+      "Tooltip": "View or activate a Foundry VTT scene",
       "Icon": "imgs/actions/scene",
       "Controllers": [
         "Keypad"
@@ -64,8 +64,8 @@
     },
     {
       "UUID": "com.vttdeck.foundry.token",
-      "Name": "Jeton",
-      "Tooltip": "Affiche un jeton (PV, image) et agit dessus",
+      "Name": "Token",
+      "Tooltip": "Show a token (image, HP) and act on it",
       "Icon": "imgs/actions/token",
       "Controllers": [
         "Keypad"
@@ -82,7 +82,7 @@
     {
       "UUID": "com.vttdeck.foundry.combat",
       "Name": "Combat",
-      "Tooltip": "Pilote le suivi de combat et affiche les combattants",
+      "Tooltip": "Control the combat tracker and show combatants",
       "Icon": "imgs/actions/combat",
       "Controllers": [
         "Keypad"
@@ -98,8 +98,8 @@
     },
     {
       "UUID": "com.vttdeck.foundry.playlist",
-      "Name": "Musique & sons",
-      "Tooltip": "Lance / arrête playlists, pistes et effets sonores",
+      "Name": "Music & Sounds",
+      "Tooltip": "Start or stop playlists, tracks and sound effects",
       "Icon": "imgs/actions/playlist",
       "Controllers": [
         "Keypad"
@@ -115,8 +115,8 @@
     },
     {
       "UUID": "com.vttdeck.foundry.system",
-      "Name": "Système",
-      "Tooltip": "Pause, outils, barre latérale, dés, tables, chat, obscurité",
+      "Name": "System",
+      "Tooltip": "Pause, tools, sidebar, dice, roll tables, chat, darkness",
       "Icon": "imgs/actions/system",
       "Controllers": [
         "Keypad"

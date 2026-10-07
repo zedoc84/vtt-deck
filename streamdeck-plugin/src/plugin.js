@@ -13,7 +13,7 @@ import { WebSocketServer, WebSocket } from "ws";
 import http from "node:http";
 
 const PROTOCOL = 1;
-const PLUGIN_VERSION = "1.1.0";
+const PLUGIN_VERSION = "1.2.0";
 const DEFAULT_PORT = 3006;
 const PREFIX = "com.vttdeck.foundry.";
 
@@ -198,7 +198,7 @@ function listen(host) {
 		const srv = http.createServer((req, res) => {
 			// Réponse simple pour tester dans un navigateur : http://127.0.0.1:3006
 			res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Access-Control-Allow-Origin": "*" });
-			res.end(`VTT Deck bridge ${PLUGIN_VERSION} — OK. Foundry ${state.client ? "connecté" : "non connecté"}.\n`);
+			res.end(`VTT Deck bridge ${PLUGIN_VERSION} — OK. Foundry ${state.client ? "connected" : "not connected"}.\n`);
 		});
 		srv.on("upgrade", (req, socket, head) => {
 			if (!state.allowRemote && !isLoopback(req.socket.remoteAddress)) {
