@@ -1,0 +1,129 @@
+{
+  "VTTDECK": {
+    "Settings": {
+      "Status": {
+        "Name": "État du Stream Deck",
+        "Label": "Afficher l'état",
+        "Hint": "Connexion au plugin, appareils détectés, touches actives."
+      },
+      "Enabled": {
+        "Name": "Connexion au Stream Deck sur ce navigateur",
+        "Hint": "Le Stream Deck doit être branché sur l'ordinateur qui affiche Foundry. « Auto » : seul le MJ se connecte (évite aux joueurs une demande d'autorisation réseau du navigateur).",
+        "auto": "Auto (MJ uniquement)",
+        "on": "Toujours",
+        "off": "Jamais"
+      },
+      "Host": {
+        "Name": "Adresse du plugin",
+        "Hint": "Laissez 127.0.0.1 si le Stream Deck est sur cet ordinateur."
+      },
+      "Port": {
+        "Name": "Port du plugin",
+        "Hint": "Doit être identique au port réglé dans le plugin Stream Deck (3006 par défaut)."
+      },
+      "Notify": {
+        "Name": "Notifications de connexion",
+        "Hint": "Affiche un message quand le Stream Deck se connecte ou se déconnecte."
+      }
+    },
+    "Status": {
+      "Title": "VTT Deck — État du Stream Deck",
+      "NotReady": "Le module n'est pas encore prêt.",
+      "Connected": "Connecté au plugin Stream Deck",
+      "Disabled": "Connexion désactivée sur ce navigateur",
+      "Replaced": "Une autre fenêtre Foundry pilote le Stream Deck",
+      "Waiting": "En attente du plugin Stream Deck…",
+      "Address": "Adresse",
+      "Mode": "Mode",
+      "Plugin": "Plugin",
+      "Devices": "Appareils",
+      "Keys": "Touches",
+      "Help": "Vérifiez que l'application Stream Deck est lancée et que le plugin « VTT Deck » est installé. Test : ouvrez http://127.0.0.1:3006 dans le navigateur, le plugin doit répondre « OK ».",
+      "Reconnect": "Reconnecter",
+      "Redraw": "Redessiner les touches",
+      "Pro": "VTT Deck Pro",
+      "ProActive": "activé (v{version})",
+      "ProMissing": "non installé",
+      "ProGet": "en savoir plus"
+    },
+    "Actions": {
+      "macro": "Macro",
+      "scene": "Scène",
+      "token": "Jeton",
+      "combat": "Combat",
+      "playlist": "Musique",
+      "system": "Système"
+    },
+    "Notify": {
+      "Connected": "VTT Deck : Stream Deck connecté.",
+      "Disconnected": "VTT Deck : Stream Deck déconnecté.",
+      "Replaced": "VTT Deck : une autre fenêtre Foundry a pris le contrôle du Stream Deck. Utilisez « Reconnecter » dans les paramètres du module pour le reprendre."
+    },
+    "Errors": {
+      "Generic": "VTT Deck : erreur — {msg}",
+      "GMOnly": "VTT Deck : action réservée au MJ.",
+      "NoTokenOnScene": "VTT Deck : aucun jeton correspondant sur la scène.",
+      "NoToken": "VTT Deck : aucun jeton / personnage.",
+      "ChooseStatus": "VTT Deck : choisissez un état dans le Stream Deck.",
+      "NoBar": "VTT Deck : ce jeton n'a pas de barre 1 configurée.",
+      "MacroMissing": "VTT Deck : macro introuvable.",
+      "MacroNoPermission": "VTT Deck : vous n'avez pas le droit d'exécuter « {name} ».",
+      "SceneMissing": "VTT Deck : scène introuvable.",
+      "NoSelection": "VTT Deck : sélectionnez d'abord un ou plusieurs jetons.",
+      "NoCombatNoSelection": "VTT Deck : aucun combat. Sélectionnez les jetons à mettre en combat.",
+      "NoCombat": "VTT Deck : aucun combat en cours.",
+      "ChooseFile": "VTT Deck : choisissez un fichier audio.",
+      "PlaylistMissing": "VTT Deck : playlist introuvable.",
+      "SoundMissing": "VTT Deck : piste introuvable.",
+      "ChooseControl": "VTT Deck : choisissez un contrôle.",
+      "TableMissing": "VTT Deck : table introuvable."
+    },
+    "Keys": {
+      "ChooseMacro": "Macro ?",
+      "MacroMissing": "Introuvable",
+      "ChooseScene": "Scène ?",
+      "NoToken": "Aucun jeton",
+      "NoCombatant": "Personne",
+      "NextTurn": "Tour suivant",
+      "PrevTurn": "Tour précéd.",
+      "NextRound": "Round suivant",
+      "PrevRound": "Round précéd.",
+      "StartCombat": "Combat !",
+      "EndCombat": "Fin combat",
+      "RollAll": "Init. tous",
+      "RollNPC": "Init. PNJ",
+      "ToggleCombat": "Combat ±",
+      "NoCombat": "Pas de combat",
+      "TurnOf": "Tour {n}/{total}",
+      "NotStarted": "Pas commencé",
+      "StopAll": "Stop musique",
+      "ChooseFile": "Fichier ?",
+      "ChoosePlaylist": "Playlist ?",
+      "ChooseSound": "Piste ?",
+      "Pause": "Pause",
+      "Resume": "Reprendre",
+      "ChooseControl": "Outil ?",
+      "ChooseFormula": "Formule ?",
+      "ChooseTable": "Table ?",
+      "ChooseMessage": "Message ?"
+    },
+    "Tabs": {
+      "chat": "Messages",
+      "combat": "Combat",
+      "scenes": "Scènes",
+      "actors": "Acteurs",
+      "items": "Objets",
+      "journal": "Journaux",
+      "tables": "Tables",
+      "cards": "Cartes",
+      "macros": "Macros",
+      "playlists": "Musique",
+      "compendium": "Compendiums",
+      "settings": "Paramètres"
+    },
+    "Pro": {
+      "Locked": "Version Pro",
+      "Required": "VTT Deck : cette fonction fait partie de VTT Deck Pro."
+    }
+  }
+}
