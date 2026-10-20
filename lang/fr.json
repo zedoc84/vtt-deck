@@ -41,7 +41,7 @@
       "Help": "Vérifiez que l'application Stream Deck est lancée et que le plugin « VTT Deck » est installé. Test : ouvrez http://127.0.0.1:3006 dans le navigateur, le plugin doit répondre « OK ».",
       "Reconnect": "Reconnecter",
       "Redraw": "Redessiner les touches",
-      "Pro": "VTT Deck Pro",
+      "Pro": "VTT Deck Premium",
       "ProActive": "activé (v{version})",
       "ProMissing": "non installé",
       "ProGet": "en savoir plus"
@@ -52,7 +52,12 @@
       "token": "Jeton",
       "combat": "Combat",
       "playlist": "Musique",
-      "system": "Système"
+      "system": "Système",
+      "numpad": "Pavé dégâts/soins",
+      "ambiance": "Ambiance",
+      "page": "Page dynamique",
+      "sequence": "Séquence",
+      "dial": "Molette"
     },
     "Notify": {
       "Connected": "VTT Deck : Stream Deck connecté.",
@@ -76,7 +81,8 @@
       "PlaylistMissing": "VTT Deck : playlist introuvable.",
       "SoundMissing": "VTT Deck : piste introuvable.",
       "ChooseControl": "VTT Deck : choisissez un contrôle.",
-      "TableMissing": "VTT Deck : table introuvable."
+      "TableMissing": "VTT Deck : table introuvable.",
+      "NotAllowed": "VTT Deck : action non autorisée."
     },
     "Keys": {
       "ChooseMacro": "Macro ?",
@@ -105,7 +111,9 @@
       "ChooseControl": "Outil ?",
       "ChooseFormula": "Formule ?",
       "ChooseTable": "Table ?",
-      "ChooseMessage": "Message ?"
+      "ChooseMessage": "Message ?",
+      "Door": "Porte",
+      "Light": "Lumière"
     },
     "Tabs": {
       "chat": "Messages",
@@ -122,8 +130,8 @@
       "settings": "Paramètres"
     },
     "Pro": {
-      "Locked": "Version Pro",
-      "Required": "VTT Deck : cette fonction fait partie de VTT Deck Pro."
+      "Locked": "Premium",
+      "Required": "VTT Deck : cette fonction fait partie de VTT Deck Premium."
     }
   }
 }

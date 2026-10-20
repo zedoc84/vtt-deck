@@ -1,5 +1,5 @@
 /**
- * Outils partagés, exposés aux extensions (dont VTT Deck Pro) via
+ * Outils partagés, exposés aux extensions (dont VTT Deck Premium) via
  * game.modules.get("vtt-deck").api.helpers
  */
 import { BORDER, COLORS, t } from "./constants.js";
@@ -66,9 +66,9 @@ export function visibleTurns(combat) {
 	return (combat?.turns ?? []).filter((c) => game.user.isGM || c.visible);
 }
 
-/** Touche verrouillée : la fonction demandée fait partie de VTT Deck Pro */
+/** Touche verrouillée : la fonction demandée fait partie de VTT Deck Premium (module payant) */
 export function lockedSpec() {
-	return { locked: true, icon: "🔒", text: [t("Pro.Locked")], bg: "#3b2f12", badge: "PRO", badgeColor: "rgba(200,140,20,.95)" };
+	return { locked: true, icon: "🔒", text: [t("Pro.Locked")], bg: "#3b2f12", badge: "★", badgeColor: "rgba(200,140,20,.95)" };
 }
 
 export function failPro() {

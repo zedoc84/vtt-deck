@@ -8,11 +8,14 @@
  *   fit: "cover"|"contain",   remplissage de l'image
  *   icon: "⏭",               emoji affiché si pas d'image
  *   big: "R3",                gros texte central (si pas d'image ni d'icône)
+ *   bigSize: 80,              taille maximale du gros texte (58 par défaut)
  *   text: ["ligne 1", "…"],   bandeau de texte en bas (2 lignes max)
  *   bar: { value, max },      jauge (PV)
  *   border: "#ffcc33",        cadre coloré
  *   dim: true,                assombrit / grise la touche
- *   badge: "▶", badgeLeft: "12"
+ *   tint: "#b3261e",          voile coloré sur la touche (ex. PV bas)
+ *   badge: "▶", badgeLeft: "12",
+ *   statusIcons: ["icons/svg/skull.svg", …]   petites icônes d'états (4 au plus), en bas à droite
  * }
  */
 const S = 144;
@@ -82,6 +85,9 @@ export class KeyRenderer {
 
 	async #draw(spec, withImage) {
 		const img = withImage && spec.image ? await this.loadImage(spec.image) : null;
+		const statusImgs = withImage && spec.statusIcons?.length
+			? (await Promise.all(spec.statusIcons.slice(0, 4).map((src) => this.loadImage(src)))).filter(Boolean)
+			: [];
 		const c = this.ctx;
 		c.save();
 		c.clearRect(0, 0, S, S);
@@ -123,11 +129,17 @@ export class KeyRenderer {
 			c.fillStyle = "#fff";
 			c.textAlign = "center";
 			c.textBaseline = "middle";
-			c.font = `700 ${this.#fitSize(spec.big, 58, S - 16 - 2 * inset, 700)}px ${FONT}`;
+			c.font = `700 ${this.#fitSize(spec.big, spec.bigSize ?? 58, S - 16 - 2 * inset, 700)}px ${FONT}`;
 			c.fillText(spec.big, S / 2, (contentH + inset) / 2 + 3);
 		}
 
-		// 3. voile
+		// 3. voiles : teinte (seuils) puis assombrissement
+		if (spec.tint && img) {
+			c.globalAlpha = 0.38;
+			c.fillStyle = spec.tint;
+			c.fillRect(0, 0, S, S);
+			c.globalAlpha = 1;
+		}
 		if (spec.dim) {
 			c.fillStyle = "rgba(0,0,0,0.5)";
 			c.fillRect(0, 0, S, S);
@@ -144,6 +156,22 @@ export class KeyRenderer {
 			c.fillRect(x, y, w, 10);
 			c.fillStyle = pct > 0.5 ? "#4cc35a" : pct > 0.25 ? "#e3a21a" : "#d93b3b";
 			c.fillRect(x + 1, y + 1, (w - 2) * pct, 8);
+		}
+
+		// 4 bis. icônes des états actifs (à terre, empoisonné…)
+		if (statusImgs.length) {
+			const sz = 26;
+			const y = contentH - (spec.bar ? 17 : 4) - sz - 4;
+			let x = S - inset - 8 - sz;
+			for (const im of statusImgs) {
+				c.fillStyle = "rgba(0,0,0,0.7)";
+				c.beginPath();
+				if (c.roundRect) c.roundRect(x - 3, y - 3, sz + 6, sz + 6, 7);
+				else c.rect(x - 3, y - 3, sz + 6, sz + 6);
+				c.fill();
+				c.drawImage(im, x, y, sz, sz);
+				x -= sz + 9;
+			}
 		}
 
 		// 5. bandeau de texte

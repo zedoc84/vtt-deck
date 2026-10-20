@@ -13,9 +13,22 @@ import { WebSocketServer, WebSocket } from "ws";
 import http from "node:http";
 
 const PROTOCOL = 1;
-const PLUGIN_VERSION = "1.2.0";
+const PLUGIN_VERSION = "1.5.0";
 const DEFAULT_PORT = 3006;
 const PREFIX = "com.vttdeck.foundry.";
+
+/**
+ * Profils fournis avec le plugin (déclarés dans manifest.json → « Profiles »), par type d'appareil.
+ * Un plugin ne peut basculer que vers ses propres profils.
+ */
+const PROFILES = {
+	0: { exploration: "profiles/vtt-deck-exploration-15", combat: "profiles/vtt-deck-combat-15" }, // Stream Deck 15 touches
+	1: { exploration: "profiles/vtt-deck-exploration-mini", combat: "profiles/vtt-deck-combat-mini" }, // Mini
+	2: { exploration: "profiles/vtt-deck-exploration-xl", combat: "profiles/vtt-deck-combat-xl" }, // XL
+	7: { exploration: "profiles/vtt-deck-exploration-plus", combat: "profiles/vtt-deck-combat-plus" }, // Stream Deck +
+	9: { exploration: "profiles/vtt-deck-exploration-neo", combat: "profiles/vtt-deck-combat-neo" }, // Neo
+	13: { exploration: "profiles/vtt-deck-exploration-plusxl", combat: "profiles/vtt-deck-combat-plusxl" } // Stream Deck + XL
+};
 
 const log = streamDeck.logger.createScope("Bridge");
 streamDeck.logger.setLevel("info");
@@ -41,7 +54,7 @@ function describeKey(action, settings) {
 		action: shortId(action.manifestId),
 		device: action.device?.id,
 		controller: action.controllerType,
-		coordinates: action.isKey?.() ? action.coordinates ?? null : null,
+		coordinates: action.coordinates ?? null,
 		inMultiAction: action.isKey?.() ? action.isInMultiAction() : false,
 		settings: settings ?? {}
 	};
@@ -91,6 +104,17 @@ async function applyRender(msg) {
 	}
 }
 
+/** Écran tactile d'une molette (Stream Deck +, + XL) : { title, value, indicator, icon } */
+async function applyFeedback(msg) {
+	const action = streamDeck.actions.getActionById(msg.context);
+	if (!action?.isDial?.()) return;
+	try {
+		await action.setFeedback(msg.feedback ?? {});
+	} catch (err) {
+		log.warn("Affichage de molette impossible pour", msg.context, err?.message);
+	}
+}
+
 /* ------------------------------------------------------------------ */
 /*  Réception depuis Foundry                                           */
 /* ------------------------------------------------------------------ */
@@ -117,6 +141,10 @@ async function handleFoundryMessage(raw) {
 			for (const r of msg.items ?? []) await applyRender(r);
 			break;
 
+		case "dialFeedback":
+			for (const d of msg.items ?? []) await applyFeedback(d);
+			break;
+
 		case "feedback": {
 			const action = streamDeck.actions.getActionById(msg.context);
 			if (!action) return;
@@ -140,8 +168,33 @@ async function handleFoundryMessage(raw) {
 			send({ type: "pong", t: msg.t });
 			break;
 
+		case "switchProfile":
+			await switchProfile(msg.profile ?? null, msg.device);
+			break;
+
 		default:
 			log.debug("Message Foundry inconnu", msg.type);
+	}
+}
+
+/**
+ * Affiche un profil VTT Deck (« exploration » ou « combat ») sur un appareil, ou sur tous.
+ * profile = null : retour au profil affiché avant le dernier changement.
+ */
+async function switchProfile(profile, deviceId) {
+	const devices = deviceId ? [streamDeck.devices.getDeviceById(deviceId)] : [...streamDeck.devices];
+	for (const d of devices) {
+		if (!d || d.isConnected === false) continue;
+		try {
+			if (profile === null) await streamDeck.profiles.switchToProfile(d.id);
+			else {
+				const name = PROFILES[d.type]?.[profile];
+				if (name) await streamDeck.profiles.switchToProfile(d.id, name);
+				else log.info(`Pas de profil « ${profile} » pour l'appareil ${d.name} (type ${d.type})`);
+			}
+		} catch (err) {
+			log.warn("Changement de profil impossible", err?.message);
+		}
 	}
 }
 
@@ -154,6 +207,20 @@ function isLoopback(addr = "") {
 
 async function resetKeysToDefault() {
 	for (const action of streamDeck.actions) {
+		if (action.isDial?.()) {
+			try {
+				// Molette « Molette » (disposition $B1) ou action de touche posée sur une molette ($A1)
+				const name = shortId(action.manifestId);
+				await action.setFeedback(
+					name === "dial"
+						? { title: "VTT Deck", value: "…", indicator: { value: 0 }, icon: "imgs/actions/dial-encoder.png" }
+						: { title: "VTT Deck", value: "…", icon: `imgs/keys/${name}.png` }
+				);
+			} catch {
+				/* molette disparue */
+			}
+			continue;
+		}
 		if (!action.isKey() || action.isInMultiAction()) continue;
 		try {
 			await action.setImage(undefined);
@@ -301,6 +368,9 @@ streamDeck.ui.onSendToPlugin(async (ev) => {
 			pushStatusToPI();
 			break;
 		}
+		case "switchProfile":
+			if (p.profile === "exploration" || p.profile === "combat") await switchProfile(p.profile, ev.action.device?.id);
+			break;
 		case "openUrl":
 			if (typeof p.url === "string" && /^https?:\/\//.test(p.url)) await streamDeck.system.openUrl(p.url);
 			break;
@@ -319,6 +389,14 @@ streamDeck.actions.onKeyDown((ev) =>
 	send({ type: "keyDown", ...describeKey(ev.action, ev.payload.settings), state: ev.payload.state })
 );
 streamDeck.actions.onKeyUp((ev) => send({ type: "keyUp", ...describeKey(ev.action, ev.payload.settings) }));
+
+// Molettes et écran tactile du Stream Deck +
+streamDeck.actions.onDialRotate((ev) =>
+	send({ type: "dialRotate", ...describeKey(ev.action, ev.payload.settings), ticks: ev.payload.ticks, pressed: !!ev.payload.pressed })
+);
+streamDeck.actions.onDialDown((ev) => send({ type: "dialDown", ...describeKey(ev.action, ev.payload.settings) }));
+streamDeck.actions.onDialUp((ev) => send({ type: "dialUp", ...describeKey(ev.action, ev.payload.settings) }));
+streamDeck.actions.onTouchTap((ev) => send({ type: "touchTap", ...describeKey(ev.action, ev.payload.settings), hold: !!ev.payload.hold }));
 
 streamDeck.devices.onDeviceDidConnect((ev) => send({ type: "device", event: "connect", device: describeDevice(ev.device) }));
 streamDeck.devices.onDeviceDidDisconnect((ev) =>

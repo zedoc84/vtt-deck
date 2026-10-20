@@ -1,7 +1,7 @@
 export const MODULE_ID = "vtt-deck";
 export const PROTOCOL = 1;
-export const PRO_ID = "vtt-deck-pro";
-/** Page de vente de VTT Deck Pro (à remplir : itch.io, Patreon…). Vide = pas de lien. */
+export const PRO_ID = "vtt-deck-premium";
+/** Page de vente de VTT Deck Premium (à remplir : itch.io, Patreon…). Vide = pas de lien. */
 export const PRO_URL = "";
 
 /** Couleurs de fond par défaut (identiques aux icônes du plugin) */
@@ -11,7 +11,12 @@ export const COLORS = {
 	token: "#2a2420",
 	combat: "#7a2424",
 	playlist: "#174e78",
-	system: "#3a414c"
+	system: "#3a414c",
+	numpad: "#5c2a1c",
+	ambiance: "#1d4a52",
+	page: "#4a4320",
+	sequence: "#3c2a52",
+	dial: "#2b2b33"
 };
 
 export const BORDER = {

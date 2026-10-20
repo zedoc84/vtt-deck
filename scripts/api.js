@@ -1,13 +1,21 @@
 /**
  * API publique du module : game.modules.get("vtt-deck").api
  *
- * Permet à une extension (VTT Deck Pro, ou un module tiers) de :
+ * Permet à une extension (VTT Deck Premium, ou un module tiers) de :
  *  - remplacer ou ajouter une action :  api.registerAction("token", handler)
  *  - réutiliser les outils communs :      api.helpers
- *  - se déclarer comme VTT Deck Pro :     api.registerPro({ version })
+ *  - se déclarer comme VTT Deck Premium :     api.registerPro({ version })
+ *  - modifier le dessin des touches :     api.registerDecorator((spec, settings, key) => spec)
+ *  - autoriser / refuser un appui :       api.registerGuard((key) => true | "message")
  *
  * Les extensions s'enregistrent dans le hook « vttDeck.init », appelé pendant l'init de Foundry :
  *   Hooks.once("vttDeck.init", (api) => { ... });
+ *
+ * Après le hook « ready », api.deck donne accès au Stream Deck :
+ *   api.deck.rank(key, match)   position d'une touche parmi ses semblables (rangées automatiques)
+ *   api.deck.queueType("combat") redessine toutes les touches d'un type
+ *   api.deck.send({ type: "switchProfile", profile: "combat" })  message au plugin
+ * Hook « vttDeck.connected » (plugin, api) : appelé à chaque connexion au plugin.
  */
 import * as helpers from "./helpers.js";
 import { MODULE_ID } from "./constants.js";
@@ -19,7 +27,7 @@ export function createApi(builtins) {
 		helpers,
 		/** @type {import("./deck.js").Deck|null} créé au hook « ready » */
 		deck: null,
-		/** Infos sur VTT Deck Pro s'il est actif */
+		/** Infos sur VTT Deck Premium s'il est actif */
 		pro: null,
 
 		get actions() {
@@ -34,9 +42,26 @@ export function createApi(builtins) {
 			actions.set(key, handler);
 			api.deck?.rebuildHooks();
 		},
+		/**
+		 * Décorateurs : fonctions (spec, settings, key) → spec appelées sur chaque touche avant son dessin
+		 * (ex. couleurs selon des seuils). Retourner undefined laisse la spec inchangée.
+		 */
+		decorators: [],
+		registerDecorator(fn) {
+			if (typeof fn === "function") api.decorators.push(fn);
+			api.deck?.queueAll();
+		},
+		/**
+		 * Gardes : fonctions (key) → true pour autoriser un appui, ou un message pour le refuser
+		 * (ex. actions réservées au MJ en « mode joueur »).
+		 */
+		guards: [],
+		registerGuard(fn) {
+			if (typeof fn === "function") api.guards.push(fn);
+		},
 		registerPro(info = {}) {
 			api.pro = { version: info.version ?? "?" };
-			console.log(`VTT Deck | VTT Deck Pro ${api.pro.version} activé`);
+			console.log(`VTT Deck | VTT Deck Premium ${api.pro.version} activé`);
 		},
 		get isPro() {
 			return !!api.pro;

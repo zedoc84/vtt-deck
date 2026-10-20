@@ -24,5 +24,25 @@
   "com.vttdeck.foundry.system": {
     "Name": "System",
     "Tooltip": "Pause, tools, sidebar, dice, roll tables, chat, darkness"
+  },
+  "com.vttdeck.foundry.numpad": {
+    "Name": "Damage & Healing Pad",
+    "Tooltip": "Type an amount, then apply damage or healing to the selected tokens"
+  },
+  "com.vttdeck.foundry.ambiance": {
+    "Name": "Ambience",
+    "Tooltip": "Set scene, music, darkness and weather with one key"
+  },
+  "com.vttdeck.foundry.page": {
+    "Name": "Dynamic Page",
+    "Tooltip": "Fill keys with the macros, scenes or music of a Foundry folder"
+  },
+  "com.vttdeck.foundry.sequence": {
+    "Name": "Sequence",
+    "Tooltip": "Chain several Foundry VTT actions with one key, without code"
+  },
+  "com.vttdeck.foundry.dial": {
+    "Name": "Dial",
+    "Tooltip": "Dials for Foundry VTT: volumes, darkness, turns, token HP, zoom, party, scenes, targets, tracks, dice and macros (Stream Deck + and + XL)"
   }
 }

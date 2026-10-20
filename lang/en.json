@@ -27,7 +27,7 @@
       }
     },
     "Status": {
-      "Title": "VTT Deck — Stream Deck status",
+      "Title": "VTT Deck status",
       "NotReady": "The module is not ready yet.",
       "Connected": "Connected to the Stream Deck plugin",
       "Disabled": "Connection disabled in this browser",
@@ -41,7 +41,7 @@
       "Help": "Make sure the Stream Deck app is running and the \"VTT Deck\" plugin is installed. Test: open http://127.0.0.1:3006 in the browser, the plugin should answer \"OK\".",
       "Reconnect": "Reconnect",
       "Redraw": "Redraw keys",
-      "Pro": "VTT Deck Pro",
+      "Pro": "VTT Deck Premium",
       "ProActive": "active (v{version})",
       "ProMissing": "not installed",
       "ProGet": "learn more"
@@ -52,7 +52,12 @@
       "token": "Token",
       "combat": "Combat",
       "playlist": "Music",
-      "system": "System"
+      "system": "System",
+      "numpad": "Damage/healing pad",
+      "ambiance": "Ambience",
+      "page": "Dynamic page",
+      "sequence": "Sequence",
+      "dial": "Dial"
     },
     "Notify": {
       "Connected": "VTT Deck: Stream Deck connected.",
@@ -76,7 +81,8 @@
       "PlaylistMissing": "VTT Deck: playlist not found.",
       "SoundMissing": "VTT Deck: track not found.",
       "ChooseControl": "VTT Deck: pick a control.",
-      "TableMissing": "VTT Deck: table not found."
+      "TableMissing": "VTT Deck: table not found.",
+      "NotAllowed": "VTT Deck: action not allowed."
     },
     "Keys": {
       "ChooseMacro": "Macro?",
@@ -105,7 +111,9 @@
       "ChooseControl": "Tool?",
       "ChooseFormula": "Formula?",
       "ChooseTable": "Table?",
-      "ChooseMessage": "Message?"
+      "ChooseMessage": "Message?",
+      "Door": "Door",
+      "Light": "Light"
     },
     "Tabs": {
       "chat": "Chat",
@@ -122,8 +130,8 @@
       "settings": "Settings"
     },
     "Pro": {
-      "Locked": "Pro version",
-      "Required": "VTT Deck: this feature is part of VTT Deck Pro."
+      "Locked": "Premium",
+      "Required": "VTT Deck: this feature is part of VTT Deck Premium."
     }
   }
 }

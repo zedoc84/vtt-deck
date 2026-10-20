@@ -3,11 +3,13 @@
  * Chaque action expose :
  *   render(settings, key) -> spec (voir renderer.js)
  *   press(settings, key)  -> exécute l'action dans Foundry
- *   needsPro(settings)    -> true si les réglages demandent une fonction de VTT Deck Pro
+ *   needsPro(settings)    -> true si les réglages demandent une fonction de VTT Deck Premium
  *   hooks: noms de hooks Foundry qui doivent rafraîchir ce type de touche
  *
- * VTT Deck Pro remplace les actions « token » et « combat » par des versions complètes
- * (voir api.js → registerAction).
+ * VTT Deck Premium remplace les actions « token » et « combat » par des versions complètes,
+ * et fournit les actions « numpad », « ambiance » et « page » (voir api.js → registerAction).
+ * Une action marquée « layout: true » est redessinée quand la disposition des touches change
+ * (elle peut lire sa position avec api.deck.rank()).
  */
 import {
 	BORDER, COLORS, t, loc, list, fail, requireGM, canvasReady, tokenImage, panTo, selectAndPan,
@@ -38,12 +40,18 @@ const macroAction = {
 /* ------------------------------------------------------------------ */
 /*  SCÈNE                                                              */
 /* ------------------------------------------------------------------ */
+const PRO_SCENE_PRESS = ["levelUp", "levelDown"];
+
 const sceneAction = {
 	hooks: ["createScene", "updateScene", "deleteScene", "canvasReady"],
+	needsPro(s) {
+		return PRO_SCENE_PRESS.includes(s.onPress);
+	},
 	find(s) {
 		return game.scenes.get(s.sceneId) ?? (s.sceneIdName ? game.scenes.getName(s.sceneIdName) : null);
 	},
 	render(s) {
+		if (this.needsPro(s)) return lockedSpec();
 		const scene = this.find(s);
 		if (!scene) return { icon: "🗺️", text: [t("Keys.ChooseScene")], dim: true };
 		const name = scene.navName || scene.name;
@@ -58,6 +66,7 @@ const sceneAction = {
 		};
 	},
 	async press(s) {
+		if (this.needsPro(s)) failPro();
 		const scene = this.find(s);
 		if (!scene) fail("Errors.SceneMissing");
 		switch (s.onPress ?? "view") {
@@ -136,7 +145,7 @@ const COMBAT_FN = {
 
 const combatAction = {
 	hooks: ["createCombat", "updateCombat", "deleteCombat", "combatStart", "combatTurnChange", "createCombatant", "deleteCombatant"],
-	/** Fonctions de base, réutilisables par VTT Deck Pro */
+	/** Fonctions de base, réutilisables par VTT Deck Premium */
 	FUNCTIONS: COMBAT_FN,
 	needsPro(s) {
 		const fn = s.fn ?? "next";
@@ -209,10 +218,15 @@ const basename = (p = "") => decodeURIComponent(p.split("/").pop() ?? "").replac
 
 const playlistAction = {
 	hooks: ["createPlaylist", "updatePlaylist", "deletePlaylist", "createPlaylistSound", "updatePlaylistSound", "deletePlaylistSound"],
+	/** Fondu enchaîné entre playlists : fonction de VTT Deck Premium */
+	needsPro(s) {
+		return (s.mode ?? "playlist") === "playlist" && Number(s.crossfade) > 0;
+	},
 	find(s) {
 		return game.playlists.get(s.playlistId) ?? (s.playlistIdName ? game.playlists.getName(s.playlistIdName) : null);
 	},
 	render(s) {
+		if (this.needsPro(s)) return lockedSpec();
 		const mode = s.mode ?? "playlist";
 		if (mode === "stopAll") {
 			const any = game.playlists.playing?.length > 0;
@@ -242,6 +256,7 @@ const playlistAction = {
 		};
 	},
 	async press(s) {
+		if (this.needsPro(s)) failPro();
 		const mode = s.mode ?? "playlist";
 		if (mode === "file") {
 			if (!s.src) fail("Errors.ChooseFile");
@@ -289,9 +304,18 @@ function rollWhisper(mode) {
 	return [];
 }
 
+/** Fonctions Système de la version gratuite (les autres viennent de VTT Deck Premium) */
+const FREE_SYSTEM_FN = ["pause", "control", "sidebar", "roll", "table", "chat", "darkness"];
+
 const systemAction = {
 	hooks: ["pauseGame", "renderSceneControls", "activateCanvasLayer", "changeSidebarTab", "collapseSidebar", "updateScene", "canvasReady", "createRollTable", "updateRollTable", "deleteRollTable"],
+	/** Fonctions de base, réutilisables par VTT Deck Premium */
+	FUNCTIONS: FREE_SYSTEM_FN,
+	needsPro(s) {
+		return !FREE_SYSTEM_FN.includes(s.fn ?? "pause");
+	},
 	render(s) {
+		if (this.needsPro(s)) return lockedSpec();
 		const fn = s.fn ?? "pause";
 		switch (fn) {
 			case "pause":
@@ -345,6 +369,7 @@ const systemAction = {
 		return { icon: "❓" };
 	},
 	async press(s) {
+		if (this.needsPro(s)) failPro();
 		const fn = s.fn ?? "pause";
 		switch (fn) {
 			case "pause":
@@ -401,15 +426,47 @@ const systemAction = {
 
 
 /* ------------------------------------------------------------------ */
-/** Actions intégrées (VTT Deck Pro peut en remplacer certaines) */
+/*  ACTIONS ENTIÈREMENT PREMIUM                                        */
+/*  (pavé dégâts/soins, ambiance, page dynamique)                      */
+/*  Sans VTT Deck Premium : la touche affiche le cadenas.                  */
+/* ------------------------------------------------------------------ */
+const proOnlyAction = {
+	hooks: [],
+	needsPro: () => true,
+	render: () => lockedSpec(),
+	press: () => failPro(),
+	/** molettes du Stream Deck + */
+	renderDial: () => ({ title: "VTT Deck", value: `🔒 ${t("Pro.Locked")}`, indicator: { value: 0 }, locked: true }),
+	dial: () => failPro()
+};
+
+/* ------------------------------------------------------------------ */
+/** Actions intégrées (VTT Deck Premium peut en remplacer certaines) */
 export const BUILTIN_ACTIONS = {
 	macro: macroAction,
 	scene: sceneAction,
 	token: tokenAction,
 	combat: combatAction,
 	playlist: playlistAction,
-	system: systemAction
+	system: systemAction,
+	numpad: { ...proOnlyAction },
+	ambiance: { ...proOnlyAction },
+	page: { ...proOnlyAction },
+	sequence: { ...proOnlyAction },
+	dial: { ...proOnlyAction }
 };
+
+/** Dossiers Foundry d'un type de document, avec leur chemin complet (« Donjon / Niveau 1 ») */
+function foldersOf(type) {
+	return (game.folders?.contents ?? [])
+		.filter((f) => f.type === type)
+		.map((f) => {
+			const path = [];
+			for (let p = f; p; p = p.folder) path.unshift(p.name);
+			return { id: f.id, name: path.join(" / ") };
+		})
+		.sort((a, b) => a.name.localeCompare(b.name, game.i18n.lang));
+}
 
 export function piData(what, api) {
 	const byName = (a, b) => a.name.localeCompare(b.name, game.i18n.lang);
@@ -447,6 +504,50 @@ export function piData(what, api) {
 			return { pro: !!api?.pro, proVersion: api?.pro?.version ?? null, version: api?.version };
 		case "tables":
 			return game.tables.contents.map((x) => ({ id: x.id, name: x.name, group: x.folder?.name })).sort(byName);
+		case "macroFolders":
+			return foldersOf("Macro");
+		case "sceneFolders":
+			return foldersOf("Scene");
+		case "playlistFolders":
+			return foldersOf("Playlist");
+		case "actorFolders":
+			return foldersOf("Actor");
+		case "groupActors":
+			// acteurs « groupe » (D&D 5e : group, PF2e : party…)
+			return game.actors.contents
+				.filter((a) => ["group", "party"].includes(a.type))
+				.map((a) => ({ id: a.id, name: a.name }))
+				.sort(byName);
+		case "weather":
+			return Object.entries(CONFIG.weatherEffects ?? {})
+				.map(([id, e]) => ({ id, name: loc(e?.label) || id }))
+				.sort(byName);
+		case "journals":
+			return game.journal.contents
+				.filter((j) => j.visible ?? true)
+				.map((j) => ({
+					id: j.id,
+					name: j.name,
+					group: j.folder?.name,
+					pages: (j.pages?.contents ?? []).map((p) => ({ id: p.id, name: p.name }))
+				}))
+				.sort(byName);
+		case "itemTypes": {
+			const labels = CONFIG.Item?.typeLabels ?? {};
+			const types = Object.keys(labels).length ? Object.keys(labels) : Object.keys(game.system?.documentTypes?.Item ?? {});
+			return types.filter((tp) => tp !== "base").map((tp) => ({ id: tp, name: loc(labels[tp]) || tp })).sort(byName);
+		}
+		case "selectedDoor": {
+			// Porte sélectionnée sur la scène (calque des murs) — bouton « Utiliser la sélection » de l'inspecteur
+			const walls = canvasReady() ? canvas.walls?.controlled ?? [] : [];
+			return walls
+				.filter((w) => w.document.door)
+				.map((w, i) => ({ id: w.document.id, sceneId: canvas.scene.id, name: `${t("Keys.Door")} ${i + 1} — ${canvas.scene.name}` }));
+		}
+		case "selectedLight": {
+			const lights = canvasReady() ? canvas.lighting?.controlled ?? [] : [];
+			return lights.map((l, i) => ({ id: l.document.id, sceneId: canvas.scene.id, name: `${t("Keys.Light")} ${i + 1} — ${canvas.scene.name}` }));
+		}
 	}
 	return [];
 }
