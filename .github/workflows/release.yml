@@ -1,0 +1,77 @@
+# Publication automatique d'une version de VTT Deck.
+# Déclenchée quand vous publiez une « Release » GitHub avec un tag du type v1.0.1
+#  1. met à jour module.json (version, URL de téléchargement, manifeste…)
+#  2. fabrique module.zip et le plugin .streamDeckPlugin
+#  3. les attache à la release GitHub
+#  4. (optionnel) annonce la version sur foundryvtt.com via la Package Release API
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.event.release.tag_name }}
+      REPO_URL: https://github.com/${{ github.repository }}
+      FOUNDRY_TOKEN: ${{ secrets.FOUNDRY_RELEASE_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Version tirée du tag
+        run: echo "VERSION=${TAG#v}" >> "$GITHUB_ENV"
+
+      - name: Mise à jour de module.json
+        run: |
+          jq --arg v "$VERSION" --arg repo "$REPO_URL" --arg tag "$TAG" \
+            '.version = $v
+             | .url = $repo
+             | .manifest = ($repo + "/releases/latest/download/module.json")
+             | .download = ($repo + "/releases/download/" + $tag + "/module.zip")
+             | .bugs = ($repo + "/issues")
+             | .changelog = ($repo + "/blob/main/CHANGELOG.md")' \
+            module.json > module.tmp && mv module.tmp module.json
+          cat module.json
+
+      - name: Archive du module
+        run: zip -r module.zip module.json scripts lang styles README.md LICENSE CHANGELOG.md
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Plugin Stream Deck
+        working-directory: streamdeck-plugin
+        run: |
+          npm ci
+          npm run build
+          npx streamdeck pack com.vttdeck.foundry.sdPlugin --output dist --force --no-update-check --version "$VERSION.0"
+
+      - name: Fichiers joints à la release GitHub
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "$TAG" module.json module.zip \
+            streamdeck-plugin/dist/com.vttdeck.foundry.streamDeckPlugin --clobber
+
+      - name: Annonce sur foundryvtt.com
+        if: ${{ env.FOUNDRY_TOKEN != '' && !github.event.release.prerelease }}
+        run: |
+          MIN=$(jq -r '.compatibility.minimum' module.json)
+          VER=$(jq -r '.compatibility.verified' module.json)
+          ID=$(jq -r '.id' module.json)
+          BODY=$(jq -n --arg id "$ID" --arg v "$VERSION" --arg min "$MIN" --arg ver "$VER" \
+            --arg mf "$REPO_URL/releases/download/$TAG/module.json" \
+            --arg notes "$REPO_URL/releases/tag/$TAG" \
+            '{id: $id, release: {version: $v, manifest: $mf, notes: $notes,
+              compatibility: {minimum: $min, verified: $ver, maximum: ""}}}')
+          echo "$BODY"
+          curl --fail-with-body -sS -X POST "https://foundryvtt.com/_api/packages/release_version/" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: $FOUNDRY_TOKEN" \
+            -d "$BODY"
