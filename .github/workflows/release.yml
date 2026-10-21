@@ -13,18 +13,26 @@ on:
 permissions:
   contents: write
 
+# Sécurité : actions épinglées sur un commit précis (un tag peut être déplacé), jeton Foundry
+# donné uniquement à l'étape d'annonce, scripts d'installation npm désactivés.
+
 jobs:
   release:
     runs-on: ubuntu-latest
     env:
       TAG: ${{ github.event.release.tag_name }}
       REPO_URL: https://github.com/${{ github.repository }}
-      FOUNDRY_TOKEN: ${{ secrets.FOUNDRY_RELEASE_TOKEN }}
+      # "true" ou "false" : le jeton lui-même n'est pas exposé aux autres étapes
+      HAS_FOUNDRY_TOKEN: ${{ secrets.FOUNDRY_RELEASE_TOKEN != '' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
 
       - name: Version tirée du tag
-        run: echo "VERSION=${TAG#v}" >> "$GITHUB_ENV"
+        run: |
+          [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "Tag attendu : v1.2.3 (reçu : $TAG)"; exit 1; }
+          echo "VERSION=${TAG#v}" >> "$GITHUB_ENV"
 
       - name: Mise à jour de module.json
         run: |
@@ -41,14 +49,14 @@ jobs:
       - name: Archive du module
         run: zip -r module.zip module.json scripts lang styles README.md LICENSE CHANGELOG.md
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 20
 
       - name: Plugin Stream Deck
         working-directory: streamdeck-plugin
         run: |
-          npm ci
+          npm ci --ignore-scripts
           npm run build
           npx streamdeck pack com.vttdeck.foundry.sdPlugin --output dist --force --no-update-check --version "$VERSION.0"
 
@@ -60,7 +68,9 @@ jobs:
             streamdeck-plugin/dist/com.vttdeck.foundry.streamDeckPlugin --clobber
 
       - name: Annonce sur foundryvtt.com
-        if: ${{ env.FOUNDRY_TOKEN != '' && !github.event.release.prerelease }}
+        if: ${{ env.HAS_FOUNDRY_TOKEN == 'true' && !github.event.release.prerelease }}
+        env:
+          FOUNDRY_TOKEN: ${{ secrets.FOUNDRY_RELEASE_TOKEN }}
         run: |
           MIN=$(jq -r '.compatibility.minimum' module.json)
           VER=$(jq -r '.compatibility.verified' module.json)
