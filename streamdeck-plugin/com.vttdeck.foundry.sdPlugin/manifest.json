@@ -1,7 +1,7 @@
 {
 	"$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
 	"Name": "VTT Deck",
-	"Version": "1.5.0.0",
+	"Version": "1.5.1.0",
 	"Author": "Paul",
 	"Description": "Control Foundry VTT (v13/v14) from your Stream Deck: macros, scenes, tokens, combat, music and more. Requires the free \"VTT Deck\" Foundry VTT module.",
 	"UUID": "com.vttdeck.foundry",

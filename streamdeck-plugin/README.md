@@ -6,7 +6,7 @@
 
 **VTT Deck** is a free Stream Deck plugin that turns your Stream Deck into a control panel for Foundry Virtual Tabletop: macros, scenes, tokens, combat tracker, music and sound effects, pause, tools, dice and roll tables. Each key shows live information from your game — token portrait and HP, active scene, track playing, whose turn it is.
 
-- Plugin ID: `com.vttdeck.foundry` · version **1.5.0**
+- Plugin ID: `com.vttdeck.foundry` · version **1.5.1**
 - Available on the **Elgato Marketplace**
 - Free and open source (MIT)
 
@@ -24,7 +24,8 @@ The plugin talks to Foundry through the free Foundry module **VTT Deck** ([insta
 1. Install **VTT Deck** from the Elgato Marketplace (or double-click `com.vttdeck.foundry.streamDeckPlugin`).
 2. A **VTT Deck** category appears in the action list.
 3. Open your Foundry game in a browser (or the Foundry app) on the computer the Stream Deck is plugged into, with the VTT Deck module enabled.
-4. Test: open <http://127.0.0.1:3006> in a browser. The plugin replies `VTT Deck bridge 1.5.0 — OK. Foundry connected.`
+4. **Pair Foundry with the plugin (once per browser)**: put any VTT Deck action on a key, open its settings, then **Foundry connection** → copy the **Code** (e.g. `K7QDM-2ZP4X`). In Foundry: *Configure Settings* → *VTT Deck* → **Pairing code** → paste → *Save*. The keys come alive.
+5. Test: open <http://127.0.0.1:3006> in a browser. The plugin replies `VTT Deck bridge 1.5.1 — OK. Foundry connected.`
 
 ## The actions
 
@@ -90,8 +91,9 @@ To open them: select any VTT Deck key → inspector → **Ready-made profiles** 
 
 At the bottom of any VTT Deck key's inspector, **Foundry connection** (applies to the whole plugin):
 
+- **Code**: the pairing code to enter once in Foundry (*VTT Deck* module settings → *Pairing code*). Only a Foundry window that knows it can drive your Stream Deck: websites and other devices are refused. **New code** (click twice) creates another one; Foundry then has to be paired again.
 - **Port**: `3006` by default. It must be the same as the *Plugin port* setting of the VTT Deck module in Foundry.
-- **Network** — *accept connections from other computers*: off by default. Leave it off unless Foundry is displayed on another computer than the one the Stream Deck is plugged into.
+- **Network** — *accept connections from other computers*: off by default. Leave it off unless Foundry is displayed on another computer than the one the Stream Deck is plugged into. Traffic with another computer is not encrypted: only use it on a trusted network.
 
 Click **Apply** after a change.
 
@@ -99,8 +101,12 @@ Click **Apply** after a change.
 
 The plugin only listens on your own computer (`127.0.0.1`) unless you allow other computers. It sends nothing over the internet and collects no data.
 
+Security: since 1.5.1, the plugin only talks to a Foundry window that proves it knows the pairing code (challenge and response, the code itself never travels), and it proves in return that it is the real plugin. A website opened in your browser can no longer read or change your keys. The last refused connection is shown under **Foundry connection**.
+
 ## Troubleshooting
 
+- **Foundry says "enter the pairing code" or "wrong pairing code"**: copy the code shown under **Foundry connection** into Foundry (*VTT Deck* module settings → *Pairing code*). Each browser needs it once.
+- **"Connection refused" under Foundry connection**: something without the right code tried to connect — an old VTT Deck module (update it to 1.5.1), a wrong code, or a website. Nothing was accepted.
 - **Keys stay on the plain VTT Deck icon**: Foundry is not connected. Is the game open with the VTT Deck module enabled? Does <http://127.0.0.1:3006> answer? Is the port the same on both sides? In Foundry, use **Reconnect** in the VTT Deck status window.
 - **The page <http://127.0.0.1:3006> doesn't load**: the Stream Deck app isn't running, or another program uses port 3006 — choose another port in **Foundry connection**, and set the same in Foundry.
 - **Chrome / Edge asks to "access devices on your local network"**: accept; that is the browser allowing the Foundry page to reach the plugin.
@@ -150,7 +156,7 @@ Stream Deck and Elgato are trademarks of Corsair Memory, Inc. Foundry Virtual Ta
 
 **VTT Deck** est un plugin Stream Deck gratuit qui transforme votre Stream Deck en tableau de commande pour Foundry Virtual Tabletop : macros, scènes, jetons, suivi de combat, musique et effets sonores, pause, outils, dés et tables aléatoires. Chaque touche affiche en direct des informations de la partie : portrait et PV d'un jeton, scène active, piste en lecture, combattant dont c'est le tour.
 
-- Identifiant du plugin : `com.vttdeck.foundry` · version **1.5.0**
+- Identifiant du plugin : `com.vttdeck.foundry` · version **1.5.1**
 - Disponible sur l'**Elgato Marketplace**
 - Gratuit et libre (licence MIT)
 
@@ -168,7 +174,8 @@ Le plugin dialogue avec Foundry grâce au module Foundry gratuit **VTT Deck** ([
 1. Installez **VTT Deck** depuis l'Elgato Marketplace (ou double-cliquez sur `com.vttdeck.foundry.streamDeckPlugin`).
 2. Une catégorie **VTT Deck** apparaît dans la liste des actions.
 3. Ouvrez votre partie Foundry dans un navigateur (ou l'application Foundry) sur l'ordinateur où le Stream Deck est branché, avec le module VTT Deck activé.
-4. Test : ouvrez <http://127.0.0.1:3006> dans un navigateur. Le plugin répond `VTT Deck bridge 1.5.0 — OK. Foundry connected.`
+4. **Appairez Foundry et le plugin (une fois par navigateur)** : posez une action VTT Deck sur une touche, ouvrez ses réglages, puis **Connexion Foundry** → copiez le **Code** (ex. `K7QDM-2ZP4X`). Dans Foundry : *Paramètres* → *VTT Deck* → **Code d'appairage** → collez → *Enregistrer*. Les touches s'animent.
+5. Test : ouvrez <http://127.0.0.1:3006> dans un navigateur. Le plugin répond `VTT Deck bridge 1.5.1 — OK. Foundry connected.`
 
 ## Les actions
 
@@ -234,8 +241,9 @@ Pour les ouvrir : sélectionnez n'importe quelle touche VTT Deck → inspecteur 
 
 En bas de l'inspecteur de n'importe quelle touche VTT Deck, **Connexion Foundry** (s'applique à tout le plugin) :
 
+- **Code** : le code d'appairage à saisir une fois dans Foundry (paramètres du module *VTT Deck* → *Code d'appairage*). Seule une fenêtre Foundry qui le connaît peut piloter votre Stream Deck : les sites web et les autres appareils sont refusés. **Nouveau code** (deux clics) en crée un autre ; Foundry doit alors être appairé à nouveau.
 - **Port** : `3006` par défaut. Il doit être identique au réglage *Port du plugin* du module VTT Deck dans Foundry.
-- **Réseau** — *accepter les connexions d'autres machines* : désactivé par défaut. Laissez-le désactivé, sauf si Foundry est affiché sur un autre ordinateur que celui où le Stream Deck est branché.
+- **Réseau** — *accepter les connexions d'autres machines* : désactivé par défaut. Laissez-le désactivé, sauf si Foundry est affiché sur un autre ordinateur que celui où le Stream Deck est branché. Les échanges avec une autre machine ne sont pas chiffrés : à réserver à un réseau de confiance.
 
 Cliquez sur **Appliquer** après un changement.
 
@@ -243,8 +251,12 @@ Cliquez sur **Appliquer** après un changement.
 
 Le plugin n'écoute que sur votre propre ordinateur (`127.0.0.1`), sauf si vous autorisez d'autres machines. Il n'envoie rien sur Internet et ne collecte aucune donnée.
 
+Sécurité : depuis la 1.5.1, le plugin ne dialogue qu'avec une fenêtre Foundry qui prouve connaître le code d'appairage (défi et réponse, le code lui-même ne circule jamais), et il prouve à son tour qu'il est bien le plugin. Un site web ouvert dans votre navigateur ne peut plus lire ni modifier vos touches. La dernière connexion refusée s'affiche sous **Connexion Foundry**.
+
 ## Dépannage
 
+- **Foundry demande « saisissez le code d'appairage » ou « code d'appairage incorrect »** : copiez le code affiché sous **Connexion Foundry** dans Foundry (paramètres du module *VTT Deck* → *Code d'appairage*). Chaque navigateur en a besoin une fois.
+- **« Connexion refusée » sous Connexion Foundry** : quelque chose sans le bon code a tenté de se connecter — un ancien module VTT Deck (mettez-le à jour en 1.5.1), un mauvais code ou un site web. Rien n'a été accepté.
 - **Les touches restent sur l'icône VTT Deck simple** : Foundry n'est pas connecté. La partie est-elle ouverte avec le module VTT Deck activé ? <http://127.0.0.1:3006> répond-il ? Le port est-il le même des deux côtés ? Dans Foundry, utilisez **Reconnecter** dans la fenêtre d'état de VTT Deck.
 - **La page <http://127.0.0.1:3006> ne s'ouvre pas** : l'application Stream Deck n'est pas lancée, ou un autre programme utilise le port 3006 — choisissez un autre port dans **Connexion Foundry**, et le même dans Foundry.
 - **Chrome / Edge demande « accéder aux appareils du réseau local »** : acceptez ; c'est le navigateur qui autorise la page Foundry à joindre le plugin.

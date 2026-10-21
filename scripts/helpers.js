@@ -74,3 +74,6 @@ export function lockedSpec() {
 export function failPro() {
 	throw new UserError(t("Pro.Required"));
 }
+
+/** Empreinte SHA-256 d'un texte (ex. reconnaître un script déjà approuvé) */
+export { sha256 } from "./hmac.js";

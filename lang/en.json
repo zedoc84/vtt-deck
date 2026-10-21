@@ -24,6 +24,10 @@
       "Notify": {
         "Name": "Connection notifications",
         "Hint": "Show a message when the Stream Deck connects or disconnects."
+      },
+      "PairingCode": {
+        "Name": "Pairing code",
+        "Hint": "Code shown in the Stream Deck plugin (settings of any VTT Deck key → Foundry connection). It stops websites and other devices from pretending to be Foundry or the plugin. Enter it once in each browser that drives the Stream Deck."
       }
     },
     "Status": {
@@ -44,7 +48,18 @@
       "Pro": "VTT Deck Premium",
       "ProActive": "active (v{version})",
       "ProMissing": "not installed",
-      "ProGet": "learn more"
+      "ProGet": "learn more",
+      "Pairing": "Pairing",
+      "Paired": "paired (connection verified)",
+      "Legacy": "unprotected (old plugin, please update)",
+      "CodeSet": "code entered",
+      "Remote": "The Stream Deck is on another computer: the link is not encrypted, use it only on a trusted network.",
+      "Auth": {
+        "noCode": "Pairing code needed",
+        "badCode": "Wrong pairing code",
+        "badProof": "Plugin not authenticated: connection refused"
+      },
+      "NoChallenge": "The program on this port does not ask for the pairing code (old or fake plugin): connection refused, retrying shortly"
     },
     "Actions": {
       "macro": "Macro",
@@ -62,7 +77,11 @@
     "Notify": {
       "Connected": "VTT Deck: Stream Deck connected.",
       "Disconnected": "VTT Deck: Stream Deck disconnected.",
-      "Replaced": "VTT Deck: another Foundry window took control of the Stream Deck. Use \"Reconnect\" in the module settings to take it back."
+      "Replaced": "VTT Deck: another Foundry window took control of the Stream Deck. Use \"Reconnect\" in the module settings to take it back.",
+      "AuthNoCode": "VTT Deck: enter the pairing code shown in the Stream Deck plugin (module settings → Pairing code).",
+      "AuthBadCode": "VTT Deck: wrong pairing code. Copy the code shown in the Stream Deck plugin again (module settings → Pairing code).",
+      "AuthBadProof": "VTT Deck: the program on the Stream Deck port did not prove it is the VTT Deck plugin. Connection refused.",
+      "Legacy": "VTT Deck: your Stream Deck plugin is old and does not protect the connection. Please update it (1.5.1 or later)."
     },
     "Errors": {
       "Generic": "VTT Deck: error — {msg}",

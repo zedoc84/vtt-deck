@@ -23,13 +23,15 @@ export class Deck {
 	#held = new Map();
 	/** dernier message d'erreur par touche, pour ne pas répéter l'alerte à chaque cran de molette */
 	#lastError = new Map();
+	#authWarned = null;
+	#legacyWarned = false;
 
 	constructor(api) {
 		this.api = api;
 		this.renderer = new KeyRenderer();
 		this.bridge = new Bridge(
 			(msg) => this.#onMessage(msg),
-			(connected) => this.#onState(connected)
+			(connected, info) => this.#onState(connected, info)
 		);
 		this.#registerHooks();
 	}
@@ -57,7 +59,24 @@ export class Deck {
 	/* ---------------------------------------------------------------- */
 	/*  Messages venant du plugin                                       */
 	/* ---------------------------------------------------------------- */
-	#onState(connected) {
+	#onState(connected, info = {}) {
+		// Appairage refusé ou plugin non authentifié : un seul avertissement par cause
+		if (info.authError) {
+			if (this.#authWarned !== info.authError) {
+				this.#authWarned = info.authError;
+				const key = { noCode: "Notify.AuthNoCode", badCode: "Notify.AuthBadCode", badProof: "Notify.AuthBadProof" }[info.authError];
+				ui.notifications.warn(t(key ?? "Notify.AuthBadCode"), { permanent: info.authError !== "badProof" });
+			}
+			this.#refreshStatusApp();
+			return;
+		}
+		if (connected) {
+			this.#authWarned = null;
+			if (this.bridge.legacy && !this.#legacyWarned) {
+				this.#legacyWarned = true;
+				ui.notifications.warn(t("Notify.Legacy"));
+			}
+		}
 		if (!connected) {
 			this.keys.clear();
 			this.signatures.clear();

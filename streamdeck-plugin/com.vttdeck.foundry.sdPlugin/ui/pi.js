@@ -337,6 +337,20 @@ const EN = {
 	"Les molettes demandent VTT Deck Premium : sans lui, l'écran affichera 🔒.": "Dials need VTT Deck Premium: without it, the strip will show 🔒.",
 	"Groupe : copiez la touche sur plusieurs emplacements, chaque touche prend un personnage du groupe.": "Party: copy the key to several slots, each key takes one party character.",
 	"Groupe (personnages du groupe)": "Party (party characters)",
+	"Nouveau code": "New code",
+	"Confirmer ?": "Confirm?",
+	"Foundry attend le code d'appairage ci-dessous.": "Foundry is waiting for the pairing code below.",
+	"Créer un nouveau code ? Foundry devra être appairé à nouveau avec ce code.": "Create a new code? Foundry will have to be paired again with this code.",
+	"Connexion refusée": "Connection refused",
+	"code incorrect": "wrong code",
+	"code manquant ou module Foundry trop ancien": "missing code or Foundry module too old",
+	"délai dépassé": "timed out",
+	"message invalide": "invalid message",
+	"depuis": "from",
+	"Une page": "A page",
+	"demande le code d'appairage. Ne le donnez que si c'est votre Foundry.": "is asking for the pairing code. Only give it if this is your Foundry.",
+	"Code d'appairage : saisissez-le une fois dans Foundry (Paramètres du module « VTT Deck » → Code d'appairage). Seul un Foundry qui le connaît peut piloter ce Stream Deck : les sites web et les autres appareils sont refusés.": "Pairing code: enter it once in Foundry (\"VTT Deck\" module settings → Pairing code). Only a Foundry that knows it can drive this Stream Deck: websites and other devices are refused.",
+	"Les échanges avec une autre machine ne sont pas chiffrés : n'activez cette option que sur un réseau de confiance.": "Traffic with another computer is not encrypted: only enable this on a trusted network.",
 	"Le port doit être identique à celui réglé dans Foundry (Paramètres du module « VTT Deck »). Le réglage s'applique à tout le plugin.": "The port must match the one set in Foundry (\"VTT Deck\" module settings). This setting applies to the whole plugin."
 };
 const tr = (s) => (s == null || LANG === "fr" ? s : EN[s] ?? s);
@@ -873,11 +887,30 @@ function renderStatus(s) {
 		txt.textContent = `${tr("Connecté à Foundry")}${f.world ? ` — ${f.world}` : ""}${f.user ? ` (${f.user})` : ""}`;
 	} else if (!s.listening) {
 		txt.textContent = `Port ${s.port} ${tr("indisponible : changez-le ci-dessous.")}`;
+	} else if (s.lastRejected && ["badCode", "noCode"].includes(s.lastRejected.reason) && Date.now() - s.lastRejected.at < 120000) {
+		// Une page a essayé sans le bon code. On n'ouvre le code tout seul que pour le Foundry déjà appairé :
+		// pour une autre origine, on la nomme, pour que l'utilisateur ne donne pas le code à un site inconnu.
+		const o = s.lastRejected.origin;
+		if (o && o === s.pairedOrigin) {
+			txt.textContent = tr("Foundry attend le code d'appairage ci-dessous.");
+			$("#connection").open = true;
+		} else {
+			txt.textContent = `${o || tr("Une page")} ${tr("demande le code d'appairage. Ne le donnez que si c'est votre Foundry.")}`;
+		}
 	} else {
 		txt.textContent = `${tr("En attente de Foundry")} (port ${s.port})…`;
 	}
 	$("#port").value = s.port;
 	$("#allowRemote").checked = !!s.allowRemote;
+	if (s.pairCode) $("#pairCode").value = s.pairCode;
+	// Dernière connexion refusée (site web, autre appareil, ancien module ou mauvais code)
+	const rej = $("#rejected");
+	const r = s.lastRejected;
+	const REASONS = { badCode: "code incorrect", noCode: "code manquant ou module Foundry trop ancien", timeout: "délai dépassé", badMessage: "message invalide" };
+	if (r && Date.now() - r.at < 10 * 60000) {
+		rej.hidden = false;
+		rej.textContent = `${tr("Connexion refusée")} (${tr(REASONS[r.reason] ?? r.reason)})${r.origin ? ` ${tr("depuis")} ${r.origin}` : ""}`;
+	} else rej.hidden = true;
 }
 
 /* ------------------------------------------------------------------ */
@@ -976,6 +1009,22 @@ window.connectElgatoStreamDeckSocket = function (port, uuid, registerEvent, info
 document.addEventListener("DOMContentLoaded", () => {
 	$("#applyConn").addEventListener("click", () => {
 		toPlugin({ type: "setConnection", port: Number($("#port").value), allowRemote: $("#allowRemote").checked });
+	});
+	$("#pairCode").addEventListener("focus", (e) => e.target.select());
+	// Deux clics pour changer de code (Foundry devra être appairé à nouveau)
+	let armed = null;
+	$("#newPairCode").addEventListener("click", (e) => {
+		const btn = e.currentTarget;
+		if (armed) {
+			clearTimeout(armed);
+			armed = null;
+			btn.textContent = tr("Nouveau code");
+			toPlugin({ type: "newPairCode" });
+			return;
+		}
+		btn.textContent = tr("Confirmer ?");
+		btn.title = tr("Créer un nouveau code ? Foundry devra être appairé à nouveau avec ce code.");
+		armed = setTimeout(() => ((armed = null), (btn.textContent = tr("Nouveau code"))), 4000);
 	});
 	$("#profExploration").addEventListener("click", () => toPlugin({ type: "switchProfile", profile: "exploration" }));
 	$("#profCombat").addEventListener("click", () => toPlugin({ type: "switchProfile", profile: "combat" }));

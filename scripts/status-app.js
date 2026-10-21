@@ -34,16 +34,19 @@ export class StatusApp extends ApplicationV2 {
 		let state;
 		if (b.connected) state = `<span class="ok">● ${t("Status.Connected")}</span>`;
 		else if (!deck.shouldConnect) state = `<span class="off">○ ${t("Status.Disabled")}</span>`;
+		else if (b.authError) state = `<span class="ko">● ${t(`Status.Auth.${b.authError}`)}</span>`;
+		else if (b.noChallenge) state = `<span class="ko">● ${t("Status.NoChallenge")}</span>`;
 		else if (b.kicked) state = `<span class="warn">● ${t("Status.Replaced")}</span>`;
 		else state = `<span class="ko">● ${t("Status.Waiting")}</span>`;
 
+		const DEVICE_TYPES_X = { ...DEVICE_TYPES, 13: "Stream Deck + XL" };
 		const devices = [...deck.devices.values()]
-			.map((d) => `<li>${esc(d.name)} <small>(${esc(DEVICE_TYPES[d.type] ?? d.type)}, ${d.size?.columns ?? "?"}×${d.size?.rows ?? "?"})</small></li>`)
+			.map((d) => `<li>${esc(d.name)} <small>(${esc(DEVICE_TYPES_X[d.type] ?? d.type)}, ${Number(d.size?.columns) || "?"}×${Number(d.size?.rows) || "?"})</small></li>`)
 			.join("");
 		const counts = {};
 		for (const k of deck.keys.values()) counts[k.action] = (counts[k.action] ?? 0) + 1;
 		const keys = Object.entries(counts)
-			.map(([a, n]) => `${esc(t(`Actions.${a}`))} : ${n}`)
+			.map(([a, n]) => `${esc(t(`Actions.${a}`))} : ${Number(n)}`)
 			.join(" · ");
 
 		return `
@@ -52,6 +55,8 @@ export class StatusApp extends ApplicationV2 {
 			<dl>
 				<dt>${t("Status.Address")}</dt><dd><code>${esc(b.url)}</code></dd>
 				<dt>${t("Status.Mode")}</dt><dd>${esc(t(`Settings.Enabled.${mode}`))}</dd>
+				<dt>${t("Status.Pairing")}</dt><dd>${b.connected ? (b.legacy ? `<span class="warn">${t("Status.Legacy")}</span>` : `<span class="ok">${t("Status.Paired")}</span>`) : b.code ? t("Status.CodeSet") : `<span class="ko">${t("Status.Auth.noCode")}</span>`}</dd>
+				${b.isLocal ? "" : `<dt></dt><dd class="warn">${t("Status.Remote")}</dd>`}
 				${deck.plugin ? `<dt>${t("Status.Plugin")}</dt><dd>${esc(deck.plugin.version)}</dd>` : ""}
 				<dt>${t("Status.Pro")}</dt><dd>${pro}</dd>
 				${devices ? `<dt>${t("Status.Devices")}</dt><dd><ul>${devices}</ul></dd>` : ""}

@@ -24,6 +24,10 @@
       "Notify": {
         "Name": "Notifications de connexion",
         "Hint": "Affiche un message quand le Stream Deck se connecte ou se déconnecte."
+      },
+      "PairingCode": {
+        "Name": "Code d'appairage",
+        "Hint": "Code affiché dans le plugin Stream Deck (réglages d'une touche VTT Deck → Connexion Foundry). Il empêche les sites web et les autres appareils de se faire passer pour Foundry ou pour le plugin. À saisir une fois sur chaque navigateur qui pilote le Stream Deck."
       }
     },
     "Status": {
@@ -44,7 +48,18 @@
       "Pro": "VTT Deck Premium",
       "ProActive": "activé (v{version})",
       "ProMissing": "non installé",
-      "ProGet": "en savoir plus"
+      "ProGet": "en savoir plus",
+      "Pairing": "Appairage",
+      "Paired": "appairé (connexion vérifiée)",
+      "Legacy": "non protégé (plugin ancien, à mettre à jour)",
+      "CodeSet": "code saisi",
+      "Remote": "Le Stream Deck est sur une autre machine : la liaison n'est pas chiffrée, à réserver à un réseau de confiance.",
+      "Auth": {
+        "noCode": "Code d'appairage à saisir",
+        "badCode": "Code d'appairage incorrect",
+        "badProof": "Plugin non authentifié : connexion refusée"
+      },
+      "NoChallenge": "Le programme sur ce port ne demande pas le code d'appairage (plugin ancien ou faux plugin) : connexion refusée, nouvel essai dans un moment"
     },
     "Actions": {
       "macro": "Macro",
@@ -62,7 +77,11 @@
     "Notify": {
       "Connected": "VTT Deck : Stream Deck connecté.",
       "Disconnected": "VTT Deck : Stream Deck déconnecté.",
-      "Replaced": "VTT Deck : une autre fenêtre Foundry a pris le contrôle du Stream Deck. Utilisez « Reconnecter » dans les paramètres du module pour le reprendre."
+      "Replaced": "VTT Deck : une autre fenêtre Foundry a pris le contrôle du Stream Deck. Utilisez « Reconnecter » dans les paramètres du module pour le reprendre.",
+      "AuthNoCode": "VTT Deck : saisissez le code d'appairage affiché dans le plugin Stream Deck (Paramètres du module → Code d'appairage).",
+      "AuthBadCode": "VTT Deck : code d'appairage incorrect. Recopiez le code affiché dans le plugin Stream Deck (Paramètres du module → Code d'appairage).",
+      "AuthBadProof": "VTT Deck : le programme sur le port du Stream Deck n'a pas prouvé qu'il était le plugin VTT Deck. Connexion refusée.",
+      "Legacy": "VTT Deck : votre plugin Stream Deck est ancien et ne protège pas la connexion. Mettez-le à jour (1.5.1 ou plus)."
     },
     "Errors": {
       "Generic": "VTT Deck : erreur — {msg}",

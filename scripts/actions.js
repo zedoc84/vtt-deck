@@ -305,6 +305,10 @@ function rollWhisper(mode) {
 }
 
 /** Fonctions Système de la version gratuite (les autres viennent de VTT Deck Premium) */
+/** Échappe un texte saisi dans le Stream Deck avant de l'envoyer comme HTML */
+export const escapeText = (str) =>
+	foundry.utils?.escapeHTML?.(String(str ?? "")) ?? String(str ?? "").replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+
 const FREE_SYSTEM_FN = ["pause", "control", "sidebar", "roll", "table", "chat", "darkness"];
 
 const systemAction = {
@@ -410,7 +414,8 @@ const systemAction = {
 				if (!s.message) fail("Keys.ChooseMessage");
 				return ChatMessage.implementation.create({
 					speaker: ChatMessage.getSpeaker(),
-					content: s.message,
+					// texte brut : un profil Stream Deck partagé ne doit pas pouvoir glisser du HTML dans le chat
+					content: escapeText(s.message),
 					whisper: s.whisperGM ? ChatMessage.getWhisperRecipients("GM").map((u) => u.id) : []
 				});
 			case "darkness": {

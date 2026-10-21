@@ -6,7 +6,7 @@
 
 **VTT Deck Premium** unlocks the advanced keys and dials of the **VTT Deck** Stream Deck plugin — everything marked ★ Premium. It is built for game masters who run their whole session from the Stream Deck: initiative, damage, the party at a glance, ambiences, doors, time, without touching the mouse.
 
-Current version: **1.3.0** · works with the VTT Deck plugin **1.5.0** or later.
+Current version: **1.3.1** · works with the VTT Deck plugin **1.5.1** or later.
 
 ## What you get on your Stream Deck
 
@@ -38,7 +38,7 @@ Current version: **1.3.0** · works with the VTT Deck plugin **1.5.0** or later.
 
 ## Getting VTT Deck Premium
 
-1. Install the free **VTT Deck** Stream Deck plugin (1.5.0 or later) from the Elgato Marketplace — it already contains every ★ Premium key and dial.
+1. Install the free **VTT Deck** Stream Deck plugin (1.5.1 or later) from the Elgato Marketplace — it already contains every ★ Premium key and dial.
 2. Buy VTT Deck Premium: **[purchase link to add]**.
 3. Activate it as explained with your purchase. As soon as it is active, the padlocks disappear. Your key settings are kept.
 
@@ -110,9 +110,9 @@ The touch strip shows the title (with the position, e.g. `Targets 2/5`), a pictu
 
 **Colour thresholds** — in every key's *Appearance*: *Below (%)* + colour (e.g. 50 → orange) and a critical threshold (e.g. 25 → red), with an optional image. Works on any key showing a value and a maximum (HP, bars).
 
-**Player mode** — in Foundry, *Configure Settings* → *VTT Deck Premium* → **Player mode**: tick the actions players may use on their own Stream Deck. A forbidden key shows 🚫 on the player's deck. On the player's computer, set the VTT Deck module's connection to *Always*. Combined with *Dynamic Page → a character's items*, players get their attacks and spells on keys.
+**Player mode** — a convenience, not a security barrier: Foundry's own permissions still decide what each player may do. In Foundry, *Configure Settings* → *VTT Deck Premium* → **Player mode**: tick the actions players may use on their own Stream Deck. A forbidden key shows 🚫 on the player's deck. On the player's computer, set the VTT Deck module's connection to *Always*. Combined with *Dynamic Page → a character's items*, players get their attacks and spells on keys.
 
-**Sequences** — the **Sequence** action chains up to 6 steps: run a macro, view/activate a scene, play/stop a playlist, stop the music, play a sound, set darkness, weather, chat message, dice roll, wait, pause, advance time, show an image. An error stops the sequence. The **Script** step (GM only) runs JavaScript for advanced users.
+**Sequences** — the **Sequence** action chains up to 6 steps: run a macro, view/activate a scene, play/stop a playlist, stop the music, play a sound, set darkness, weather, chat message, dice roll, wait, pause, advance time, show an image. An error stops the sequence. The **Script** step (GM only) runs JavaScript for advanced users. The first time a script runs, Foundry shows you its code and asks for confirmation (a profile downloaded from the internet could contain one); once accepted, the same script is not asked again in that browser. All the scripts of a sequence are confirmed before its first step, so refusing one runs nothing. Hidden or text-direction characters are flagged in red: refuse a script that contains them unless you know why.
 
 ## Ready-made profiles and automatic switching
 
@@ -131,7 +131,7 @@ The VTT Deck plugin comes with **VTT Deck – Exploration** and **VTT Deck – C
 
 - **Padlocks are still shown**: VTT Deck Premium is not active yet. Once it is, the keys redraw by themselves.
 - **A row (initiative, party, page) looks shuffled**: keys are read line by line, left to right. Check that they are on the same Stream Deck page and have exactly the same settings.
-- **The profile doesn't switch**: update the plugin to 1.5.0 or later; the switch works with the Stream Deck (15 keys), XL, +, + XL, Neo and Mini.
+- **The profile doesn't switch**: update the plugin to 1.5.1 or later; the switch works with the Stream Deck (15 keys), XL, +, + XL, Neo and Mini.
 - **A dial shows 🔒**: dials need VTT Deck Premium, including Macro, Scene… actions placed on a dial.
 - **The Party dial or party view is empty**: choose the party source (*Automatic*, *A Group actor* or *An actor folder*) in the key settings.
 - **Damage isn't applied to a token**: no bar 1 (HP) set up in Foundry, or you don't own the token.
@@ -156,7 +156,7 @@ VTT Deck Premium is proprietary software: personal, non-transferable licence; co
 
 **VTT Deck Premium** débloque les touches et molettes avancées du plugin Stream Deck **VTT Deck** — tout ce qui est marqué ★ Premium. Il s'adresse aux MJ qui mènent toute leur partie depuis le Stream Deck : initiative, dégâts, le groupe d'un coup d'œil, ambiances, portes, temps, sans toucher à la souris.
 
-Version actuelle : **1.3.0** · fonctionne avec le plugin VTT Deck **1.5.0** ou plus récent.
+Version actuelle : **1.3.1** · fonctionne avec le plugin VTT Deck **1.5.1** ou plus récent.
 
 ## Ce que vous obtenez sur votre Stream Deck
 
@@ -188,7 +188,7 @@ Version actuelle : **1.3.0** · fonctionne avec le plugin VTT Deck **1.5.0** ou 
 
 ## Obtenir VTT Deck Premium
 
-1. Installez le plugin Stream Deck gratuit **VTT Deck** (1.5.0 ou plus récent) depuis l'Elgato Marketplace — il contient déjà toutes les touches et molettes ★ Premium.
+1. Installez le plugin Stream Deck gratuit **VTT Deck** (1.5.1 ou plus récent) depuis l'Elgato Marketplace — il contient déjà toutes les touches et molettes ★ Premium.
 2. Achetez VTT Deck Premium : **[lien d'achat à ajouter]**.
 3. Activez-le comme indiqué avec votre achat. Dès qu'il est actif, les cadenas disparaissent. Les réglages de vos touches sont conservés.
 
@@ -260,9 +260,9 @@ L'écran tactile affiche le titre (avec la position, ex. `Cibles 2/5`), une imag
 
 **Couleurs selon des seuils** — dans l'*Apparence* de chaque touche : *Sous (%)* + couleur (ex. 50 → orange) et un seuil critique (ex. 25 → rouge), avec image facultative. Fonctionne sur toute touche qui affiche une valeur et un maximum (PV, barres).
 
-**Mode joueur** — dans Foundry, *Paramètres* → *VTT Deck Premium* → **Mode joueur** : cochez les actions que les joueurs peuvent utiliser sur leur propre Stream Deck. Une touche interdite affiche 🚫 chez le joueur. Sur l'ordinateur du joueur, réglez la connexion du module VTT Deck sur *Toujours*. Avec *Page dynamique → objets d'un personnage*, les joueurs ont leurs attaques et leurs sorts sur des touches.
+**Mode joueur** — un confort, pas une barrière de sécurité : ce sont les permissions de Foundry qui décident de ce que chaque joueur peut faire. Dans Foundry, *Paramètres* → *VTT Deck Premium* → **Mode joueur** : cochez les actions que les joueurs peuvent utiliser sur leur propre Stream Deck. Une touche interdite affiche 🚫 chez le joueur. Sur l'ordinateur du joueur, réglez la connexion du module VTT Deck sur *Toujours*. Avec *Page dynamique → objets d'un personnage*, les joueurs ont leurs attaques et leurs sorts sur des touches.
 
-**Séquences** — l'action **Séquence** enchaîne jusqu'à 6 étapes : exécuter une macro, afficher/activer une scène, lancer/arrêter une playlist, arrêter la musique, jouer un son, régler l'obscurité, la météo, message dans le chat, lancer de dés, attendre, pause, avancer le temps, montrer une image. Une erreur arrête la séquence. L'étape **Script** (MJ uniquement) exécute du JavaScript, pour les utilisateurs avancés.
+**Séquences** — l'action **Séquence** enchaîne jusqu'à 6 étapes : exécuter une macro, afficher/activer une scène, lancer/arrêter une playlist, arrêter la musique, jouer un son, régler l'obscurité, la météo, message dans le chat, lancer de dés, attendre, pause, avancer le temps, montrer une image. Une erreur arrête la séquence. L'étape **Script** (MJ uniquement) exécute du JavaScript, pour les utilisateurs avancés. La première fois qu'un script s'exécute, Foundry vous montre son code et demande confirmation (un profil téléchargé sur internet pourrait en contenir un) ; une fois accepté, le même script n'est plus demandé sur ce navigateur. Tous les scripts d'une séquence sont confirmés avant la première étape : en refuser un ne lance rien. Les caractères invisibles ou qui inversent le sens d'écriture sont signalés en rouge : refusez un script qui en contient si vous ne savez pas pourquoi.
 
 ## Profils prêts à l'emploi et changement automatique
 
@@ -281,7 +281,7 @@ Le plugin VTT Deck est livré avec **VTT Deck – Exploration** et **VTT Deck �
 
 - **Les cadenas restent affichés** : VTT Deck Premium n'est pas encore actif. Une fois actif, les touches se redessinent d'elles-mêmes.
 - **Une rangée (initiative, groupe, page) semble mélangée** : les touches sont lues ligne par ligne, de gauche à droite. Vérifiez qu'elles sont sur la même page du Stream Deck et qu'elles ont exactement les mêmes réglages.
-- **Le profil ne change pas** : mettez le plugin à jour (1.5.0 ou plus) ; le changement fonctionne avec le Stream Deck (15 touches), le XL, le +, le + XL, le Neo et le Mini.
+- **Le profil ne change pas** : mettez le plugin à jour (1.5.1 ou plus) ; le changement fonctionne avec le Stream Deck (15 touches), le XL, le +, le + XL, le Neo et le Mini.
 - **Une molette affiche 🔒** : les molettes demandent VTT Deck Premium, y compris les actions Macro, Scène… posées sur une molette.
 - **La molette Groupe ou la vue du groupe est vide** : choisissez la source du groupe (*Automatique*, *Un acteur Groupe* ou *Un dossier d'acteurs*) dans les réglages de la touche.
 - **Les dégâts ne s'appliquent pas à un jeton** : pas de barre 1 (PV) configurée dans Foundry, ou vous n'en êtes pas propriétaire.

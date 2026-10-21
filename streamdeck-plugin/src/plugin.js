@@ -7,13 +7,28 @@
  *   Stream Deck  -> Foundry : apparition/disparition des touches, réglages, appuis
  *   Foundry -> Stream Deck  : images/titres des touches, données pour l'inspecteur
  * Toute la logique de jeu vit dans le module Foundry (facile à faire évoluer).
+ *
+ * Sécurité (1.5.1) : n'importe quelle page web ouverte sur l'ordinateur peut ouvrir un WebSocket vers 127.0.0.1.
+ * Le plugin n'accepte donc que le client qui prouve connaître le code d'appairage (affiché dans l'inspecteur,
+ * saisi une fois dans Foundry), par défi / réponse HMAC-SHA-256 ; il prouve à son tour qu'il le connaît.
+ * Une connexion non appairée ne reçoit rien, ne peut rien envoyer et n'éjecte pas Foundry.
  */
 import streamDeck from "@elgato/streamdeck";
 import { WebSocketServer, WebSocket } from "ws";
 import http from "node:http";
+import crypto from "node:crypto";
 
-const PROTOCOL = 1;
-const PLUGIN_VERSION = "1.5.0";
+const PROTOCOL = 2;
+const PLUGIN_VERSION = "1.5.1";
+/** Délai pour s'authentifier après l'ouverture de la connexion */
+const AUTH_TIMEOUT = 5000;
+/** Après 10 refus en une minute depuis une même origine, cette origine est bloquée une minute
+ *  (jamais l'origine du dernier Foundry appairé : une page piégée ne peut bloquer qu'elle-même) */
+const MAX_FAILURES = 10;
+const LOCK_MS = 60000;
+/** Avant l'appairage : 8 connexions en attente au plus, messages de 4 Ko au plus */
+const MAX_PENDING = 8;
+const MAX_PREAUTH_BYTES = 4096;
 const DEFAULT_PORT = 3006;
 const PREFIX = "com.vttdeck.foundry.";
 
@@ -43,8 +58,44 @@ const state = {
 	wss: null,
 	client: null,
 	foundry: null, // infos envoyées par Foundry (monde, utilisateur, version…)
-	piCache: new Map() // what -> items (pour que l'inspecteur reste utilisable hors ligne)
+	piCache: new Map(), // what -> items (pour que l'inspecteur reste utilisable hors ligne)
+	pairCode: null, // code d'appairage (réglages globaux du plugin)
+	failures: new Map(), // origine (ou adresse) → horodatages des refus
+	locked: new Map(), // origine (ou adresse) → fin du blocage
+	pending: 0, // connexions ouvertes pas encore appairées
+	pairedOrigin: null, // origine du dernier Foundry appairé (jamais bloquée)
+	lastRejected: null // { origin, reason, at } : dernière connexion refusée, montrée dans l'inspecteur
 };
+
+/* ------------------------------------------------------------------ */
+/*  Code d'appairage                                                   */
+/* ------------------------------------------------------------------ */
+const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // 32 signes, sans I, O, 0, 1
+const normalizeCode = (c) => String(c ?? "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+
+/** Nouveau code de 10 signes (50 bits), affiché « ABCDE-FGHJK » */
+function newPairCode() {
+	let out = "";
+	for (const b of crypto.randomBytes(10)) out += CODE_ALPHABET[b % 32];
+	return `${out.slice(0, 5)}-${out.slice(5)}`;
+}
+
+const hmac = (msg) => crypto.createHmac("sha256", normalizeCode(state.pairCode)).update(String(msg)).digest("hex");
+
+function sameString(a, b) {
+	const x = Buffer.from(String(a ?? ""));
+	const y = Buffer.from(String(b ?? ""));
+	return x.length === y.length && crypto.timingSafeEqual(x, y);
+}
+
+async function saveGlobalSettings() {
+	await streamDeck.settings.setGlobalSettings({
+		port: state.port,
+		allowRemote: state.allowRemote,
+		pairCode: state.pairCode,
+		pairedOrigin: state.pairedOrigin
+	});
+}
 
 const shortId = (uuid) => (uuid?.startsWith(PREFIX) ? uuid.slice(PREFIX.length) : uuid);
 
@@ -79,7 +130,8 @@ function send(msg) {
 	}
 }
 
-async function sendHello() {
+/** Présentation à Foundry ; ws = la connexion visée (la preuve d'appairage ne doit aller qu'à elle) */
+async function sendHello(proof, ws = state.client) {
 	const keys = [];
 	for (const action of streamDeck.actions) {
 		try {
@@ -89,7 +141,13 @@ async function sendHello() {
 		}
 	}
 	const devices = [...streamDeck.devices].map(describeDevice);
-	send({ type: "hello", protocol: PROTOCOL, version: PLUGIN_VERSION, devices, keys });
+	// entre-temps, une autre session a pu prendre la main : on n'envoie rien à une connexion remplacée
+	if (!ws || state.client !== ws || ws.readyState !== WebSocket.OPEN) return;
+	try {
+		ws.send(JSON.stringify({ type: "hello", protocol: PROTOCOL, version: PLUGIN_VERSION, devices, keys, ...(proof ? { proof } : {}) }));
+	} catch (err) {
+		log.warn("Envoi impossible", err);
+	}
 }
 
 async function applyRender(msg) {
@@ -126,11 +184,8 @@ async function handleFoundryMessage(raw) {
 		return log.warn("Message non JSON ignoré");
 	}
 	switch (msg.type) {
-		case "hello": // Foundry se présente
-			state.foundry = msg.foundry ?? {};
-			log.info(`Foundry connecté : ${state.foundry.world ?? "?"} (${state.foundry.user ?? "?"})`);
+		case "hello": // déjà appairé : simple rafraîchissement
 			await sendHello();
-			pushStatusToPI();
 			break;
 
 		case "render":
@@ -158,11 +213,7 @@ async function handleFoundryMessage(raw) {
 			await streamDeck.ui.sendToPropertyInspector({ type: "data", what: msg.what, items: msg.items ?? [], live: true });
 			break;
 
-		case "setSettings": {
-			const action = streamDeck.actions.getActionById(msg.context);
-			if (action) await action.setSettings(msg.settings ?? {});
-			break;
-		}
+		// (1.5.1) plus de « setSettings » : Foundry n'a pas à réécrire les réglages des touches
 
 		case "ping":
 			send({ type: "pong", t: msg.t });
@@ -201,6 +252,12 @@ async function switchProfile(profile, deviceId) {
 /* ------------------------------------------------------------------ */
 /*  Serveur WebSocket                                                  */
 /* ------------------------------------------------------------------ */
+/** En-tête Host d'une requête adressée à cet ordinateur (127.x, localhost, ::1) */
+function isLocalHost(host = "") {
+	const h = String(host).replace(/:\d+$/, "").replace(/^\[|\]$/g, "").toLowerCase();
+	return h === "localhost" || h === "::1" || /^127(\.\d{1,3}){3}$/.test(h);
+}
+
 function isLoopback(addr = "") {
 	return addr === "::1" || addr.startsWith("127.") || addr.startsWith("::ffff:127.");
 }
@@ -231,9 +288,131 @@ async function resetKeysToDefault() {
 	}
 }
 
-function attachClient(ws, req) {
+/** Clé de comptage des refus : l'origine (qu'une page web ne peut pas falsifier), sinon l'adresse */
+const sourceKey = (origin, req) => origin || `addr:${req.socket.remoteAddress ?? "?"}`;
+
+/** Connexion entrante : défi d'appairage, rien d'autre tant que le client ne s'est pas authentifié */
+function onConnection(ws, req) {
+	const origin = String(req.headers.origin ?? "");
+	const key = sourceKey(origin, req);
+	const drop = (code, reason) => {
+		try {
+			ws.close(code, reason);
+		} catch {
+			/* ignore */
+		}
+	};
+	if ((state.locked.get(key) ?? 0) > Date.now() && origin !== state.pairedOrigin) return drop(4029, "locked");
+	if (state.pending >= MAX_PENDING) return drop(4029, "busy");
+	state.pending++;
+	ws.pendingCounted = true;
+	ws.isAlive = true;
+	ws.authed = false;
+	ws.refused = false;
+	ws.nonce = crypto.randomBytes(16).toString("hex");
+	const unpend = () => {
+		if (ws.pendingCounted) state.pending--;
+		ws.pendingCounted = false;
+	};
+	ws.on("pong", () => (ws.isAlive = true));
+	ws.on("error", (err) => log.warn("Erreur WebSocket", err.message));
+	ws.on("message", (data) => {
+		if (ws.refused) return; // une connexion refusée n'est plus écoutée
+		if (ws.authed) return handleFoundryMessage(data).catch((err) => log.error("Erreur traitement message", err));
+		if (data.length > MAX_PREAUTH_BYTES) return refuse(ws, origin, key, "badMessage");
+		if (authenticate(ws, data, origin, key)) unpend();
+	});
+	ws.on("close", () => {
+		clearTimeout(ws.authTimer);
+		unpend();
+		if (state.client !== ws) return;
+		state.client = null;
+		state.foundry = null;
+		log.info("Foundry déconnecté");
+		resetKeysToDefault();
+		pushStatusToPI();
+	});
+	ws.authTimer = setTimeout(() => !ws.authed && refuse(ws, origin, key, "timeout"), AUTH_TIMEOUT);
+	try {
+		ws.send(JSON.stringify({ type: "challenge", nonce: ws.nonce, protocol: PROTOCOL, version: PLUGIN_VERSION }));
+	} catch {
+		/* ignore */
+	}
+}
+
+/** @returns {boolean} true si le client est appairé */
+function authenticate(ws, data, origin, key) {
+	let msg;
+	try {
+		msg = JSON.parse(data.toString());
+	} catch {
+		refuse(ws, origin, key, "badMessage");
+		return false;
+	}
+	if (msg?.type !== "hello") return refuse(ws, origin, key, "badMessage"), false;
+	if (!msg.auth) return refuse(ws, origin, key, "noCode"), false; // module d'avant 1.5.1, ou code non saisi
+	if (!sameString(msg.auth, hmac(`client:${ws.nonce}`))) return refuse(ws, origin, key, "badCode"), false;
+	ws.authed = true;
+	clearTimeout(ws.authTimer);
+	attachClient(ws, origin);
+	state.foundry = msg.foundry ?? {};
+	if (origin && origin !== state.pairedOrigin) {
+		state.pairedOrigin = origin;
+		saveGlobalSettings().catch(() => {});
+	}
+	state.failures.delete(key);
+	state.locked.delete(key);
+	log.info(`Foundry connecté : ${state.foundry.world ?? "?"} (${state.foundry.user ?? "?"})`);
+	sendHello(hmac(`server:${String(msg.cnonce ?? "")}`), ws).catch((err) => log.warn("hello", err));
+	pushStatusToPI();
+	return true;
+}
+
+function refuse(ws, origin, key, reason) {
+	if (ws.refused) return;
+	ws.refused = true;
+	clearTimeout(ws.authTimer);
+	state.lastRejected = { origin, reason, at: Date.now() };
+	if (reason !== "timeout" && origin !== state.pairedOrigin) {
+		const now = Date.now();
+		const list = (state.failures.get(key) ?? []).filter((t) => now - t < 60000);
+		list.push(now);
+		state.failures.set(key, list);
+		if (list.length >= MAX_FAILURES) {
+			state.locked.set(key, now + LOCK_MS);
+			state.failures.delete(key);
+			log.warn(`Trop de connexions refusées depuis ${origin || key} : bloquée une minute`);
+		}
+		// ménage : pas de croissance sans fin des tables
+		if (state.failures.size > 200) state.failures.clear();
+		for (const [k, until] of state.locked) if (until < now) state.locked.delete(k);
+	}
+	try {
+		ws.send(JSON.stringify({ type: "authFailed", reason }));
+	} catch {
+		/* ignore */
+	}
+	// fermeture immédiate (les messages suivants sont déjà ignorés : ws.refused) ; coupure franche si l'autre côté traîne
+	try {
+		ws.close(4003, reason);
+	} catch {
+		/* ignore */
+	}
+	setTimeout(() => {
+		try {
+			ws.terminate();
+		} catch {
+			/* ignore */
+		}
+	}, 1000);
+	log.warn(`Connexion refusée (${reason}) depuis ${origin || "origine inconnue"}`);
+	pushStatusToPI();
+}
+
+/** Client authentifié : il devient la session Foundry qui pilote le Stream Deck */
+function attachClient(ws, origin) {
 	if (state.client && state.client !== ws) {
-		// Une seule session Foundry pilote le Stream Deck : la plus récente gagne.
+		// Une seule session Foundry pilote le Stream Deck : la plus récente (appairée) gagne.
 		try {
 			state.client.send(JSON.stringify({ type: "replaced" }));
 			state.client.close(4001, "replaced");
@@ -243,32 +422,26 @@ function attachClient(ws, req) {
 	}
 	state.client = ws;
 	state.foundry = null;
-	ws.isAlive = true;
-	log.info("Connexion entrante depuis", req.socket.remoteAddress, req.headers.origin ?? "");
-
-	ws.on("pong", () => (ws.isAlive = true));
-	ws.on("message", (data) => handleFoundryMessage(data).catch((err) => log.error("Erreur traitement message", err)));
-	ws.on("close", () => {
-		if (state.client !== ws) return;
-		state.client = null;
-		state.foundry = null;
-		log.info("Foundry déconnecté");
-		resetKeysToDefault();
-		pushStatusToPI();
-	});
-	ws.on("error", (err) => log.warn("Erreur WebSocket", err.message));
-	// On attend le « hello » de Foundry avant d'envoyer l'état du Stream Deck.
+	log.info("Connexion appairée depuis", origin || "origine inconnue");
 }
 
 function listen(host) {
 	return new Promise((resolve) => {
 		const srv = http.createServer((req, res) => {
 			// Réponse simple pour tester dans un navigateur : http://127.0.0.1:3006
-			res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Access-Control-Allow-Origin": "*" });
+			// Pas d'en-tête CORS : une page web ne peut pas lire cette réponse.
+			// En-tête Host vérifié : une page « DNS rebinding » (nom de domaine qui pointe vers 127.0.0.1) est refusée.
+			if (!state.allowRemote && !isLocalHost(req.headers.host)) {
+				res.writeHead(421, { "Content-Type": "text/plain; charset=utf-8" });
+				res.end("Misdirected request\n");
+				return;
+			}
+			res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "X-Content-Type-Options": "nosniff" });
 			res.end(`VTT Deck bridge ${PLUGIN_VERSION} — OK. Foundry ${state.client ? "connected" : "not connected"}.\n`);
 		});
 		srv.on("upgrade", (req, socket, head) => {
-			if (!state.allowRemote && !isLoopback(req.socket.remoteAddress)) {
+			// connexions locales seulement (sauf option Réseau), adressées à 127.0.0.1 / localhost / ::1
+			if (!state.allowRemote && (!isLoopback(req.socket.remoteAddress) || !isLocalHost(req.headers.host))) {
 				socket.destroy();
 				return;
 			}
@@ -287,8 +460,8 @@ function listen(host) {
 
 async function startServer() {
 	await stopServer();
-	state.wss = new WebSocketServer({ noServer: true, maxPayload: 8 * 1024 * 1024 });
-	state.wss.on("connection", attachClient);
+	state.wss = new WebSocketServer({ noServer: true, maxPayload: 4 * 1024 * 1024 });
+	state.wss.on("connection", onConnection);
 	const hosts = state.allowRemote ? ["::", "0.0.0.0"] : ["127.0.0.1", "::1"];
 	for (const host of hosts) {
 		const srv = await listen(host);
@@ -337,7 +510,10 @@ function statusPayload() {
 		port: state.port,
 		allowRemote: state.allowRemote,
 		listening: state.servers.length > 0,
-		version: PLUGIN_VERSION
+		version: PLUGIN_VERSION,
+		pairCode: state.pairCode,
+		lastRejected: state.lastRejected,
+		pairedOrigin: state.pairedOrigin
 	};
 }
 
@@ -363,8 +539,23 @@ streamDeck.ui.onSendToPlugin(async (ev) => {
 			const port = Number(p.port);
 			state.port = Number.isInteger(port) && port > 1023 && port < 65536 ? port : DEFAULT_PORT;
 			state.allowRemote = !!p.allowRemote;
-			await streamDeck.settings.setGlobalSettings({ port: state.port, allowRemote: state.allowRemote });
+			await saveGlobalSettings();
 			await startServer();
+			pushStatusToPI();
+			break;
+		}
+		case "newPairCode": {
+			// Nouveau code : la session Foundry en cours est coupée et devra être appairée à nouveau
+			state.pairCode = newPairCode();
+			state.lastRejected = null;
+			await saveGlobalSettings();
+			if (state.client) {
+				try {
+					state.client.close(4003, "newCode");
+				} catch {
+					/* ignore */
+				}
+			}
 			pushStatusToPI();
 			break;
 		}
@@ -415,7 +606,13 @@ try {
 	const g = await streamDeck.settings.getGlobalSettings();
 	if (Number.isInteger(g?.port)) state.port = g.port;
 	state.allowRemote = !!g?.allowRemote;
+	if (normalizeCode(g?.pairCode).length === 10) state.pairCode = g.pairCode;
+	if (typeof g?.pairedOrigin === "string") state.pairedOrigin = g.pairedOrigin;
 } catch (err) {
 	log.warn("Réglages globaux illisibles", err);
+}
+if (!state.pairCode) {
+	state.pairCode = newPairCode();
+	await saveGlobalSettings().catch((err) => log.warn("Enregistrement du code d'appairage impossible", err));
 }
 await startServer();

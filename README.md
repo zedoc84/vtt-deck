@@ -13,7 +13,7 @@ VTT Deck is free and open source (MIT). Some advanced features come from a paid 
 | Stream Deck plugin **VTT Deck** (`com.vttdeck.foundry`) | Elgato Marketplace, or `com.vttdeck.foundry.streamDeckPlugin` on the [Releases](https://github.com/zedoc84/vtt-deck/releases) page | on the computer the Stream Deck is plugged into |
 | Foundry module **VTT Deck** (`vtt-deck`) | manifest URL below, or `module.zip` on the Releases page | in Foundry |
 
-Current version: **1.5.0** (module and plugin share the same version number).
+Current version: **1.5.1** (module and plugin share the same version number).
 
 ## How it works
 
@@ -46,7 +46,7 @@ In the Stream Deck inspector, Premium options are marked ★ Premium. Without VT
 
 1. Install **VTT Deck** from the Elgato Marketplace, or double-click `com.vttdeck.foundry.streamDeckPlugin`.
 2. A **VTT Deck** category appears in the action list with 11 actions: Macro, Scene, Token, Combat, Music & Sounds, System, Damage & Healing Pad, Ambience, Dynamic Page, Sequence and Dial (Stream Deck +, + XL).
-3. Test: open <http://127.0.0.1:3006> in a browser. The plugin replies `VTT Deck bridge 1.5.0 — OK`.
+3. Test: open <http://127.0.0.1:3006> in a browser. The plugin replies `VTT Deck bridge 1.5.1 — OK`.
 
 Requirements: Stream Deck app 6.9 or later, macOS 12+ or Windows 10+. The inspector follows the language of the Stream Deck app (English or French).
 
@@ -65,7 +65,8 @@ Foundry then offers updates automatically.
    (on Mac: `~/Library/Application Support/FoundryVTT/Data/modules/vtt-deck/`).
    The folder must contain `module.json` directly.
 3. Restart the world and enable **VTT Deck** in *Manage Modules*.
-4. *Configure Settings* → *VTT Deck* → **Show status**: the dot should be green.
+4. **Pairing (once per browser)**: on the Stream Deck, open the settings of any VTT Deck key → **Foundry connection** → copy the **Code**. In Foundry: *Configure Settings* → *VTT Deck* → **Pairing code** → paste → *Save*.
+5. *Configure Settings* → *VTT Deck* → **Show status**: the dot should be green and *Pairing* should read "paired".
 
 Module settings (stored per browser):
 
@@ -73,6 +74,7 @@ Module settings (stored per browser):
 |---|---|---|
 | Connect to the Stream Deck from this browser | Auto (GM only) | *Always* / *Never*. "Auto" spares players a browser network-permission prompt. |
 | Plugin address | `127.0.0.1` | Keep it if the Stream Deck is plugged into this computer. |
+| Pairing code | — | Code shown by the plugin (inspector → *Foundry connection*). Without it, the plugin refuses the connection (plugin 1.5.1 or later). |
 | Plugin port | `3006` | Must match the plugin's port (inspector → *Foundry connection*). |
 | Connection notifications | on | Message when the Stream Deck connects or disconnects. |
 
@@ -120,6 +122,8 @@ Open them from any VTT Deck key: inspector → **Ready-made profiles** → *Expl
 
 ## 6. Troubleshooting
 
+- **"Enter the pairing code" / "Wrong pairing code"**: copy the code shown in the plugin (settings of any VTT Deck key → *Foundry connection*) into *Configure Settings* → *VTT Deck* → **Pairing code**.
+- **"Unprotected (old plugin)" in the status window**: your Stream Deck plugin is older than 1.5.1 and does not check who connects. Update it.
 - **The dot stays red**: is the Stream Deck app running? Does <http://127.0.0.1:3006> answer? Is the port the same on both sides? Click **Reconnect** in the status window.
 - **Chrome / Edge asks to "access devices on your local network"**: accept. That is the browser allowing the Foundry page to talk to the plugin on your computer.
 - **Foundry over HTTPS in Safari**: Safari may block the local `ws://` connection. Use Chrome, Firefox or the Foundry desktop app.
@@ -176,8 +180,9 @@ Adding a feature usually doesn't require changing the plugin itself: add the opt
 
 ### Protocol (JSON over WebSocket)
 
+- Pairing (protocol 2): plugin → `challenge {nonce}`; Foundry → `hello {auth: HMAC-SHA256(code, "client:"+nonce), cnonce}`; plugin → `hello {proof: HMAC-SHA256(code, "server:"+cnonce)}` or `authFailed` then close. Nothing else is exchanged before both sides are verified.
 - Plugin → Foundry: `hello`, `willAppear`, `willDisappear`, `settings`, `keyDown`, `keyUp`, `dialRotate`, `dialDown`, `dialUp`, `touchTap`, `piRequest`, `device`, `replaced`.
-- Foundry → plugin: `hello`, `renderBatch` (144×144 PNG images as data URLs), `render`, `dialFeedback` (touch strip of the Stream Deck + and + XL: title, value, indicator, icon), `feedback`, `piData`, `setSettings`, `switchProfile`, `ping`.
+- Foundry → plugin: `hello`, `renderBatch` (144×144 PNG images as data URLs), `render`, `dialFeedback` (touch strip of the Stream Deck + and + XL: title, value, indicator, icon), `feedback`, `piData`, `switchProfile`, `ping`.
 
 ## License
 
@@ -202,7 +207,7 @@ VTT Deck est gratuit et libre (licence MIT). Certaines fonctions avancées vienn
 | Plugin Stream Deck **VTT Deck** (`com.vttdeck.foundry`) | Elgato Marketplace, ou `com.vttdeck.foundry.streamDeckPlugin` sur la page [Releases](https://github.com/zedoc84/vtt-deck/releases) | sur l'ordinateur où le Stream Deck est branché |
 | Module Foundry **VTT Deck** (`vtt-deck`) | URL de manifeste ci-dessous, ou `module.zip` sur la page Releases | dans Foundry |
 
-Version actuelle : **1.5.0** (le module et le plugin ont le même numéro).
+Version actuelle : **1.5.1** (le module et le plugin ont le même numéro).
 
 ## Fonctionnement
 
@@ -235,7 +240,7 @@ Dans l'inspecteur Stream Deck, les options Premium sont marquées ★ Premium. S
 
 1. Installez **VTT Deck** depuis l'Elgato Marketplace, ou double-cliquez sur `com.vttdeck.foundry.streamDeckPlugin`.
 2. Une catégorie **VTT Deck** apparaît dans la liste des actions, avec 11 actions : Macro, Scène, Jeton, Combat, Musique & sons, Système, Pavé dégâts & soins, Ambiance, Page dynamique, Séquence et Molette (Stream Deck +, + XL).
-3. Test : ouvrez <http://127.0.0.1:3006> dans un navigateur. Le plugin répond `VTT Deck bridge 1.5.0 — OK`.
+3. Test : ouvrez <http://127.0.0.1:3006> dans un navigateur. Le plugin répond `VTT Deck bridge 1.5.1 — OK`.
 
 Prérequis : application Stream Deck 6.9 ou plus récente, macOS 12+ ou Windows 10+. L'inspecteur suit la langue de l'application Stream Deck (français ou anglais).
 
@@ -254,7 +259,8 @@ Foundry proposera ensuite les mises à jour automatiquement.
    (sur Mac : `~/Library/Application Support/FoundryVTT/Data/modules/vtt-deck/`).
    Le dossier doit contenir directement `module.json`.
 3. Relancez le monde et activez **VTT Deck** dans *Gérer les modules*.
-4. *Paramètres* → *VTT Deck* → **Afficher l'état** : le point doit être vert.
+4. **Appairage (une fois par navigateur)** : sur le Stream Deck, ouvrez les réglages de n'importe quelle touche VTT Deck → **Connexion Foundry** → copiez le **Code**. Dans Foundry : *Paramètres* → *VTT Deck* → **Code d'appairage** → collez → *Enregistrer*.
+5. *Paramètres* → *VTT Deck* → **Afficher l'état** : le point doit être vert et *Appairage* doit indiquer « appairé ».
 
 Réglages du module (enregistrés par navigateur) :
 
@@ -262,6 +268,7 @@ Réglages du module (enregistrés par navigateur) :
 |---|---|---|
 | Connexion au Stream Deck sur ce navigateur | Auto (MJ uniquement) | *Toujours* / *Jamais*. « Auto » évite aux joueurs une demande d'autorisation réseau du navigateur. |
 | Adresse du plugin | `127.0.0.1` | À garder si le Stream Deck est branché sur cet ordinateur. |
+| Code d'appairage | — | Code affiché par le plugin (inspecteur → *Connexion Foundry*). Sans lui, le plugin refuse la connexion (plugin 1.5.1 ou plus récent). |
 | Port du plugin | `3006` | Doit être identique à celui du plugin (inspecteur → *Connexion Foundry*). |
 | Notifications de connexion | activées | Message quand le Stream Deck se connecte ou se déconnecte. |
 
@@ -309,6 +316,8 @@ Ouvrez-les depuis n'importe quelle touche VTT Deck : inspecteur → **Profils pr
 
 ## 6. Dépannage
 
+- **« Saisissez le code d'appairage » / « Code d'appairage incorrect »** : copiez le code affiché dans le plugin (réglages de n'importe quelle touche VTT Deck → *Connexion Foundry*) dans *Paramètres* → *VTT Deck* → **Code d'appairage**.
+- **« Non protégé (plugin ancien) » dans la fenêtre d'état** : votre plugin Stream Deck est antérieur à la 1.5.1 et ne vérifie pas qui se connecte. Mettez-le à jour.
 - **Le point reste rouge** : l'application Stream Deck est-elle lancée ? <http://127.0.0.1:3006> répond-il ? Le port est-il le même des deux côtés ? Cliquez sur **Reconnecter** dans la fenêtre d'état.
 - **Chrome / Edge demande « accéder aux appareils du réseau local »** : acceptez. C'est le navigateur qui autorise la page Foundry à parler au plugin sur votre ordinateur.
 - **Foundry en HTTPS avec Safari** : Safari peut bloquer la connexion `ws://` locale. Utilisez Chrome, Firefox ou l'application Foundry.
@@ -365,8 +374,9 @@ Ajouter une fonction se fait en général sans modifier le plugin lui-même : aj
 
 ### Protocole (JSON sur WebSocket)
 
+- Appairage (protocole 2) : plugin → `challenge {nonce}` ; Foundry → `hello {auth: HMAC-SHA256(code, "client:"+nonce), cnonce}` ; plugin → `hello {proof: HMAC-SHA256(code, "server:"+cnonce)}` ou `authFailed` puis fermeture. Rien d'autre n'est échangé avant que les deux côtés soient vérifiés.
 - Plugin → Foundry : `hello`, `willAppear`, `willDisappear`, `settings`, `keyDown`, `keyUp`, `dialRotate`, `dialDown`, `dialUp`, `touchTap`, `piRequest`, `device`, `replaced`.
-- Foundry → plugin : `hello`, `renderBatch` (images PNG 144×144 en data URL), `render`, `dialFeedback` (écran tactile du Stream Deck + et + XL : titre, valeur, jauge, image), `feedback`, `piData`, `setSettings`, `switchProfile`, `ping`.
+- Foundry → plugin : `hello`, `renderBatch` (images PNG 144×144 en data URL), `render`, `dialFeedback` (écran tactile du Stream Deck + et + XL : titre, valeur, jauge, image), `feedback`, `piData`, `switchProfile`, `ping`.
 
 ## Licence
 

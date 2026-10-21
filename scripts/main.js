@@ -45,6 +45,16 @@ Hooks.once("init", () => {
 		onChange: restart
 	});
 
+	game.settings.register(MODULE_ID, "pairingCode", {
+		name: "VTTDECK.Settings.PairingCode.Name",
+		hint: "VTTDECK.Settings.PairingCode.Hint",
+		scope: "client",
+		config: true,
+		type: String,
+		default: "",
+		onChange: restart
+	});
+
 	game.settings.register(MODULE_ID, "port", {
 		name: "VTTDECK.Settings.Port.Name",
 		hint: "VTTDECK.Settings.Port.Hint",

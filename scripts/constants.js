@@ -1,5 +1,5 @@
 export const MODULE_ID = "vtt-deck";
-export const PROTOCOL = 1;
+export const PROTOCOL = 2;
 export const PRO_ID = "vtt-deck-premium";
 /** Page de vente de VTT Deck Premium (à remplir : itch.io, Patreon…). Vide = pas de lien. */
 export const PRO_URL = "";
