@@ -1,0 +1,405 @@
+{
+	"$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+	"Name": "VTT Deck",
+	"Version": "1.5.1.0",
+	"Author": "Paul",
+	"Description": "Control Foundry VTT (v13/v14) from your Stream Deck: macros, scenes, tokens, combat, music and more. Requires the free \"VTT Deck\" Foundry VTT module.",
+	"UUID": "com.vttdeck.foundry",
+	"Category": "VTT Deck",
+	"CategoryIcon": "imgs/plugin/category",
+	"Icon": "imgs/plugin/marketplace",
+	"CodePath": "bin/plugin.js",
+	"PropertyInspectorPath": "ui/pi.html",
+	"SDKVersion": 3,
+	"Software": {
+		"MinimumVersion": "6.9"
+	},
+	"OS": [
+		{
+			"Platform": "mac",
+			"MinimumVersion": "12"
+		},
+		{
+			"Platform": "windows",
+			"MinimumVersion": "10"
+		}
+	],
+	"Nodejs": {
+		"Version": "20"
+	},
+	"Actions": [
+		{
+			"UUID": "com.vttdeck.foundry.macro",
+			"Name": "Macro",
+			"Tooltip": "Run a Foundry VTT macro",
+			"Icon": "imgs/actions/macro",
+			"Controllers": [
+				"Keypad",
+				"Encoder"
+			],
+			"SupportedInMultiActions": true,
+			"States": [
+				{
+					"Image": "imgs/keys/macro",
+					"TitleAlignment": "bottom",
+					"ShowTitle": true
+				}
+			],
+			"Encoder": {
+				"layout": "$A1",
+				"Icon": "imgs/keys/macro",
+				"TriggerDescription": {
+					"Push": "Run the macro",
+					"Touch": "Run the macro"
+				}
+			}
+		},
+		{
+			"UUID": "com.vttdeck.foundry.scene",
+			"Name": "Scene",
+			"Tooltip": "View or activate a Foundry VTT scene",
+			"Icon": "imgs/actions/scene",
+			"Controllers": [
+				"Keypad",
+				"Encoder"
+			],
+			"SupportedInMultiActions": true,
+			"States": [
+				{
+					"Image": "imgs/keys/scene",
+					"TitleAlignment": "bottom",
+					"ShowTitle": true
+				}
+			],
+			"Encoder": {
+				"layout": "$A1",
+				"Icon": "imgs/keys/scene",
+				"TriggerDescription": {
+					"Push": "Same as the key",
+					"Touch": "Same as the key"
+				}
+			}
+		},
+		{
+			"UUID": "com.vttdeck.foundry.token",
+			"Name": "Token",
+			"Tooltip": "Show a token (image, HP) and act on it",
+			"Icon": "imgs/actions/token",
+			"Controllers": [
+				"Keypad",
+				"Encoder"
+			],
+			"SupportedInMultiActions": true,
+			"States": [
+				{
+					"Image": "imgs/keys/token",
+					"TitleAlignment": "bottom",
+					"ShowTitle": true
+				}
+			],
+			"Encoder": {
+				"layout": "$A1",
+				"Icon": "imgs/keys/token",
+				"TriggerDescription": {
+					"Push": "Same as the key",
+					"Touch": "Same as the key"
+				}
+			}
+		},
+		{
+			"UUID": "com.vttdeck.foundry.combat",
+			"Name": "Combat",
+			"Tooltip": "Control the combat tracker and show combatants",
+			"Icon": "imgs/actions/combat",
+			"Controllers": [
+				"Keypad",
+				"Encoder"
+			],
+			"SupportedInMultiActions": true,
+			"States": [
+				{
+					"Image": "imgs/keys/combat",
+					"TitleAlignment": "bottom",
+					"ShowTitle": true
+				}
+			],
+			"Encoder": {
+				"layout": "$A1",
+				"Icon": "imgs/keys/combat",
+				"TriggerDescription": {
+					"Rotate": "Next / previous turn",
+					"Push": "Same as the key",
+					"Touch": "Same as the key"
+				}
+			}
+		},
+		{
+			"UUID": "com.vttdeck.foundry.playlist",
+			"Name": "Music & Sounds",
+			"Tooltip": "Start or stop playlists, tracks and sound effects",
+			"Icon": "imgs/actions/playlist",
+			"Controllers": [
+				"Keypad",
+				"Encoder"
+			],
+			"SupportedInMultiActions": true,
+			"States": [
+				{
+					"Image": "imgs/keys/playlist",
+					"TitleAlignment": "bottom",
+					"ShowTitle": true
+				}
+			],
+			"Encoder": {
+				"layout": "$A1",
+				"Icon": "imgs/keys/playlist",
+				"TriggerDescription": {
+					"Rotate": "Volume",
+					"Push": "Play / stop",
+					"Touch": "Play / stop"
+				}
+			}
+		},
+		{
+			"UUID": "com.vttdeck.foundry.system",
+			"Name": "System",
+			"Tooltip": "Pause, tools, sidebar, dice, roll tables, chat, darkness",
+			"Icon": "imgs/actions/system",
+			"Controllers": [
+				"Keypad",
+				"Encoder"
+			],
+			"SupportedInMultiActions": true,
+			"States": [
+				{
+					"Image": "imgs/keys/system",
+					"TitleAlignment": "bottom",
+					"ShowTitle": true
+				}
+			],
+			"Encoder": {
+				"layout": "$A1",
+				"Icon": "imgs/keys/system",
+				"TriggerDescription": {
+					"Push": "Same as the key",
+					"Touch": "Same as the key"
+				}
+			}
+		},
+		{
+			"UUID": "com.vttdeck.foundry.numpad",
+			"Name": "Damage & Healing Pad",
+			"Tooltip": "Type an amount, then apply damage or healing to the selected tokens",
+			"Icon": "imgs/actions/numpad",
+			"Controllers": [
+				"Keypad",
+				"Encoder"
+			],
+			"SupportedInMultiActions": true,
+			"States": [
+				{
+					"Image": "imgs/keys/numpad",
+					"TitleAlignment": "bottom",
+					"ShowTitle": true
+				}
+			],
+			"Encoder": {
+				"layout": "$A1",
+				"Icon": "imgs/keys/numpad",
+				"TriggerDescription": {
+					"Rotate": "Change the amount",
+					"Push": "Same as the key",
+					"Touch": "Same as the key"
+				}
+			}
+		},
+		{
+			"UUID": "com.vttdeck.foundry.ambiance",
+			"Name": "Ambience",
+			"Tooltip": "Set scene, music, darkness and weather with one key",
+			"Icon": "imgs/actions/ambiance",
+			"Controllers": [
+				"Keypad",
+				"Encoder"
+			],
+			"SupportedInMultiActions": true,
+			"States": [
+				{
+					"Image": "imgs/keys/ambiance",
+					"TitleAlignment": "bottom",
+					"ShowTitle": true
+				}
+			],
+			"Encoder": {
+				"layout": "$A1",
+				"Icon": "imgs/keys/ambiance",
+				"TriggerDescription": {
+					"Push": "Set the ambience",
+					"Touch": "Set the ambience"
+				}
+			}
+		},
+		{
+			"UUID": "com.vttdeck.foundry.page",
+			"Name": "Dynamic Page",
+			"Tooltip": "Fill keys with the macros, scenes or music of a Foundry folder",
+			"Icon": "imgs/actions/page",
+			"Controllers": [
+				"Keypad",
+				"Encoder"
+			],
+			"SupportedInMultiActions": true,
+			"States": [
+				{
+					"Image": "imgs/keys/page",
+					"TitleAlignment": "bottom",
+					"ShowTitle": true
+				}
+			],
+			"Encoder": {
+				"layout": "$A1",
+				"Icon": "imgs/keys/page",
+				"TriggerDescription": {
+					"Push": "Same as the key",
+					"Touch": "Same as the key"
+				}
+			}
+		},
+		{
+			"UUID": "com.vttdeck.foundry.sequence",
+			"Name": "Sequence",
+			"Tooltip": "Chain several Foundry VTT actions with one key, without code",
+			"Icon": "imgs/actions/sequence",
+			"Controllers": [
+				"Keypad",
+				"Encoder"
+			],
+			"SupportedInMultiActions": true,
+			"States": [
+				{
+					"Image": "imgs/keys/sequence",
+					"TitleAlignment": "bottom",
+					"ShowTitle": true
+				}
+			],
+			"Encoder": {
+				"layout": "$A1",
+				"Icon": "imgs/keys/sequence",
+				"TriggerDescription": {
+					"Push": "Run the sequence",
+					"Touch": "Run the sequence"
+				}
+			}
+		},
+		{
+			"UUID": "com.vttdeck.foundry.dial",
+			"Name": "Dial",
+			"Tooltip": "Foundry VTT volumes, darkness, token HP, initiative or map zoom on a Stream Deck + dial",
+			"Icon": "imgs/actions/dial",
+			"Controllers": [
+				"Encoder"
+			],
+			"SupportedInMultiActions": false,
+			"Encoder": {
+				"layout": "$B1",
+				"Icon": "imgs/actions/dial-encoder",
+				"TriggerDescription": {
+					"Rotate": "Adjust / browse",
+					"Push": "Mute, reset or choose",
+					"Touch": "Same as push (dice: clear)"
+				}
+			},
+			"States": [
+				{
+					"Image": "imgs/keys/dial"
+				}
+			]
+		}
+	],
+	"Profiles": [
+		{
+			"Name": "profiles/vtt-deck-exploration-15",
+			"DeviceType": 0,
+			"Readonly": false,
+			"DontAutoSwitchWhenInstalled": true,
+			"AutoInstall": true
+		},
+		{
+			"Name": "profiles/vtt-deck-combat-15",
+			"DeviceType": 0,
+			"Readonly": false,
+			"DontAutoSwitchWhenInstalled": true,
+			"AutoInstall": true
+		},
+		{
+			"Name": "profiles/vtt-deck-exploration-xl",
+			"DeviceType": 2,
+			"Readonly": false,
+			"DontAutoSwitchWhenInstalled": true,
+			"AutoInstall": true
+		},
+		{
+			"Name": "profiles/vtt-deck-combat-xl",
+			"DeviceType": 2,
+			"Readonly": false,
+			"DontAutoSwitchWhenInstalled": true,
+			"AutoInstall": true
+		},
+		{
+			"Name": "profiles/vtt-deck-exploration-plus",
+			"DeviceType": 7,
+			"Readonly": false,
+			"DontAutoSwitchWhenInstalled": true,
+			"AutoInstall": true
+		},
+		{
+			"Name": "profiles/vtt-deck-combat-plus",
+			"DeviceType": 7,
+			"Readonly": false,
+			"DontAutoSwitchWhenInstalled": true,
+			"AutoInstall": true
+		},
+		{
+			"Name": "profiles/vtt-deck-exploration-mini",
+			"DeviceType": 1,
+			"Readonly": false,
+			"DontAutoSwitchWhenInstalled": true,
+			"AutoInstall": true
+		},
+		{
+			"Name": "profiles/vtt-deck-combat-mini",
+			"DeviceType": 1,
+			"Readonly": false,
+			"DontAutoSwitchWhenInstalled": true,
+			"AutoInstall": true
+		},
+		{
+			"Name": "profiles/vtt-deck-exploration-neo",
+			"DeviceType": 9,
+			"Readonly": false,
+			"DontAutoSwitchWhenInstalled": true,
+			"AutoInstall": true
+		},
+		{
+			"Name": "profiles/vtt-deck-combat-neo",
+			"DeviceType": 9,
+			"Readonly": false,
+			"DontAutoSwitchWhenInstalled": true,
+			"AutoInstall": true
+		},
+		{
+			"Name": "profiles/vtt-deck-exploration-plusxl",
+			"DeviceType": 13,
+			"Readonly": false,
+			"DontAutoSwitchWhenInstalled": true,
+			"AutoInstall": true
+		},
+		{
+			"Name": "profiles/vtt-deck-combat-plusxl",
+			"DeviceType": 13,
+			"Readonly": false,
+			"DontAutoSwitchWhenInstalled": true,
+			"AutoInstall": true
+		}
+	]
+}

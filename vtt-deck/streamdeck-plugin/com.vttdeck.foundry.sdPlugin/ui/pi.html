@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>VTT Deck</title>
+	<link rel="stylesheet" href="pi.css" />
+</head>
+<body>
+	<div id="status" class="status off"><span class="dot"></span><span class="txt" data-t="Connexion au plugin…">Connecting to the plugin…</span></div>
+	<p id="help" class="help"></p>
+	<form id="form" onsubmit="return false"></form>
+
+	<details id="profiles">
+		<summary data-t="Profils prêts à l'emploi">Ready-made profiles</summary>
+		<div class="row">
+			<label data-t="Ouvrir">Open</label>
+			<div class="val">
+				<button id="profExploration" type="button" data-t="Exploration">Exploration</button>
+				<button id="profCombat" type="button" data-t="Combat">Combat</button>
+			</div>
+		</div>
+		<p class="help small" data-t="Affiche sur ce Stream Deck le profil « VTT Deck – Exploration » ou « VTT Deck – Combat » fourni avec le plugin. Vous pouvez ensuite le modifier comme n'importe quel profil.">Shows the "VTT Deck – Exploration" or "VTT Deck – Combat" profile bundled with the plugin on this Stream Deck. You can then edit it like any other profile.</p>
+	</details>
+
+	<details id="connection">
+		<summary data-t="Connexion Foundry">Foundry connection</summary>
+		<div class="row">
+			<label for="pairCode" data-t="Code">Code</label>
+			<div class="val">
+				<input id="pairCode" type="text" readonly value="…" />
+				<button id="newPairCode" type="button" data-t="Nouveau code">New code</button>
+			</div>
+		</div>
+		<p class="help small" data-t="Code d'appairage : saisissez-le une fois dans Foundry (Paramètres du module « VTT Deck » → Code d'appairage). Seul un Foundry qui le connaît peut piloter ce Stream Deck : les sites web et les autres appareils sont refusés.">Pairing code: enter it once in Foundry ("VTT Deck" module settings → Pairing code). Only a Foundry that knows it can drive this Stream Deck: websites and other devices are refused.</p>
+		<p id="rejected" class="note pro" hidden></p>
+		<div class="row">
+			<label for="port">Port</label>
+			<input id="port" type="number" min="1024" max="65535" value="3006" />
+		</div>
+		<div class="row">
+			<label for="allowRemote" data-t="Réseau">Network</label>
+			<span class="check"><input id="allowRemote" type="checkbox" /> <span data-t="accepter les connexions d'autres machines">accept connections from other computers</span></span>
+		</div>
+		<p class="help small" data-t="Les échanges avec une autre machine ne sont pas chiffrés : n'activez cette option que sur un réseau de confiance.">Traffic with another computer is not encrypted: only enable this on a trusted network.</p>
+		<div class="row">
+			<label></label>
+			<button id="applyConn" type="button" data-t="Appliquer">Apply</button>
+		</div>
+		<p class="help small" data-t="Le port doit être identique à celui réglé dans Foundry (Paramètres du module « VTT Deck »). Le réglage s'applique à tout le plugin.">The port must match the one set in Foundry ("VTT Deck" module settings). This setting applies to the whole plugin.</p>
+	</details>
+
+	<script src="pi.js"></script>
+</body>
+</html>

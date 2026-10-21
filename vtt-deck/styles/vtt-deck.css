@@ -1,0 +1,13 @@
+.vtt-deck-status .vtt-deck-status-body { padding: 0.5rem 0.75rem; }
+.vtt-deck-status .state { font-size: 1.1em; font-weight: bold; margin: 0 0 0.5rem; }
+.vtt-deck-status .state .ok { color: #3fbf5f; }
+.vtt-deck-status .state .ko { color: #d94f4f; }
+.vtt-deck-status .state .warn { color: #e3a21a; }
+.vtt-deck-status .state .off { color: #8a8a8a; }
+.vtt-deck-status dl { display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem 0.75rem; margin: 0 0 0.5rem; }
+.vtt-deck-status dt { font-weight: bold; opacity: 0.8; }
+.vtt-deck-status dd { margin: 0; }
+.vtt-deck-status dd ul { margin: 0; padding-left: 1rem; }
+.vtt-deck-status .hint { font-size: 0.9em; opacity: 0.85; border-left: 3px solid #e3a21a; padding-left: 0.5rem; }
+.vtt-deck-status .form-footer { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+.vtt-deck-status .form-footer button { flex: 1; }
