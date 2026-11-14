@@ -59,6 +59,13 @@
         "badCode": "Wrong pairing code",
         "badProof": "Plugin not authenticated: connection refused"
       },
+      "Refused": {
+        "timeout": "The plugin closed the connection because pairing took too long. Retrying shortly",
+        "badMessage": "The plugin refused an unexpected message. Retrying shortly",
+        "locked": "Too many refused attempts from this page: the plugin ignores it for one minute. Retrying shortly",
+        "busy": "The plugin has too many connections waiting. Retrying shortly",
+        "other": "The plugin refused the connection. Retrying shortly"
+      },
       "NoChallenge": "The program on this port does not ask for the pairing code (old or fake plugin): connection refused, retrying shortly"
     },
     "Actions": {

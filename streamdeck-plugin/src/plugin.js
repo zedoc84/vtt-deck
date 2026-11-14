@@ -19,7 +19,7 @@ import http from "node:http";
 import crypto from "node:crypto";
 
 const PROTOCOL = 2;
-const PLUGIN_VERSION = "1.5.1";
+const PLUGIN_VERSION = "1.5.2";
 /** Délai pour s'authentifier après l'ouverture de la connexion */
 const AUTH_TIMEOUT = 5000;
 /** Après 10 refus en une minute depuis une même origine, cette origine est bloquée une minute

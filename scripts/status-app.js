@@ -37,6 +37,7 @@ export class StatusApp extends ApplicationV2 {
 		else if (b.authError) state = `<span class="ko">● ${t(`Status.Auth.${b.authError}`)}</span>`;
 		else if (b.noChallenge) state = `<span class="ko">● ${t("Status.NoChallenge")}</span>`;
 		else if (b.kicked) state = `<span class="warn">● ${t("Status.Replaced")}</span>`;
+		else if (b.refused) state = `<span class="warn">● ${t(`Status.Refused.${b.refused}`)}</span>`;
 		else state = `<span class="ko">● ${t("Status.Waiting")}</span>`;
 
 		const DEVICE_TYPES_X = { ...DEVICE_TYPES, 13: "Stream Deck + XL" };

@@ -24,6 +24,8 @@ export class Deck {
 	/** dernier message d'erreur par touche, pour ne pas répéter l'alerte à chaque cran de molette */
 	#lastError = new Map();
 	#authWarned = null;
+	/** avertissement d'appairage affiché (permanent) : retiré dès que l'appairage réussit ou que l'on réessaie */
+	#authNotice = null;
 	#legacyWarned = false;
 
 	constructor(api) {
@@ -51,9 +53,23 @@ export class Deck {
 	}
 
 	restart() {
+		// Nouveau code ou « Reconnecter » : l'ancien avertissement ne vaut plus, le prochain essai dira ce qu'il en est
+		this.#clearAuthNotice();
 		this.bridge.stop();
 		this.start();
 		this.#refreshStatusApp();
+	}
+
+	#clearAuthNotice() {
+		const notice = this.#authNotice;
+		this.#authNotice = null;
+		this.#authWarned = null;
+		if (notice == null) return;
+		try {
+			if (ui.notifications?.has?.(notice) !== false) ui.notifications?.remove?.(notice);
+		} catch {
+			/* déjà fermé par l'utilisateur */
+		}
 	}
 
 	/* ---------------------------------------------------------------- */
@@ -63,15 +79,22 @@ export class Deck {
 		// Appairage refusé ou plugin non authentifié : un seul avertissement par cause
 		if (info.authError) {
 			if (this.#authWarned !== info.authError) {
+				this.#clearAuthNotice();
 				this.#authWarned = info.authError;
 				const key = { noCode: "Notify.AuthNoCode", badCode: "Notify.AuthBadCode", badProof: "Notify.AuthBadProof" }[info.authError];
-				ui.notifications.warn(t(key ?? "Notify.AuthBadCode"), { permanent: info.authError !== "badProof" });
+				this.#authNotice = ui.notifications.warn(t(key ?? "Notify.AuthBadCode"), { permanent: info.authError !== "badProof" });
 			}
 			this.#refreshStatusApp();
 			return;
 		}
+		// Refus passager du plugin (délai, trop d'essais…) : seulement dans la fenêtre d'état, le pont réessaie tout seul
+		if (info.refused) {
+			this.#refreshStatusApp();
+			return;
+		}
 		if (connected) {
-			this.#authWarned = null;
+			// Appairage réussi : l'avertissement « code manquant / incorrect » d'un essai précédent n'a plus lieu d'être
+			this.#clearAuthNotice();
 			if (this.bridge.legacy && !this.#legacyWarned) {
 				this.#legacyWarned = true;
 				ui.notifications.warn(t("Notify.Legacy"));

@@ -17,6 +17,8 @@ import { hmacSha256, normalizeCode, randomHex, sameString } from "./hmac.js";
 const LEGACY_WAIT = 1500;
 /** Délai maximal pour recevoir le défi (code saisi) puis la preuve du plugin */
 const AUTH_WAIT = 5000;
+/** Refus du plugin qui ne concernent pas le code (voir plugin.js, refuse() et onConnection()) */
+const REFUSALS = new Set(["timeout", "badMessage", "locked", "busy"]);
 
 export class Bridge {
 	constructor(onMessage, onState) {
@@ -35,6 +37,11 @@ export class Bridge {
 		this.legacy = false;
 		/** true quand le programme sur le port ne lance pas le défi alors qu'un code est saisi */
 		this.noChallenge = false;
+		/**
+		 * Dernier refus du plugin qui ne met pas le code en cause (« timeout » | « badMessage » | « locked » | « busy »
+		 * | « other ») : passager, on réessaie tout seul ; affiché dans la fenêtre d'état, sans avertissement.
+		 */
+		this.refused = null;
 	}
 
 	get host() {
@@ -65,6 +72,7 @@ export class Bridge {
 		this.kicked = false;
 		this.authError = null;
 		this.noChallenge = false;
+		this.refused = null;
 		this.retry = 0;
 		this.#open();
 	}
@@ -178,6 +186,7 @@ export class Bridge {
 				phase = "ready";
 				this.retry = 0;
 				this.legacy = true;
+				this.refused = null;
 				this.#setConnected(true);
 				this.#raw(ws, this.#hello());
 			}, LEGACY_WAIT);
@@ -205,13 +214,20 @@ export class Bridge {
 				ws._authTimer = setTimeout(() => phase === "verify" && this.ws === ws && giveUp(), AUTH_WAIT);
 				return;
 			}
-			if (msg.type === "authFailed") return fail(msg.reason === "noCode" ? "noCode" : "badCode");
+			if (msg.type === "authFailed") {
+				// Seuls « noCode » et « badCode » mettent en cause le code saisi. Les autres refus (délai dépassé,
+				// message inattendu…) sont passagers : pas d'avertissement « code incorrect », nouvel essai plus tard.
+				if (msg.reason === "noCode" || msg.reason === "badCode") return fail(msg.reason);
+				this.#noteRefusal(REFUSALS.has(msg.reason) ? msg.reason : "other");
+				return giveUp();
+			}
 			if (phase === "verify" && msg.type === "hello") {
 				clearTimeout(ws._authTimer);
 				if (!sameString(msg.proof, hmacSha256(this.code, `server:${cnonce}`))) return fail("badProof");
 				phase = "ready";
 				this.retry = 0;
 				this.authError = null;
+				this.refused = null;
 				this.#setConnected(true);
 				return this.onMessage(msg);
 			}
@@ -219,15 +235,26 @@ export class Bridge {
 		};
 		ws.onerror = () => {
 			this.lastError = `Impossible de joindre ${this.url}`;
+			// plugin injoignable : l'ancien refus ne décrit plus la situation (la fenêtre d'état repasse à « En attente »)
+			this.refused = null;
 		};
-		ws.onclose = () => {
+		ws.onclose = (ev) => {
 			clearTimeout(ws._legacyTimer);
 			clearTimeout(ws._authTimer);
+			// 4029 : le plugin écarte la connexion sans l'examiner (trop d'essais refusés, ou trop de connexions en attente)
+			if (ev?.code === 4029 && this.ws === ws && !this.stopped) this.#noteRefusal(ev.reason === "busy" ? "busy" : "locked");
 			if (this.ws === ws) this.ws = null;
 			this.#setConnected(false);
 			// Appairage refusé : on attend que l'utilisateur corrige le code (le réglage relance la connexion)
 			if (!this.stopped && !this.kicked && !this.authError) this.#schedule();
 		};
+	}
+
+	/** Refus passager du plugin : mémorisé pour la fenêtre d'état, sans avertissement (on réessaie tout seul) */
+	#noteRefusal(reason) {
+		this.refused = reason;
+		this.lastError = null;
+		this.onState?.(this.connected, { refused: reason });
 	}
 
 	#schedule() {

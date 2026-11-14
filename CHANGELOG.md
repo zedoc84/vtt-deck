@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.2 — messages d'appairage
+Correctifs du module Foundry. Le plugin Stream Deck ne change pas (seul son numéro passe en 1.5.2) : le plugin 1.5.1 de l'Elgato Marketplace convient.
+- L'avertissement « code d'appairage à saisir » ou « code d'appairage incorrect » disparaît dès que l'appairage réussit, et aussi quand vous saisissez un nouveau code ou cliquez sur « Reconnecter ». Avant, il restait affiché même une fois le Stream Deck connecté.
+- « Code d'appairage incorrect » ne s'affiche plus que si le plugin refuse vraiment le code. Les autres refus (appairage trop lent, trop d'essais refusés, trop de connexions en attente) sont passagers : Foundry réessaie tout seul, sans avertissement, et la fenêtre d'état dit ce qui se passe.
+
 ## 1.5.1 — sécurité
 Module Foundry et plugin Stream Deck 1.5.1. Corrige les points de l'audit de sécurité du 21 octobre 2026.
 - **Appairage** : le plugin affiche un code (réglages d'une touche → Connexion Foundry), à saisir une fois dans Foundry (paramètres du module → Code d'appairage). Défi et réponse HMAC-SHA-256 dans les deux sens : le code ne circule jamais, et Foundry ignore tout programme qui ne prouve pas être le plugin.

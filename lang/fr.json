@@ -59,6 +59,13 @@
         "badCode": "Code d'appairage incorrect",
         "badProof": "Plugin non authentifié : connexion refusée"
       },
+      "Refused": {
+        "timeout": "Le plugin a coupé la connexion : l'appairage a pris trop de temps. Nouvel essai dans un moment",
+        "badMessage": "Le plugin a refusé un message inattendu. Nouvel essai dans un moment",
+        "locked": "Trop d'essais refusés depuis cette page : le plugin l'ignore pendant une minute. Nouvel essai dans un moment",
+        "busy": "Le plugin a trop de connexions en attente. Nouvel essai dans un moment",
+        "other": "Le plugin a refusé la connexion. Nouvel essai dans un moment"
+      },
       "NoChallenge": "Le programme sur ce port ne demande pas le code d'appairage (plugin ancien ou faux plugin) : connexion refusée, nouvel essai dans un moment"
     },
     "Actions": {

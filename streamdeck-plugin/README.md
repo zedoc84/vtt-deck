@@ -6,7 +6,7 @@
 
 **VTT Deck** is a free Stream Deck plugin that turns your Stream Deck into a control panel for Foundry Virtual Tabletop: macros, scenes, tokens, combat tracker, music and sound effects, pause, tools, dice and roll tables. Each key shows live information from your game — token portrait and HP, active scene, track playing, whose turn it is.
 
-- Plugin ID: `com.vttdeck.foundry` · version **1.5.1**
+- Plugin ID: `com.vttdeck.foundry` · version **1.5.2**
 - Available on the **Elgato Marketplace**
 - Free and open source (MIT)
 
@@ -156,7 +156,7 @@ Stream Deck and Elgato are trademarks of Corsair Memory, Inc. Foundry Virtual Ta
 
 **VTT Deck** est un plugin Stream Deck gratuit qui transforme votre Stream Deck en tableau de commande pour Foundry Virtual Tabletop : macros, scènes, jetons, suivi de combat, musique et effets sonores, pause, outils, dés et tables aléatoires. Chaque touche affiche en direct des informations de la partie : portrait et PV d'un jeton, scène active, piste en lecture, combattant dont c'est le tour.
 
-- Identifiant du plugin : `com.vttdeck.foundry` · version **1.5.1**
+- Identifiant du plugin : `com.vttdeck.foundry` · version **1.5.2**
 - Disponible sur l'**Elgato Marketplace**
 - Gratuit et libre (licence MIT)
 

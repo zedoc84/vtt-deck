@@ -13,7 +13,7 @@ VTT Deck is free and open source (MIT). Some advanced features come from a paid 
 | Stream Deck plugin **VTT Deck** (`com.vttdeck.foundry`) | Elgato Marketplace, or `com.vttdeck.foundry.streamDeckPlugin` on the [Releases](https://github.com/zedoc84/vtt-deck/releases) page | on the computer the Stream Deck is plugged into |
 | Foundry module **VTT Deck** (`vtt-deck`) | manifest URL below, or `module.zip` on the Releases page | in Foundry |
 
-Current version: **1.5.1** (module and plugin share the same version number).
+Current version: **1.5.2** (module and plugin share the same version number; the plugin did not change in 1.5.2, so plugin 1.5.1 works too).
 
 ## How it works
 
@@ -207,7 +207,7 @@ VTT Deck est gratuit et libre (licence MIT). Certaines fonctions avancées vienn
 | Plugin Stream Deck **VTT Deck** (`com.vttdeck.foundry`) | Elgato Marketplace, ou `com.vttdeck.foundry.streamDeckPlugin` sur la page [Releases](https://github.com/zedoc84/vtt-deck/releases) | sur l'ordinateur où le Stream Deck est branché |
 | Module Foundry **VTT Deck** (`vtt-deck`) | URL de manifeste ci-dessous, ou `module.zip` sur la page Releases | dans Foundry |
 
-Version actuelle : **1.5.1** (le module et le plugin ont le même numéro).
+Version actuelle : **1.5.2** (le module et le plugin ont le même numéro ; le plugin n'a pas changé en 1.5.2, le plugin 1.5.1 convient donc aussi).
 
 ## Fonctionnement
 
