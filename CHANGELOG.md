@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.6.0 — Stream Deck Mobile, Virtual Stream Deck, bibliothèque d'icônes, touches « Personnage » D&D 5e et PF2e
+Module Foundry et plugin Stream Deck 1.6.0. Le plugin passe par une nouvelle revue Elgato.
+- **Stream Deck Mobile** : profils « VTT Deck – Exploration » et « VTT Deck – Combat » en 5 × 3 ; le coin 3 × 2 en haut à gauche reprend la disposition du Mini, pour l'app gratuite à 6 touches.
+- **Virtual Stream Deck** (Stream Deck 7.0 et plus) : « écran du MJ » de 64 touches (8 × 8) en Exploration et en Combat, pour un second écran.
+- La bascule automatique vers le profil Combat (VTT Deck Premium) fonctionne aussi sur ces deux appareils.
+- Nouvelle action **Personnage (D&D 5e)** : utiliser les objets, sorts et aptitudes de la fiche, jets, emplacements de sorts, repos, inspiration, concentration, demandes de jet au groupe. Elle demande VTT Deck Premium 1.4 et le système dnd5e ; sans lui, la touche affiche un cadenas.
+- Nouvelle action **Personnage (PF2e)** : frappes avec pénalité d'attaques multiples, objets et sorts, tests et sauvegardes, actions du tour et réaction, états à valeur, points d'héroïsme et de focalisation, récupération, repos pour la nuit, demandes de test au groupe. Elle demande VTT Deck Premium 1.4 et le système pf2e (7.x ou 8.x).
+- **Outils de séance** (gratuits, action Système) : « Ramener la vue des joueurs sur la mienne » (MJ : centre et zoom de votre vue), « Minuteur / chronomètre » affiché sur la touche (compte à rebours avec jauge, son et message à la fin ; chronomètre ; pause ; touche « Remettre à zéro » liée par un nom), « Réinitialiser le brouillard » de la scène (MJ, après confirmation).
+- Profil « écran du MJ » du Virtual Stream Deck : touches Vue des joueurs et Minuteur ; en Combat, touche Minuteur du tour (Premium).
+- Inspecteur : réglages des outils de séance de VTT Deck Premium 1.4 (journal de séance, minuteur du tour de combat, zone de brouillard).
+- **Bibliothèque d'icônes** (gratuite, toutes les actions) : plus de 4 000 icônes de game-icons.net (CC BY 3.0) à choisir dans la section Apparence de l'inspecteur, avec recherche en français ou en anglais et catégories ; teinte réglable ; sur une touche qui affiche un nombre, l'icône passe en filigrane.
+- Fenêtre d'état : noms des Virtual Stream Deck, Galleon 100 SD et Stream Deck + XL.
+- Fenêtre d'état : lien vers la fiche de VTT Deck Premium sur la boutique Foundry.
+- Sécurité : les noms et réglages insérés dans les notifications de Foundry sont échappés ; le tracé d'une icône de la bibliothèque est vérifié (caractères autorisés, 30 000 au plus) avant d'être dessiné. Dépendance de développement `fast-uri` mise à jour.
+- **Texte en haut des touches** (gratuit, toutes les actions) : réglage *Apparence → Position* ; le texte échappe aux reflets du bas des boutons quand le Stream Deck est incliné.
+- Inspecteur : réglages du carrousel de combat (Jeton « Place dans l'initiative », suivi automatique en ordre carrousel, cadres de couleur, appui « Cibler ») et de la molette « Scène : changer l'image de fond », pour VTT Deck Premium 1.4.
+- Inspecteur : molette « Jeton sélectionné : PV ou autre jauge » (PV, barre 2 du jeton, ou attribut de la fiche donné par son chemin, ex. `resources.legact`) ; page dynamique « Objets d'un personnage » avec un personnage précis (fixe, quel que soit le jeton sélectionné) ou le combattant actif — pour VTT Deck Premium 1.4.
+
 ## 1.5.2 — messages d'appairage
 Correctifs du module Foundry. Le plugin Stream Deck ne change pas (seul son numéro passe en 1.5.2) : le plugin 1.5.1 de l'Elgato Marketplace convient.
 - L'avertissement « code d'appairage à saisir » ou « code d'appairage incorrect » disparaît dès que l'appairage réussit, et aussi quand vous saisissez un nouveau code ou cliquez sur « Reconnecter ». Avant, il restait affiché même une fois le Stream Deck connecté.

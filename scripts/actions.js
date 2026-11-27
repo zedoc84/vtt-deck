@@ -13,8 +13,9 @@
  */
 import {
 	BORDER, COLORS, t, loc, list, fail, requireGM, canvasReady, tokenImage, panTo, selectAndPan,
-	toggleSheet, toggleCombat, visibleTurns, lockedSpec, failPro
+	toggleSheet, toggleCombat, visibleTurns, lockedSpec, failPro, safeData
 } from "./helpers.js";
+import { MODULE_ID } from "./constants.js";
 
 /* ------------------------------------------------------------------ */
 /*  MACRO                                                              */
@@ -309,7 +310,146 @@ function rollWhisper(mode) {
 export const escapeText = (str) =>
 	foundry.utils?.escapeHTML?.(String(str ?? "")) ?? String(str ?? "").replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 
-const FREE_SYSTEM_FN = ["pause", "control", "sidebar", "roll", "table", "chat", "darkness"];
+/* ------------------------------------------------------------------ */
+/*  OUTILS DE SÉANCE (gratuits) : vue des joueurs, minuteur, brouillard */
+/* ------------------------------------------------------------------ */
+/**
+ * Minuteurs de ce navigateur, partagés par nom entre les touches (une touche « Remettre à zéro »
+ * réglée sur le même nom agit sur le même minuteur). Ils ne survivent pas au rechargement de la page.
+ */
+const TIMERS = new Map();
+let timerTick = null;
+
+const timerName = (s) => String(s.timerName ?? "").trim().slice(0, 20) || "A";
+const timerTotal = (s) => Math.round(Math.max(0.1, Math.min(1440, Number(s.minutes ?? 5) || 5)) * 60000);
+
+function timerOf(s) {
+	const name = timerName(s);
+	let tm = TIMERS.get(name);
+	if (!tm) {
+		tm = { name, type: "countdown", total: 300000, running: false, startedAt: 0, elapsed: 0, done: false, sound: true };
+		TIMERS.set(name, tm);
+	}
+	// les réglages de la touche « Démarrer / pause » s'appliquent tant que le minuteur n'a pas démarré
+	if ((s.timerPress ?? "toggle") === "toggle" && !tm.running && !tm.elapsed) {
+		tm.type = s.timerType === "stopwatch" ? "stopwatch" : "countdown";
+		tm.total = timerTotal(s);
+		tm.sound = s.timerSound !== false;
+	}
+	return tm;
+}
+
+const timerElapsed = (tm, now = Date.now()) => tm.elapsed + (tm.running ? now - tm.startedAt : 0);
+
+/** 75 s → « 1:15 », 3 725 s → « 1:02:05 » */
+export function formatDuration(ms, { up = false } = {}) {
+	const total = Math.max(0, up ? Math.floor(ms / 1000) : Math.ceil(ms / 1000));
+	const h = Math.floor(total / 3600);
+	const m = Math.floor((total % 3600) / 60);
+	const sec = String(total % 60).padStart(2, "0");
+	return h ? `${h}:${String(m).padStart(2, "0")}:${sec}` : `${m}:${sec}`;
+}
+
+function redrawSystemKeys() {
+	game.modules.get(MODULE_ID)?.api?.deck?.queueType?.("system");
+}
+
+function timerFinished(tm) {
+	tm.running = false;
+	tm.elapsed = tm.total;
+	tm.done = true;
+	ui.notifications?.info(t("Keys.TimerDone", safeData({ name: tm.name === "A" ? "" : tm.name })).trim());
+	if (tm.sound) {
+		try {
+			foundry.audio.AudioHelper.play({ src: CONFIG.sounds.notification, volume: 0.8, autoplay: true, loop: false }, false);
+		} catch {
+			/* pas de son : la notification suffit */
+		}
+	}
+}
+
+/** Une seule horloge pour tous les minuteurs, arrêtée dès qu'aucun ne tourne */
+function ensureTimerTick() {
+	if (timerTick) return;
+	timerTick = setInterval(() => {
+		const now = Date.now();
+		let running = false;
+		for (const tm of TIMERS.values()) {
+			if (!tm.running) continue;
+			if (tm.type === "countdown" && timerElapsed(tm, now) >= tm.total) timerFinished(tm);
+			else running = true;
+		}
+		redrawSystemKeys();
+		if (!running) {
+			clearInterval(timerTick);
+			timerTick = null;
+		}
+	}, 500);
+}
+
+function pressTimer(s) {
+	const tm = timerOf(s);
+	if ((s.timerPress ?? "toggle") === "reset" || tm.done) {
+		Object.assign(tm, { running: false, startedAt: 0, elapsed: 0, done: false });
+	} else if (tm.running) {
+		tm.elapsed = timerElapsed(tm);
+		tm.running = false;
+	} else {
+		tm.startedAt = Date.now();
+		tm.running = true;
+		ensureTimerTick();
+	}
+	redrawSystemKeys();
+}
+
+function renderTimer(s) {
+	const tm = timerOf(s);
+	const el = timerElapsed(tm);
+	const countdown = tm.type === "countdown";
+	const left = Math.max(0, tm.total - el);
+	const shown = formatDuration(countdown ? left : el, { up: !countdown });
+	const label = tm.name !== "A" ? tm.name : t(countdown ? "Keys.Timer" : "Keys.Stopwatch");
+	const vars = { value: shown, name: tm.name };
+	if ((s.timerPress ?? "toggle") === "reset") return { icon: "⏮️", text: [t("Keys.TimerReset"), `${label} · ${shown}`], vars };
+	const state = tm.done ? t("Keys.TimerDoneShort") : tm.running ? label : el ? t("Keys.TimerPaused") : label;
+	return {
+		big: shown,
+		text: [state],
+		bar: countdown && (tm.running || el) ? { value: left, max: tm.total } : null,
+		border: tm.done ? BORDER.alert : tm.running ? BORDER.active : null,
+		// en pause : grisé ; prêt à démarrer, en marche ou terminé : normal
+		dim: !tm.running && !tm.done && el > 0,
+		vars
+	};
+}
+
+/** Ramène la vue de tous les joueurs sur le centre et le zoom de la vue du MJ */
+async function pullPlayersView() {
+	requireGM();
+	if (!canvasReady()) fail("Errors.SceneMissing");
+	const { x, y } = canvas.stage.pivot;
+	const zoom = canvas.stage.scale?.x;
+	return canvas.ping({ x, y }, { style: CONFIG.Canvas?.pings?.types?.PULL ?? "pull", pull: true, zoom });
+}
+
+/** Réinitialise l'exploration du brouillard de la scène, pour tous les joueurs, après confirmation */
+async function resetFog() {
+	requireGM();
+	if (!canvasReady() || !canvas.fog) fail("Errors.SceneMissing");
+	const Dialog = foundry.applications?.api?.DialogV2;
+	const ok = Dialog
+		? await Dialog.confirm({
+				window: { title: t("Keys.ResetFogTitle") },
+				content: `<p>${t("Keys.ResetFogConfirm", { scene: canvas.scene?.navName || canvas.scene?.name || "" })}</p>`,
+				modal: true,
+				rejectClose: false
+			})
+		: false;
+	if (ok !== true) return;
+	return canvas.fog.reset();
+}
+
+const FREE_SYSTEM_FN = ["pause", "control", "sidebar", "roll", "table", "chat", "darkness", "pullView", "timer", "resetFog"];
 
 const systemAction = {
 	hooks: ["pauseGame", "renderSceneControls", "activateCanvasLayer", "changeSidebarTab", "collapseSidebar", "updateScene", "canvasReady", "createRollTable", "updateRollTable", "deleteRollTable"],
@@ -369,6 +509,15 @@ const systemAction = {
 					vars: { value: Math.round(target * 100) }
 				};
 			}
+			case "pullView":
+				return { icon: "🎯", text: [t("Keys.PullView")], dim: !game.user.isGM || !canvasReady() };
+			case "timer":
+				return renderTimer(s);
+			case "resetFog": {
+				const scene = canvasReady() ? canvas.scene : null;
+				const fogOn = scene ? scene.fog?.exploration ?? scene.fogExploration ?? true : false;
+				return { icon: "🌫️", text: [t("Keys.Fog"), t("Keys.FogReset")], dim: !game.user.isGM || !fogOn };
+			}
 		}
 		return { icon: "❓" };
 	},
@@ -425,6 +574,12 @@ const systemAction = {
 				const target = Math.max(0, Math.min(100, Number(s.darkness ?? 100))) / 100;
 				return scene.update({ "environment.darknessLevel": target }, { animateDarkness: 2500 });
 			}
+			case "pullView":
+				return pullPlayersView();
+			case "timer":
+				return pressTimer(s);
+			case "resetFog":
+				return resetFog();
 		}
 	}
 };
@@ -458,7 +613,9 @@ export const BUILTIN_ACTIONS = {
 	ambiance: { ...proOnlyAction },
 	page: { ...proOnlyAction },
 	sequence: { ...proOnlyAction },
-	dial: { ...proOnlyAction }
+	dial: { ...proOnlyAction },
+	character: { ...proOnlyAction },
+	pf2e: { ...proOnlyAction }
 };
 
 /** Dossiers Foundry d'un type de document, avec leur chemin complet (« Donjon / Niveau 1 ») */

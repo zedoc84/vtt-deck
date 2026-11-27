@@ -41,6 +41,14 @@
     "Name": "Sequence",
     "Tooltip": "Chain several Foundry VTT actions with one key, without code"
   },
+  "com.vttdeck.foundry.character": {
+    "Name": "Character (D&D 5e)",
+    "Tooltip": "D&D 5e: use items and spells, roll checks and saves, spell slots, rests, group rolls"
+  },
+  "com.vttdeck.foundry.pf2e": {
+    "Name": "Character (PF2e)",
+    "Tooltip": "Pathfinder 2e: strikes with multiple attack penalty, turn actions, valued conditions, hero and focus points, checks and saves, group checks"
+  },
   "com.vttdeck.foundry.dial": {
     "Name": "Dial",
     "Tooltip": "Dials for Foundry VTT: volumes, darkness, turns, token HP, zoom, party, scenes, targets, tracks, dice and macros (Stream Deck + and + XL)"

@@ -180,7 +180,7 @@ const EN = {
 	"Affiche sur ce Stream Deck le profil « VTT Deck – Exploration » ou « VTT Deck – Combat » fourni avec le plugin. Vous pouvez ensuite le modifier comme n'importe quel profil.": "Shows the \"VTT Deck – Exploration\" or \"VTT Deck – Combat\" profile bundled with the plugin on this Stream Deck. You can then edit it like any other profile.",
 	"Niveau supérieur (Foundry v14)": "Level up (Foundry v14)",
 	"Niveau inférieur (Foundry v14)": "Level down (Foundry v14)",
-	"Gratuit : le jeton sélectionné (image, nom, sélection, fiche). ★ Premium : personnages précis, vue du groupe, PV et jauge (barre 1 du jeton, tous systèmes), icônes des états, ±PV, cibler, cacher, déplacer, pivoter, altitude, niveaux.": "Free: the selected token (image, name, select, sheet). ★ Premium: specific characters, party view, HP and gauge (token bar 1, any system), condition icons, ±HP, target, hide, move, rotate, elevation, levels.",
+	"Gratuit : le jeton sélectionné (image, nom, sélection, fiche). ★ Premium : personnages précis, vue du groupe, carrousel de combat, PV et jauge (barre 1 du jeton, tous systèmes), icônes des états, ±PV, cibler, cacher, déplacer, pivoter, altitude, niveaux.": "Free: the selected token (image, name, select, sheet). ★ Premium: specific characters, party view, combat carousel, HP and gauge (token bar 1, any system), condition icons, ±HP, target, hide, move, rotate, elevation, levels.",
 	"États": "Conditions",
 	"afficher les icônes des états actifs": "show active condition icons",
 	"Déplacer d'une case": "Move one square",
@@ -270,7 +270,7 @@ const EN = {
 	"Volume de la musique": "Music volume",
 	"Volume de l'ambiance": "Ambience volume",
 	"Volume de l'interface": "Interface volume",
-	"PV du jeton sélectionné": "Selected token HP",
+	"Jeton sélectionné : PV ou autre jauge": "Selected token: HP or another gauge",
 	"Zoom de la carte": "Map zoom",
 	"Pas": "Step",
 	"par cran de molette : en % (volumes, obscurité) ou en PV": "per dial notch: in % (volumes, darkness) or in HP",
@@ -301,7 +301,7 @@ const EN = {
 	"Macros : faire défiler": "Macros: browse",
 	"Tourner : volume. Appuyer : couper / rétablir.": "Turn: volume. Press: mute / restore.",
 	"Tourner : plus clair / plus sombre. Appuyer : jour ↔ nuit.": "Turn: lighter / darker. Press: day ↔ night.",
-	"Tourner : PV du jeton sélectionné (appliqués après un court arrêt). Appuyer : appliquer tout de suite.": "Turn: selected token HP (applied after a short pause). Press: apply now.",
+	"Tourner : PV ou autre jauge du jeton sélectionné (appliqués après un court arrêt). Appuyer : appliquer tout de suite.": "Turn: HP or another gauge of the selected token (applied after a short pause). Press: apply now.",
 	"Tourner : tour suivant / précédent. Appuyer : centrer sur le combattant actif.": "Turn: next / previous turn. Press: centre on the active combatant.",
 	"Tourner : zoom. Appuyer : zoom normal, centré sur le jeton sélectionné.": "Turn: zoom. Press: normal zoom, centred on the selected token.",
 	"Tourner : sélectionne le jeton du personnage suivant et centre la vue.": "Turn: selects the next character's token and centres the view.",
@@ -351,6 +351,206 @@ const EN = {
 	"demande le code d'appairage. Ne le donnez que si c'est votre Foundry.": "is asking for the pairing code. Only give it if this is your Foundry.",
 	"Code d'appairage : saisissez-le une fois dans Foundry (Paramètres du module « VTT Deck » → Code d'appairage). Seul un Foundry qui le connaît peut piloter ce Stream Deck : les sites web et les autres appareils sont refusés.": "Pairing code: enter it once in Foundry (\"VTT Deck\" module settings → Pairing code). Only a Foundry that knows it can drive this Stream Deck: websites and other devices are refused.",
 	"Les échanges avec une autre machine ne sont pas chiffrés : n'activez cette option que sur un réseau de confiance.": "Traffic with another computer is not encrypted: only enable this on a trusted network.",
+	"Acrobaties": "Acrobatics",
+	"Dressage": "Animal Handling",
+	"Arcanes": "Arcana",
+	"Athlétisme": "Athletics",
+	"Tromperie": "Deception",
+	"Histoire": "History",
+	"Perspicacité": "Insight",
+	"Médecine": "Medicine",
+	"Représentation": "Performance",
+	"Escamotage": "Sleight of Hand",
+	"Discrétion": "Stealth",
+	"Survie": "Survival",
+	"Force": "Strength",
+	"Dextérité": "Dexterity",
+	"Sagesse": "Wisdom",
+	"Charisme": "Charisma",
+	"Système D&D 5e (dnd5e 5.3 ou plus). Objets, sorts et aptitudes de la fiche, jets, emplacements de sorts, repos, inspiration, concentration, jets contre la mort. « Groupe : demander… » envoie une carte de jet dans le chat : chaque joueur lance pour son personnage.": "D&D 5e system (dnd5e 5.3 or later). Items, spells and features from the sheet, rolls, spell slots, rests, inspiration, concentration, death saves. \"Party: request…\" posts a roll card in the chat: each player rolls for their own character.",
+	"Utiliser un objet, un sort ou une aptitude": "Use an item, spell or feature",
+	"Emplacements de sorts": "Spell slots",
+	"Jet de compétence": "Skill check",
+	"Test de caractéristique": "Ability check",
+	"Jet de sauvegarde": "Saving throw",
+	"Jet d'initiative": "Initiative roll",
+	"Jet contre la mort": "Death saving throw",
+	"Dé de vie": "Hit die",
+	"Groupe : demander un jet de compétence (MJ)": "Party: request a skill check (GM)",
+	"Groupe : demander un jet de sauvegarde (MJ)": "Party: request a saving throw (GM)",
+	"Groupe : demander un repos (MJ)": "Party: request a rest (GM)",
+	"Mon personnage (joueur)": "My character (player)",
+	"Groupe : un personnage par touche": "Party: one character per key",
+	"ex. Épée longue, Boule de feu": "e.g. Longsword, Fireball",
+	"Nom de l'objet, du sort ou de l'aptitude tel qu'il est écrit sur la fiche (majuscules et accents indifférents).": "Name of the item, spell or feature as written on the sheet (case and accents ignored).",
+	"Magie de pacte": "Pact magic",
+	"Compétence": "Skill",
+	"Caractéristique": "Ability",
+	"DD": "DC",
+	"facultatif : la carte indique alors les réussites et les échecs": "optional: the card then shows successes and failures",
+	"Repos court": "Short rest",
+	"Repos long": "Long rest",
+	"Jet": "Roll",
+	"Avec avantage": "With advantage",
+	"Avec désavantage": "With disadvantage",
+	"Rapide": "Fast",
+	"sans fenêtre de réglage (lance directement)": "no configuration window (roll right away)",
+	"écrire le nom du personnage sur la touche": "write the character's name on the key",
+	"Ramener la vue des joueurs sur la mienne (MJ)": "Pull the players' view to mine (GM)",
+	"Minuteur / chronomètre": "Timer / stopwatch",
+	"Réinitialiser le brouillard (MJ)": "Reset fog of war (GM)",
+	"Démarrer / mettre en pause": "Start / pause",
+	"Remettre à zéro": "Reset",
+	"Terminé : un appui remet le minuteur à zéro. Le minuteur tourne dans ce navigateur (il s'arrête si la page est rechargée).": "When it's done, a press resets the timer. The timer runs in this browser (it stops if the page is reloaded).",
+	"Compte à rebours": "Countdown",
+	"Chronomètre (temps écoulé)": "Stopwatch (elapsed time)",
+	"Durée": "Duration",
+	"minutes (ex. 0.5 = 30 s)": "minutes (e.g. 0.5 = 30 s)",
+	"Fin": "End",
+	"son et message à la fin": "sound and message at the end",
+	"Deux touches avec le même nom pilotent le même minuteur (ex. une touche « Remettre à zéro »).": "Two keys with the same name control the same timer (e.g. a \"Reset\" key).",
+	"Artisanat": "Crafting",
+	"Duperie": "Deception",
+	"Diplomatie": "Diplomacy",
+	"Occultisme": "Occultism",
+	"Société": "Society",
+	"Vol": "Thievery",
+	"Vigueur": "Fortitude",
+	"Réflexes": "Reflex",
+	"Volonté": "Will",
+	"Sauvegarde": "Save",
+	"Action": "Action",
+	"Réaction": "Reaction",
+	"Effrayé (valeur)": "Frightened (value)",
+	"Nauséeux (valeur)": "Sickened (value)",
+	"Maladroit (valeur)": "Clumsy (value)",
+	"Affaibli (valeur)": "Enfeebled (value)",
+	"Stupéfié (valeur)": "Stupefied (value)",
+	"Drainé (valeur)": "Drained (value)",
+	"Condamné (valeur)": "Doomed (value)",
+	"Blessé (valeur)": "Wounded (value)",
+	"Ralenti (valeur)": "Slowed (value)",
+	"Étourdi (valeur)": "Stunned (value)",
+	"Pris au dépourvu": "Off-guard",
+	"À terre": "Prone",
+	"Agrippé": "Grabbed",
+	"Entravé": "Restrained",
+	"Immobilisé": "Immobilized",
+	"Accéléré": "Quickened",
+	"Aveuglé": "Blinded",
+	"Ébloui": "Dazzled",
+	"Sourd": "Deafened",
+	"Fatigué": "Fatigued",
+	"Masqué": "Concealed",
+	"Caché": "Hidden",
+	"Confus": "Confused",
+	"Fasciné": "Fascinated",
+	"En fuite": "Fleeing",
+	"Paralysé": "Paralyzed",
+	"Inconscient": "Unconscious",
+	"Surchargé": "Encumbered",
+	"Système Pathfinder 2e (pf2e 7 ou plus, Foundry 13 et 14). Frappes avec pénalité d'attaques multiples, actions du tour, états à valeur, points d'héroïsme et de focalisation, tests et sauvegardes. « Groupe : demander… » envoie un bouton de test dans le chat : chaque joueur lance pour son personnage.": "Pathfinder 2e system (pf2e 7 or later, Foundry 13 and 14). Strikes with multiple attack penalty, turn actions, valued conditions, hero and focus points, checks and saves. \"Party: request…\" posts a check button in the chat: each player rolls for their own character.",
+	"Frappe (arme ou attaque)": "Strike (weapon or attack)",
+	"Objet, action, don ou sort": "Item, action, feat or spell",
+	"Test de compétence ou de Perception": "Skill or Perception check",
+	"Actions du tour (◆ et réaction)": "Turn actions (◆ and reaction)",
+	"État (valeur + 1 / − 1)": "Condition (value + 1 / − 1)",
+	"Points d'héroïsme": "Hero points",
+	"Points de focalisation": "Focus points",
+	"Test de récupération (mourant)": "Recovery check (dying)",
+	"Repos pour la nuit": "Rest for the night",
+	"Groupe : demander un test (MJ)": "Party: request a check (GM)",
+	"Groupe : repos pour la nuit (MJ)": "Party: rest for the night (GM)",
+	"ex. Épée longue, Mâchoires": "e.g. Longsword, Jaws",
+	"Nom de l'arme ou de l'attaque tel qu'il est écrit sur la fiche (majuscules et accents indifférents).": "Name of the weapon or attack as written on the sheet (case and accents ignored).",
+	"1re attaque": "1st attack",
+	"2e attaque (pénalité)": "2nd attack (penalty)",
+	"3e attaque (pénalité)": "3rd attack (penalty)",
+	"Dégâts critiques": "Critical damage",
+	"La pénalité d'attaques multiples (et celle des armes agiles) est calculée par le système.": "The multiple attack penalty (including agile weapons) is computed by the system.",
+	"ex. Potion de soins, Projectile magique": "e.g. Healing Potion, Force Barrage",
+	"Un consommable est utilisé (potion, parchemin…) ; sinon sa carte est postée dans le chat.": "A consumable is used (potion, scroll…); anything else posts its card in the chat.",
+	"1re action": "1st action",
+	"2e action": "2nd action",
+	"3e action": "3rd action",
+	"4e action (Accéléré)": "4th action (quickened)",
+	"Une touche par action. Appuyer coche ou décoche ; tout redevient disponible au début du tour du personnage. Ralenti et Accéléré sont pris en compte.": "One key per action. Press to tick or untick; everything is available again at the start of the character's turn. Slowed and quickened are taken into account.",
+	"Ajouter (+ 1)": "Add (+ 1)",
+	"Retirer (− 1)": "Remove (− 1)",
+	"Un état sans valeur (À terre…) est ajouté ou retiré.": "A condition without a value (prone…) is added or removed.",
+	"Dépenser 1 point": "Spend 1 point",
+	"Regagner 1 point": "Regain 1 point",
+	"Journal de séance (note datée)": "Session log (timestamped note)",
+	"Minuteur du tour de combat": "Combat turn timer",
+	"Zone de brouillard (révéler / cacher)": "Fog area (reveal / hide)",
+	"Ajouter la note tout de suite": "Add the note right away",
+	"Écrire la note dans Foundry": "Write the note in Foundry",
+	"Ouvrir le journal de séance": "Open the session log",
+	"Chaque note porte l'heure ; une page par jour de jeu. Le MJ crée le journal au premier appui ; un joueur peut écrire s'il en est propriétaire.": "Each note carries the time; one page per game day. The GM creates the journal on the first press; a player can write in it if they own it.",
+	"Note": "Note",
+	"Moment marquant": "Memorable moment",
+	"(Journal de séance, créé au besoin)": "(Session log, created when needed)",
+	"Contexte": "Context",
+	"ajouter la scène, le round et le combattant actif": "add the scene, the round and the active combatant",
+	"secondes par tour ; le minuteur repart à chaque changement de tour": "seconds per turn; the timer restarts at every turn change",
+	"Orange": "Orange",
+	"la touche passe à l'orange quand il reste ce nombre de secondes": "the key turns orange when this many seconds are left",
+	"son quand le temps est écoulé": "sound when time is up",
+	"son chez tous les joueurs (MJ)": "sound for all players (GM)",
+	"message privé au joueur du combattant": "private message to the combatant's player",
+	"Appui : pause / reprise. Une fois le temps écoulé, la touche clignote en rouge ; un appui relance le minuteur.": "Press: pause / resume. Once time is up the key blinks red; a press restarts the timer.",
+	"Placez une lumière qui couvre la zone, sélectionnez-la (outil Éclairage), puis cliquez sur « Utiliser la sélection ». La touche l'allume avec « Fournit la vision » (la zone devient visible pour les joueurs) ou l'éteint. Une zone déjà vue reste explorée : « Réinitialiser le brouillard » l'efface.": "Place a light that covers the area, select it (Lighting tool), then click \"Use selection\". The key switches it on with \"Provides vision\" (players can see the area) or off. An area already seen stays explored: \"Reset fog\" clears it.",
+	"ex. Crypte": "e.g. Crypt",
+	"Icône": "Icon",
+	"Bibliothèque game-icons.net (plus de 4 000 icônes). L'icône remplace l'image ou l'emoji de la touche ; sur une touche qui affiche un nombre, elle passe derrière, en filigrane.": "game-icons.net library (over 4,000 icons). The icon replaces the key's picture or emoji; on a key that shows a number, it goes behind it as a watermark.",
+	"Bibliothèque d'icônes introuvable dans le plugin.": "Icon library missing from the plugin.",
+	"Fermer": "Close",
+	"Choisir…": "Choose…",
+	"Retirer l'icône": "Remove the icon",
+	"Chargement des icônes…": "Loading icons…",
+	"Rechercher (ex. épée, dragon, potion, porte)": "Search (e.g. sword, dragon, potion, door)",
+	"Toutes": "All",
+	"Magie": "Magic",
+	"Créatures": "Creatures",
+	"États et soins": "Conditions & healing",
+	"Lieux": "Places",
+	"Nature et météo": "Nature & weather",
+	"Musique et sons": "Music & sounds",
+	"Dés et jeu": "Dice & game",
+	"Personnages": "Characters",
+	"Icônes de game-icons.net (Lorc, Delapouite et d'autres auteurs), licence CC BY 3.0.": "Icons from game-icons.net (Lorc, Delapouite and other authors), CC BY 3.0 licence.",
+	"Aucune icône : essayez un autre mot (français ou anglais).": "No icon: try another word (English or French).",
+	"icônes — affinez la recherche pour voir les autres.": "icons — refine the search to see the others.",
+	"icônes": "icons",
+	"Teinte": "Tint",
+	"couleur de l'icône (blanc par défaut)": "icon colour (white by default)",
+	"Position": "Position",
+	"Texte en bas": "Text at the bottom",
+	"Texte en haut": "Text at the top",
+	"En haut, le texte échappe aux reflets du bas des boutons quand le Stream Deck est incliné.": "At the top, the text avoids the reflections at the bottom of the buttons when the Stream Deck is tilted.",
+	"Précédent": "Previous",
+	"Actif": "Active",
+	"Suivant": "Next",
+	"Autres": "Others",
+	"Place dans l'initiative (carrousel)": "Place in the initiative (carousel)",
+	"Place": "Place",
+	"0 = combattant actif, -1 = précédent, 1 = suivant, 2, 3… Copiez la touche et changez ce nombre pour faire une rangée : elle tourne à chaque tour.": "0 = active combatant, -1 = previous, 1 = next, 2, 3… Copy the key and change this number to build a row: it turns at every turn.",
+	"Cadre": "Frame",
+	"couleur selon le rôle : précédent, actif, suivant, autres": "colour by role: previous, active, next, others",
+	"Carrousel : précédent, actif, suivants": "Carousel: previous, active, next",
+	"Tourner : change l'image de fond de la scène affichée, pour tous les joueurs (appliquée après un court arrêt de la molette). Jetons, murs et lumières restent en place. Appuyer : revenir à l'image d'origine. MJ.": "Turn: changes the background image of the viewed scene, for every player (applied after the dial stops briefly). Tokens, walls and lights stay in place. Press: back to the original image. GM.",
+	"Scène : changer l'image de fond": "Scene: change the background image",
+	"ex. worlds/mon-monde/cartes/taverne": "e.g. worlds/my-world/maps/tavern",
+	"Mettez dans ce dossier les déclinaisons du lieu (en flammes, en ruines, de nuit…), à la même taille que l'image d'origine. L'image d'origine de la scène est toujours la première. Foundry 14 : c'est le niveau affiché qui change.": "Put the variants of the place in this folder (on fire, in ruins, at night…), at the same size as the original image. The scene's original image always comes first. Foundry 14: the viewed level changes.",
+	"La page montre toujours les objets de ce personnage, quel que soit le jeton sélectionné.": "The page always shows this character's items, whatever token is selected.",
+	"Jauge": "Gauge",
+	"PV (barre 1 du jeton)": "HP (token bar 1)",
+	"Barre 2 du jeton": "Token bar 2",
+	"Attribut de la fiche (chemin)": "Sheet attribute (path)",
+	"Chemin": "Path",
+	"ex. resources.legact, attributes.hd": "e.g. resources.legact, attributes.hd",
+	"Chemin dans les données du personnage, avec ou sans « system. ». Une valeur avec maximum (PV, ressources) se règle comme les PV ; un nombre simple aussi.": "Path in the character's data, with or without \"system.\". A value with a maximum (HP, resources) is adjusted like HP; a plain number too.",
+	"Objets de": "Items of",
 	"Le port doit être identique à celui réglé dans Foundry (Paramètres du module « VTT Deck »). Le réglage s'applique à tout le plugin.": "The port must match the one set in Foundry (\"VTT Deck\" module settings). This setting applies to the whole plugin."
 };
 const tr = (s) => (s == null || LANG === "fr" ? s : EN[s] ?? s);
@@ -373,6 +573,14 @@ const TABS = opt(
 	["compendium", "Compendiums"], ["settings", "Paramètres"]
 );
 
+/** Carrousel de combat : cadre de couleur selon le rôle du combattant (Premium) */
+const roleFields = (show) => [
+	{ key: "colorPrev", label: "Précédent", type: "color", colorDefault: "#3d8bfd", pro: true, show },
+	{ key: "colorActive", label: "Actif", type: "color", colorDefault: "#d94f4f", pro: true, show },
+	{ key: "colorNext", label: "Suivant", type: "color", colorDefault: "#ffcc33", pro: true, show },
+	{ key: "colorOther", label: "Autres", type: "color", colorDefault: "#8a8a8a", pro: true, show }
+];
+
 const SCHEMAS = {
 	macro: {
 		help: "Exécute la macro choisie. L'image et le nom de la macro s'affichent sur la touche.",
@@ -388,12 +596,18 @@ const SCHEMAS = {
 		]
 	},
 	token: {
-		help: "Gratuit : le jeton sélectionné (image, nom, sélection, fiche). ★ Premium : personnages précis, vue du groupe, PV et jauge (barre 1 du jeton, tous systèmes), icônes des états, ±PV, cibler, cacher, déplacer, pivoter, altitude, niveaux.",
+		help: "Gratuit : le jeton sélectionné (image, nom, sélection, fiche). ★ Premium : personnages précis, vue du groupe, carrousel de combat, PV et jauge (barre 1 du jeton, tous systèmes), icônes des états, ±PV, cibler, cacher, déplacer, pivoter, altitude, niveaux.",
 		fields: [
 			{ key: "target", label: "Jeton", type: "select", default: "selected", options: opt(
-				["selected", "Jeton sélectionné"], ["actor", "Personnage précis", 1], ["turn", "Combattant actif", 1], ["party", "Groupe (personnages du groupe)", 1]),
-				note: "Groupe : copiez la touche sur plusieurs emplacements, chaque touche prend un personnage du groupe." },
+				["selected", "Jeton sélectionné"], ["actor", "Personnage précis", 1], ["turn", "Combattant actif", 1], ["party", "Groupe (personnages du groupe)", 1],
+				["initiative", "Place dans l'initiative (carrousel)", 1]),
+				noteFn: (s) => (s.target === "party" ? "Groupe : copiez la touche sur plusieurs emplacements, chaque touche prend un personnage du groupe." : null) },
 			...partyFields((s) => s.target === "party"),
+			{ key: "initOffset", label: "Place", type: "number", default: 0, min: -20, max: 20, pro: true, show: (s) => s.target === "initiative",
+				note: "0 = combattant actif, -1 = précédent, 1 = suivant, 2, 3… Copiez la touche et changez ce nombre pour faire une rangée : elle tourne à chaque tour." },
+			{ key: "markRoles", label: "Cadre", type: "checkbox", default: true, pro: true, show: (s) => s.target === "initiative",
+				text: "couleur selon le rôle : précédent, actif, suivant, autres" },
+			...roleFields((s) => s.target === "initiative" && s.markRoles !== false),
 			{ key: "actorId", label: "Personnage", type: "select", source: "actors", pro: true, show: (s) => s.target === "actor" },
 			{ key: "display", label: "Afficher", type: "select", default: "name", options: opt(
 				["name", "Nom"], ["bar1", "Barre 1 (PV)", 1], ["bar2", "Barre 2", 1], ["path", "Attribut…", 1], ["none", "Rien"]) },
@@ -424,15 +638,20 @@ const SCHEMAS = {
 				["round", "Afficher round / tour"], ["auto", "Suivi d'initiative automatique", 1], ["turn", "Combattant actif", 1], ["slot", "Combattant n°…", 1],
 				["toggleCombat", "Ajouter/retirer les jetons sélectionnés", 1]) },
 			{ key: "order", label: "Ordre", type: "select", default: "active", pro: true, show: (s) => s.fn === "auto", options: opt(
-				["active", "Combattant actif en premier"], ["init", "Ordre d'initiative"]),
+				["active", "Combattant actif en premier"], ["init", "Ordre d'initiative"], ["carousel", "Carrousel : précédent, actif, suivants"]),
 				note: "Toutes les touches « Suivi automatique » de ce Stream Deck forment une rangée, lue ligne par ligne. S'il y a plus de combattants que de touches, la dernière affiche la suite." },
+			{ key: "markRoles", label: "Cadre", type: "checkbox", default: true, pro: true, show: (s) => s.fn === "auto" && s.order === "carousel",
+				text: "couleur selon le rôle : précédent, actif, suivant, autres" },
+			{ key: "markRoles", label: "Cadre", type: "checkbox", default: false, pro: true, show: (s) => s.fn === "auto" && s.order !== "carousel",
+				text: "couleur selon le rôle : précédent, actif, suivant, autres" },
+			...roleFields((s) => s.fn === "auto" && (s.markRoles ?? s.order === "carousel")),
 			{ key: "slot", label: "Place n°", type: "number", default: 1, min: 1, pro: true, show: (s) => s.fn === "slot" },
 			{ key: "display", label: "Afficher", type: "select", default: "name", pro: true, show: (s) => ["slot", "turn", "auto"].includes(s.fn), options: opt(
 				["name", "Nom"], ["bar1", "Barre 1 (PV)"], ["init", "Initiative"], ["none", "Rien"]) },
 			{ key: "showBar", label: "Jauge PV", type: "checkbox", default: true, pro: true, text: "dessiner la jauge", show: (s) => ["slot", "turn", "auto"].includes(s.fn) },
 			{ key: "showStatuses", label: "États", type: "checkbox", default: true, pro: true, text: "afficher les icônes des états actifs", show: (s) => ["slot", "turn", "auto"].includes(s.fn) },
 			{ key: "slotPress", label: "Appui", type: "select", default: "select", pro: true, show: (s) => ["slot", "turn", "auto"].includes(s.fn), options: opt(
-				["select", "Sélectionner + centrer"], ["pan", "Centrer la vue"], ["sheet", "Ouvrir la fiche"], ["none", "Rien"]) }
+				["select", "Sélectionner + centrer"], ["pan", "Centrer la vue"], ["sheet", "Ouvrir la fiche"], ["target", "Cibler"], ["none", "Rien"]) }
 		]
 	},
 	playlist: {
@@ -455,9 +674,11 @@ const SCHEMAS = {
 			{ key: "fn", label: "Fonction", type: "select", default: "pause", options: opt(
 				["pause", "Pause"], ["control", "Outil de la scène"], ["sidebar", "Onglet de la barre latérale"], ["roll", "Lancer de dés"],
 				["table", "Tirer dans une table"], ["chat", "Message dans le chat"], ["darkness", "Obscurité de la scène"],
+				["pullView", "Ramener la vue des joueurs sur la mienne (MJ)"], ["timer", "Minuteur / chronomètre"], ["resetFog", "Réinitialiser le brouillard (MJ)"],
 				["weather", "Météo", 1], ["time", "Temps de jeu", 1], ["showImage", "Montrer une image aux joueurs", 1], ["showJournal", "Montrer un journal aux joueurs", 1],
 				["door", "Porte", 1], ["light", "Lumière", 1], ["alerts", "Alertes (20, 1, message privé)", 1],
-				["clearTargets", "Effacer les cibles", 1], ["targetNext", "Cibler l'ennemi suivant", 1], ["rollPool", "Lancer la réserve de dés (molette Dés)", 1]) },
+				["clearTargets", "Effacer les cibles", 1], ["targetNext", "Cibler l'ennemi suivant", 1], ["rollPool", "Lancer la réserve de dés (molette Dés)", 1],
+				["sessionNote", "Journal de séance (note datée)", 1], ["turnTimer", "Minuteur du tour de combat", 1], ["fogZone", "Zone de brouillard (révéler / cacher)", 1]) },
 			{ key: "control", label: "Contrôle", type: "select", source: "controls", show: (s) => s.fn === "control" },
 			{ key: "tool", label: "Outil", type: "select", source: "tools", show: (s) => s.fn === "control" },
 			{ key: "tab", label: "Onglet", type: "select", default: "chat", options: TABS, show: (s) => s.fn === "sidebar" },
@@ -469,6 +690,15 @@ const SCHEMAS = {
 			{ key: "message", label: "Message", type: "text", placeholder: "Texte à envoyer", show: (s) => s.fn === "chat" },
 			{ key: "whisperGM", label: "Chuchoter", type: "checkbox", default: false, text: "au(x) MJ uniquement", show: (s) => s.fn === "chat" },
 			{ key: "darkness", label: "Obscurité", type: "range", default: 100, min: 0, max: 100, show: (s) => s.fn === "darkness", note: "0 = plein jour, 100 = nuit noire" },
+			{ key: "timerPress", label: "Appui", type: "select", default: "toggle", show: (s) => s.fn === "timer", options: opt(
+				["toggle", "Démarrer / mettre en pause"], ["reset", "Remettre à zéro"]),
+				note: "Terminé : un appui remet le minuteur à zéro. Le minuteur tourne dans ce navigateur (il s'arrête si la page est rechargée)." },
+			{ key: "timerType", label: "Type", type: "select", default: "countdown", show: (s) => s.fn === "timer" && (s.timerPress ?? "toggle") === "toggle", options: opt(
+				["countdown", "Compte à rebours"], ["stopwatch", "Chronomètre (temps écoulé)"]) },
+			{ key: "minutes", label: "Durée", type: "number", default: 5, min: 0.1, max: 1440, step: "any", show: (s) => s.fn === "timer" && (s.timerPress ?? "toggle") === "toggle" && s.timerType !== "stopwatch", note: "minutes (ex. 0.5 = 30 s)" },
+			{ key: "timerSound", label: "Fin", type: "checkbox", default: true, show: (s) => s.fn === "timer" && (s.timerPress ?? "toggle") === "toggle" && s.timerType !== "stopwatch", text: "son et message à la fin" },
+			{ key: "timerName", label: "Nom", type: "text", placeholder: "A", show: (s) => s.fn === "timer",
+				note: "Deux touches avec le même nom pilotent le même minuteur (ex. une touche « Remettre à zéro »)." },
 			{ key: "weather", label: "Météo", type: "select", source: "weather", emptyLabel: "(aucune — temps clair)", pro: true, show: (s) => s.fn === "weather",
 				note: "Un appui pose cette météo sur la scène ; un second appui l'enlève." },
 			{ key: "timeStep", label: "Temps", type: "select", default: "10m", pro: true, show: (s) => s.fn === "time", options: opt(
@@ -490,6 +720,21 @@ const SCHEMAS = {
 			{ key: "alertWhisper", label: "", type: "checkbox", default: true, pro: true, text: "message privé reçu", show: (s) => s.fn === "alerts" },
 			{ key: "playersOnly", label: "Origine", type: "checkbox", default: true, pro: true, text: "seulement les jets des joueurs", show: (s) => s.fn === "alerts",
 				note: "La touche clignote ; un appui l'éteint et ouvre le chat." },
+			{ key: "noteMode", label: "Appui", type: "select", default: "quick", pro: true, show: (s) => s.fn === "sessionNote", options: opt(
+				["quick", "Ajouter la note tout de suite"], ["ask", "Écrire la note dans Foundry"], ["open", "Ouvrir le journal de séance"]),
+				note: "Chaque note porte l'heure ; une page par jour de jeu. Le MJ crée le journal au premier appui ; un joueur peut écrire s'il en est propriétaire." },
+			{ key: "noteText", label: "Note", type: "text", placeholder: "Moment marquant", pro: true, show: (s) => s.fn === "sessionNote" && s.noteMode !== "open" },
+			{ key: "journalId", label: "Journal", type: "select", source: "journals", emptyLabel: "(Journal de séance, créé au besoin)", pro: true, show: (s) => s.fn === "sessionNote" },
+			{ key: "noteContext", label: "Contexte", type: "checkbox", default: true, pro: true, text: "ajouter la scène, le round et le combattant actif", show: (s) => s.fn === "sessionNote" && s.noteMode !== "open" },
+			{ key: "turnSeconds", label: "Durée", type: "number", default: 60, min: 5, pro: true, show: (s) => s.fn === "turnTimer", note: "secondes par tour ; le minuteur repart à chaque changement de tour" },
+			{ key: "turnWarn", label: "Orange", type: "number", default: 15, min: 0, pro: true, show: (s) => s.fn === "turnTimer", note: "la touche passe à l'orange quand il reste ce nombre de secondes" },
+			{ key: "turnSound", label: "Fin", type: "checkbox", default: true, pro: true, text: "son quand le temps est écoulé", show: (s) => s.fn === "turnTimer" },
+			{ key: "turnBroadcast", label: "", type: "checkbox", default: false, pro: true, text: "son chez tous les joueurs (MJ)", show: (s) => s.fn === "turnTimer" && s.turnSound !== false },
+			{ key: "turnChat", label: "", type: "checkbox", default: false, pro: true, text: "message privé au joueur du combattant", show: (s) => s.fn === "turnTimer",
+				note: "Appui : pause / reprise. Une fois le temps écoulé, la touche clignote en rouge ; un appui relance le minuteur." },
+			{ key: "lightId", label: "Lumière", type: "capture", source: "selectedLight", sceneKey: "sceneId", pro: true, show: (s) => s.fn === "fogZone",
+				note: "Placez une lumière qui couvre la zone, sélectionnez-la (outil Éclairage), puis cliquez sur « Utiliser la sélection ». La touche l'allume avec « Fournit la vision » (la zone devient visible pour les joueurs) ou l'éteint. Une zone déjà vue reste explorée : « Réinitialiser le brouillard » l'efface." },
+			{ key: "zoneName", label: "Nom", type: "text", placeholder: "ex. Crypte", pro: true, show: (s) => s.fn === "fogZone" },
 			{ key: "includeNeutral", label: "Cibles", type: "checkbox", default: false, pro: true, text: "inclure les jetons neutres", show: (s) => s.fn === "targetNext" },
 			{ key: "panToTarget", label: "Vue", type: "checkbox", default: true, pro: true, text: "centrer sur la cible", show: (s) => s.fn === "targetNext" }
 		]
@@ -536,8 +781,10 @@ const SCHEMAS = {
 				["data", "Données utilisateur"], ["public", "Fichiers de Foundry (sounds/…)"]) },
 			{ key: "volume", label: "Volume", type: "range", default: 80, min: 0, max: 100, show: (s) => s.kind === "files" },
 			{ key: "broadcast", label: "Diffusion", type: "checkbox", default: true, text: "jouer chez tous les joueurs", show: (s) => s.kind === "files" },
-			{ key: "actorSource", label: "Personnage", type: "select", default: "mine", show: (s) => s.kind === "items", options: opt(
-				["mine", "Mon personnage"], ["selected", "Jeton sélectionné"]) },
+			{ key: "actorSource", label: "Objets de", type: "select", default: "mine", show: (s) => s.kind === "items", options: opt(
+				["mine", "Mon personnage"], ["selected", "Jeton sélectionné"], ["actor", "Personnage précis"], ["turn", "Combattant actif"]) },
+			{ key: "actorId", label: "Personnage", type: "select", source: "actors", show: (s) => s.kind === "items" && s.actorSource === "actor",
+				note: "La page montre toujours les objets de ce personnage, quel que soit le jeton sélectionné." },
 			{ key: "itemType", label: "Type", type: "select", source: "itemTypes", emptyLabel: "(tous)", show: (s) => s.kind === "items" },
 			{ key: "folderId", label: "Dossier", type: "select", source: "macroFolders", emptyLabel: "(toutes les macros)", show: (s) => (s.kind ?? "macros") === "macros" },
 			{ key: "folderId", label: "Dossier", type: "select", source: "sceneFolders", emptyLabel: "(toutes les scènes)", show: (s) => s.kind === "scenes" },
@@ -602,7 +849,7 @@ const DIAL_NOTES = {
 	ambientVolume: "Tourner : volume. Appuyer : couper / rétablir.",
 	interfaceVolume: "Tourner : volume. Appuyer : couper / rétablir.",
 	darkness: "Tourner : plus clair / plus sombre. Appuyer : jour ↔ nuit.",
-	tokenHp: "Tourner : PV du jeton sélectionné (appliqués après un court arrêt). Appuyer : appliquer tout de suite.",
+	tokenHp: "Tourner : PV ou autre jauge du jeton sélectionné (appliqués après un court arrêt). Appuyer : appliquer tout de suite.",
 	initiative: "Tourner : tour suivant / précédent. Appuyer : centrer sur le combattant actif.",
 	zoom: "Tourner : zoom. Appuyer : zoom normal, centré sur le jeton sélectionné.",
 	party: "Tourner : sélectionne le jeton du personnage suivant et centre la vue.",
@@ -610,7 +857,8 @@ const DIAL_NOTES = {
 	targets: "Tourner : parcourt les cibles possibles, les plus proches d'abord. Appuyer : cibler. Toucher l'écran : effacer les cibles.",
 	tracks: "Tourner : fait défiler les pistes. Appuyer : jouer la piste montrée, ou l'arrêter si elle joue (MJ).",
 	dice: "Tourner : type de dé. Appuyer : ajouter un dé. Tourner en appuyant : bonus ±1. Toucher l'écran : vider la réserve. Une touche Système « Lancer la réserve de dés » lance les dés.",
-	macros: "Tourner : fait défiler les macros. Appuyer : exécuter la macro montrée."
+	macros: "Tourner : fait défiler les macros. Appuyer : exécuter la macro montrée.",
+	backgrounds: "Tourner : change l'image de fond de la scène affichée, pour tous les joueurs (appliquée après un court arrêt de la molette). Jetons, murs et lumières restent en place. Appuyer : revenir à l'image d'origine. MJ."
 };
 const dialFn = (s) => s.fn ?? "musicVolume";
 SCHEMAS.dial = {
@@ -620,9 +868,14 @@ SCHEMAS.dial = {
 	fields: [
 		{ key: "fn", label: "Fonction", type: "select", default: "musicVolume", resets: ["folderId", "folderIdName", "playlistId", "playlistIdName"], noteFn: (s) => DIAL_NOTES[dialFn(s)], options: opt(
 			["musicVolume", "Volume de la musique"], ["ambientVolume", "Volume de l'ambiance"], ["interfaceVolume", "Volume de l'interface"],
-			["darkness", "Lumière de la scène (obscurité, MJ)"], ["tokenHp", "PV du jeton sélectionné"], ["initiative", "Tours de combat (suivant / précédent)"], ["zoom", "Zoom de la carte"],
+			["darkness", "Lumière de la scène (obscurité, MJ)"], ["tokenHp", "Jeton sélectionné : PV ou autre jauge"], ["initiative", "Tours de combat (suivant / précédent)"], ["zoom", "Zoom de la carte"],
 			["party", "Groupe : passer d'un personnage à l'autre"], ["scenes", "Scènes : faire défiler"], ["targets", "Cibles : parcourir et cibler"],
-			["tracks", "Musique : choisir une piste"], ["dice", "Dés : préparer un lancer"], ["macros", "Macros : faire défiler"]) },
+			["tracks", "Musique : choisir une piste"], ["dice", "Dés : préparer un lancer"], ["macros", "Macros : faire défiler"],
+			["backgrounds", "Scène : changer l'image de fond"]) },
+		{ key: "gauge", label: "Jauge", type: "select", default: "bar1", show: (s) => dialFn(s) === "tokenHp", options: opt(
+			["bar1", "PV (barre 1 du jeton)"], ["bar2", "Barre 2 du jeton"], ["attr", "Attribut de la fiche (chemin)"]) },
+		{ key: "attrPath", label: "Chemin", type: "text", placeholder: "ex. resources.legact, attributes.hd", show: (s) => dialFn(s) === "tokenHp" && s.gauge === "attr",
+			note: "Chemin dans les données du personnage, avec ou sans « system. ». Une valeur avec maximum (PV, ressources) se règle comme les PV ; un nombre simple aussi." },
 		{ key: "step", label: "Pas", type: "number", min: 1, show: (s) => ["musicVolume", "ambientVolume", "interfaceVolume", "darkness", "tokenHp"].includes(dialFn(s)),
 			note: "par cran de molette : en % (volumes, obscurité) ou en PV" },
 		...partyFields((s) => dialFn(s) === "party"),
@@ -641,7 +894,116 @@ SCHEMAS.dial = {
 		{ key: "panTo", label: "Vue", type: "checkbox", default: false, text: "centrer sur la cible en tournant", show: (s) => dialFn(s) === "targets" },
 		{ key: "pingTarget", label: "Signal", type: "checkbox", default: false, text: "signal sur la carte en tournant (vu par toute la table)", show: (s) => dialFn(s) === "targets" },
 		{ key: "folderId", label: "Dossier", type: "select", source: "macroFolders", emptyLabel: "(toutes les macros)", show: (s) => dialFn(s) === "macros" },
+		{ key: "bgFolder", label: "Dossier", type: "text", placeholder: "ex. worlds/mon-monde/cartes/taverne", show: (s) => dialFn(s) === "backgrounds",
+			note: "Mettez dans ce dossier les déclinaisons du lieu (en flammes, en ruines, de nuit…), à la même taille que l'image d'origine. L'image d'origine de la scène est toujours la première. Foundry 14 : c'est le niveau affiché qui change." },
 		{ key: "label", label: "Titre", type: "text", placeholder: "(automatique)" }
+	]
+};
+
+/* Personnage D&D 5e (VTT Deck Premium, système dnd5e) */
+const DND_SKILLS = opt(
+	["acr", "Acrobaties"], ["ani", "Dressage"], ["arc", "Arcanes"], ["ath", "Athlétisme"], ["dec", "Tromperie"], ["his", "Histoire"],
+	["ins", "Perspicacité"], ["itm", "Intimidation"], ["inv", "Investigation"], ["med", "Médecine"], ["nat", "Nature"], ["prc", "Perception"],
+	["prf", "Représentation"], ["per", "Persuasion"], ["rel", "Religion"], ["slt", "Escamotage"], ["ste", "Discrétion"], ["sur", "Survie"]
+);
+const DND_ABILITIES = opt(
+	["str", "Force"], ["dex", "Dextérité"], ["con", "Constitution"], ["int", "Intelligence"], ["wis", "Sagesse"], ["cha", "Charisme"]
+);
+const DND_GROUP = ["groupSkill", "groupSave", "groupRest"];
+const dndFn = (s) => s.fn ?? "item";
+const dndPersonal = (s) => !DND_GROUP.includes(dndFn(s));
+SCHEMAS.character = {
+	pro: true,
+	help: "Système D&D 5e (dnd5e 5.3 ou plus). Objets, sorts et aptitudes de la fiche, jets, emplacements de sorts, repos, inspiration, concentration, jets contre la mort. « Groupe : demander… » envoie une carte de jet dans le chat : chaque joueur lance pour son personnage.",
+	fields: [
+		{ key: "fn", label: "Fonction", type: "select", default: "item", options: opt(
+			["item", "Utiliser un objet, un sort ou une aptitude"], ["slots", "Emplacements de sorts"], ["skill", "Jet de compétence"],
+			["ability", "Test de caractéristique"], ["save", "Jet de sauvegarde"], ["initiative", "Jet d'initiative"], ["deathSave", "Jet contre la mort"],
+			["hitDie", "Dé de vie"], ["rest", "Repos"], ["inspiration", "Inspiration"], ["concentration", "Concentration"],
+			["groupSkill", "Groupe : demander un jet de compétence (MJ)"], ["groupSave", "Groupe : demander un jet de sauvegarde (MJ)"],
+			["groupRest", "Groupe : demander un repos (MJ)"]) },
+		{ key: "target", label: "Personnage", type: "select", default: "selected", show: dndPersonal, options: opt(
+			["selected", "Jeton sélectionné"], ["mine", "Mon personnage (joueur)"], ["actor", "Personnage précis"], ["turn", "Combattant actif"],
+			["party", "Groupe : un personnage par touche"]),
+			note: "Groupe : copiez la touche sur plusieurs emplacements, chaque touche prend un personnage du groupe." },
+		...partyFields((s) => dndPersonal(s) && s.target === "party"),
+		{ key: "actorId", label: "Personnage", type: "select", source: "actors", show: (s) => dndPersonal(s) && s.target === "actor" },
+		{ key: "itemName", label: "Nom", type: "text", placeholder: "ex. Épée longue, Boule de feu", show: (s) => dndFn(s) === "item",
+			note: "Nom de l'objet, du sort ou de l'aptitude tel qu'il est écrit sur la fiche (majuscules et accents indifférents)." },
+		{ key: "slotLevel", label: "Niveau", type: "select", default: "1", show: (s) => dndFn(s) === "slots", options: opt(
+			["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"], ["pact", "Magie de pacte"]) },
+		{ key: "skill", label: "Compétence", type: "select", default: "prc", show: (s) => ["skill", "groupSkill"].includes(dndFn(s)), options: DND_SKILLS },
+		{ key: "ability", label: "Caractéristique", type: "select", default: "dex", show: (s) => ["ability", "save", "groupSave"].includes(dndFn(s)), options: DND_ABILITIES },
+		{ key: "dc", label: "DD", type: "number", min: 0, show: (s) => ["groupSkill", "groupSave"].includes(dndFn(s)), note: "facultatif : la carte indique alors les réussites et les échecs" },
+		{ key: "restType", label: "Repos", type: "select", default: "short", show: (s) => ["rest", "groupRest"].includes(dndFn(s)), options: opt(
+			["short", "Repos court"], ["long", "Repos long"]) },
+		{ key: "mode", label: "Jet", type: "select", default: "normal", show: (s) => ["skill", "ability", "save", "initiative", "deathSave"].includes(dndFn(s)), options: opt(
+			["normal", "Normal"], ["advantage", "Avec avantage"], ["disadvantage", "Avec désavantage"]) },
+		{ key: "fast", label: "Rapide", type: "checkbox", default: false, show: (s) => ["item", "skill", "ability", "save", "initiative", "deathSave", "hitDie", "rest"].includes(dndFn(s)),
+			text: "sans fenêtre de réglage (lance directement)" },
+		{ key: "showName", label: "Afficher", type: "checkbox", default: true, show: dndPersonal, text: "écrire le nom du personnage sur la touche" }
+	]
+};
+
+/* Personnage Pathfinder 2e (VTT Deck Premium, système pf2e) */
+const PF2E_SKILLS = opt(
+	["perception", "Perception"], ["acrobatics", "Acrobaties"], ["arcana", "Arcanes"], ["athletics", "Athlétisme"], ["crafting", "Artisanat"],
+	["deception", "Duperie"], ["diplomacy", "Diplomatie"], ["intimidation", "Intimidation"], ["medicine", "Médecine"], ["nature", "Nature"],
+	["occultism", "Occultisme"], ["performance", "Représentation"], ["religion", "Religion"], ["society", "Société"], ["stealth", "Discrétion"],
+	["survival", "Survie"], ["thievery", "Vol"]
+);
+const PF2E_SAVES = opt(["fortitude", "Vigueur"], ["reflex", "Réflexes"], ["will", "Volonté"]);
+const PF2E_CONDITIONS = opt(
+	["frightened", "Effrayé (valeur)"], ["sickened", "Nauséeux (valeur)"], ["clumsy", "Maladroit (valeur)"], ["enfeebled", "Affaibli (valeur)"],
+	["stupefied", "Stupéfié (valeur)"], ["drained", "Drainé (valeur)"], ["doomed", "Condamné (valeur)"], ["wounded", "Blessé (valeur)"],
+	["slowed", "Ralenti (valeur)"], ["stunned", "Étourdi (valeur)"], ["off-guard", "Pris au dépourvu"], ["prone", "À terre"],
+	["grabbed", "Agrippé"], ["restrained", "Entravé"], ["immobilized", "Immobilisé"], ["quickened", "Accéléré"], ["blinded", "Aveuglé"],
+	["dazzled", "Ébloui"], ["deafened", "Sourd"], ["fatigued", "Fatigué"], ["concealed", "Masqué"], ["hidden", "Caché"],
+	["invisible", "Invisible"], ["confused", "Confus"], ["fascinated", "Fasciné"], ["fleeing", "En fuite"], ["paralyzed", "Paralysé"],
+	["unconscious", "Inconscient"], ["encumbered", "Surchargé"]
+);
+const PF2E_GROUP = ["groupCheck", "groupSave", "groupRest"];
+const pf2eFn = (s) => s.fn ?? "strike";
+const pf2ePersonal = (s) => !PF2E_GROUP.includes(pf2eFn(s));
+SCHEMAS.pf2e = {
+	pro: true,
+	help: "Système Pathfinder 2e (pf2e 7 ou plus, Foundry 13 et 14). Frappes avec pénalité d'attaques multiples, actions du tour, états à valeur, points d'héroïsme et de focalisation, tests et sauvegardes. « Groupe : demander… » envoie un bouton de test dans le chat : chaque joueur lance pour son personnage.",
+	fields: [
+		{ key: "fn", label: "Fonction", type: "select", default: "strike", options: opt(
+			["strike", "Frappe (arme ou attaque)"], ["item", "Objet, action, don ou sort"], ["skill", "Test de compétence ou de Perception"],
+			["save", "Jet de sauvegarde"], ["initiative", "Jet d'initiative"], ["actions", "Actions du tour (◆ et réaction)"],
+			["condition", "État (valeur + 1 / − 1)"], ["heroPoints", "Points d'héroïsme"], ["focus", "Points de focalisation"],
+			["recovery", "Test de récupération (mourant)"], ["rest", "Repos pour la nuit"],
+			["groupCheck", "Groupe : demander un test (MJ)"], ["groupSave", "Groupe : demander un jet de sauvegarde (MJ)"],
+			["groupRest", "Groupe : repos pour la nuit (MJ)"]) },
+		{ key: "target", label: "Personnage", type: "select", default: "selected", show: pf2ePersonal, options: opt(
+			["selected", "Jeton sélectionné"], ["mine", "Mon personnage (joueur)"], ["actor", "Personnage précis"], ["turn", "Combattant actif"],
+			["party", "Groupe : un personnage par touche"]),
+			note: "Groupe : copiez la touche sur plusieurs emplacements, chaque touche prend un personnage du groupe." },
+		...partyFields((s) => pf2ePersonal(s) && s.target === "party"),
+		{ key: "actorId", label: "Personnage", type: "select", source: "actors", show: (s) => pf2ePersonal(s) && s.target === "actor" },
+		{ key: "itemName", label: "Nom", type: "text", placeholder: "ex. Épée longue, Mâchoires", show: (s) => pf2eFn(s) === "strike",
+			note: "Nom de l'arme ou de l'attaque tel qu'il est écrit sur la fiche (majuscules et accents indifférents)." },
+		{ key: "strikeMode", label: "Jet", type: "select", default: "attack0", show: (s) => pf2eFn(s) === "strike", options: opt(
+			["attack0", "1re attaque"], ["attack1", "2e attaque (pénalité)"], ["attack2", "3e attaque (pénalité)"], ["damage", "Dégâts"], ["critical", "Dégâts critiques"]),
+			note: "La pénalité d'attaques multiples (et celle des armes agiles) est calculée par le système." },
+		{ key: "itemName", label: "Nom", type: "text", placeholder: "ex. Potion de soins, Projectile magique", show: (s) => pf2eFn(s) === "item",
+			note: "Un consommable est utilisé (potion, parchemin…) ; sinon sa carte est postée dans le chat." },
+		{ key: "skill", label: "Compétence", type: "select", default: "perception", show: (s) => ["skill", "groupCheck"].includes(pf2eFn(s)), options: PF2E_SKILLS },
+		{ key: "save", label: "Sauvegarde", type: "select", default: "fortitude", show: (s) => ["save", "groupSave"].includes(pf2eFn(s)), options: PF2E_SAVES },
+		{ key: "slot", label: "Action", type: "select", default: "1", show: (s) => pf2eFn(s) === "actions", options: opt(
+			["1", "1re action"], ["2", "2e action"], ["3", "3e action"], ["4", "4e action (Accéléré)"], ["reaction", "Réaction"]),
+			note: "Une touche par action. Appuyer coche ou décoche ; tout redevient disponible au début du tour du personnage. Ralenti et Accéléré sont pris en compte." },
+		{ key: "condition", label: "État", type: "select", default: "frightened", show: (s) => pf2eFn(s) === "condition", options: PF2E_CONDITIONS },
+		{ key: "step", label: "Appui", type: "select", default: "up", show: (s) => pf2eFn(s) === "condition", options: opt(
+			["up", "Ajouter (+ 1)"], ["down", "Retirer (− 1)"]),
+			note: "Un état sans valeur (À terre…) est ajouté ou retiré." },
+		{ key: "resource", label: "Appui", type: "select", default: "spend", show: (s) => ["heroPoints", "focus"].includes(pf2eFn(s)), options: opt(
+			["spend", "Dépenser 1 point"], ["gain", "Regagner 1 point"]) },
+		{ key: "dc", label: "DD", type: "number", min: 0, show: (s) => ["groupCheck", "groupSave"].includes(pf2eFn(s)), note: "facultatif : la carte indique alors les réussites et les échecs" },
+		{ key: "fast", label: "Rapide", type: "checkbox", default: false, show: (s) => ["strike", "skill", "save", "initiative", "rest"].includes(pf2eFn(s)),
+			text: "sans fenêtre de réglage (lance directement)" },
+		{ key: "showName", label: "Afficher", type: "checkbox", default: true, show: pf2ePersonal, text: "écrire le nom du personnage sur la touche" }
 	]
 };
 
@@ -656,7 +1018,12 @@ const COMMON = [
 	{ sep: "Apparence" },
 	{ key: "label", label: "Texte", type: "text", placeholder: "(automatique)", note: "| = retour à la ligne · {name} {value} {max} {round}" },
 	{ key: "hideText", label: "Masquer", type: "checkbox", default: false, text: "ne pas écrire de texte" },
+	{ key: "textPos", label: "Position", type: "select", default: "bottom", show: (s) => !s.hideText, options: opt(["bottom", "Texte en bas"], ["top", "Texte en haut"]),
+		note: "En haut, le texte échappe aux reflets du bas des boutons quand le Stream Deck est incliné." },
 	{ key: "customImage", label: "Image", type: "text", placeholder: "chemin Foundry (optionnel)" },
+	{ key: "gameIcon", label: "Icône", type: "icon",
+		note: "Bibliothèque game-icons.net (plus de 4 000 icônes). L'icône remplace l'image ou l'emoji de la touche ; sur une touche qui affiche un nombre, elle passe derrière, en filigrane." },
+	{ key: "iconColor", label: "Teinte", type: "color", colorDefault: "#ffffff", show: (s) => !!s.gameIcon, note: "couleur de l'icône (blanc par défaut)" },
 	{ key: "bgColor", label: "Fond", type: "color" },
 	{ sep: "Couleurs selon la valeur ★ Premium" },
 	{ key: "thrLow", label: "Sous (%)", type: "number", min: 0, max: 100, pro: true, note: "ex. 50 : la touche change de couleur quand les PV passent sous la moitié" },
@@ -772,11 +1139,21 @@ function buildField(f) {
 	const value = valueOf(f);
 	let input;
 	const extra = [];
+	/** éléments placés sous la ligne (sélecteur d'icônes) */
+	const after = [];
 	switch (f.type) {
 		case "textarea": {
 			input = el("textarea", { id: f.key, rows: 6, placeholder: tr(f.placeholder ?? "") });
 			input.value = value ?? "";
 			input.addEventListener("change", () => (set(f.key, input.value.trim() ? input.value : undefined), save()));
+			break;
+		}
+		case "icon": {
+			if (globalThis.IconPicker) {
+				const ip = IconPicker.field(f, { settings, set, save, render, tr, el });
+				input = ip.input;
+				if (ip.panel) after.push(ip.panel);
+			} else input = el("span", { class: "help small", text: tr("Bibliothèque d'icônes introuvable dans le plugin.") });
 			break;
 		}
 		case "capture": {
@@ -827,7 +1204,7 @@ function buildField(f) {
 			break;
 		}
 		case "color": {
-			const c = el("input", { id: f.key, type: "color", value: value || "#333333" });
+			const c = el("input", { id: f.key, type: "color", value: value || f.colorDefault || "#333333" });
 			c.addEventListener("change", () => (set(f.key, c.value), save()));
 			input = c;
 			extra.push(el("button", { type: "button", class: "icon", title: tr("Couleur par défaut"), text: "↺", onclick: () => (set(f.key, undefined), save(), render()) }));
@@ -844,6 +1221,7 @@ function buildField(f) {
 	const row = el("div", { class: "row" }, [el("label", { for: f.key, text: labelText }), el("div", { class: "val" }, [input, ...extra])]);
 	const frag = document.createDocumentFragment();
 	frag.append(row);
+	for (const node of after) frag.append(node);
 	if (f.note) frag.append(el("div", { class: "note", text: tr(f.note) }));
 	if (f.noteFn && f.noteFn(settings)) frag.append(el("div", { class: "note", text: tr(f.noteFn(settings)) }));
 	if (f.type === "capture" && captureMessage && pendingCapture === null && captureMessage.key === f.key)

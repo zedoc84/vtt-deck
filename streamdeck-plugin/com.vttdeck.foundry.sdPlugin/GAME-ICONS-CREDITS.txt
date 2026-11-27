@@ -1,0 +1,51 @@
+Icônes de la bibliothèque VTT Deck / VTT Deck icon library
+
+Les icônes proviennent de game-icons.net (https://game-icons.net, https://github.com/game-icons/icons).
+Icons come from game-icons.net (https://game-icons.net, https://github.com/game-icons/icons).
+
+Licence : Creative Commons Attribution 3.0 Unported (CC BY 3.0), https://creativecommons.org/licenses/by/3.0/
+Quelques icônes de Viscious Speed sont dans le domaine public (CC0). / A few icons by Viscious Speed are CC0.
+Modifications : tracés pris dans le paquet @iconify-json/game-icons (optimisés par Iconify, fond noir retiré) ;
+VTT Deck les colore et les met à l'échelle sur les touches.
+Changes: paths taken from the @iconify-json/game-icons package (optimised by Iconify, black background removed);
+VTT Deck colours and scales them on the keys.
+
+Sources : @iconify-json/game-icons 1.2.4 ; game-icons/icons, commit 82d948812bfe
+
+Auteurs / Authors:
+- Andy Meneely
+- Aussiesim
+- Carl Olsen
+- Caro Asercion
+- Cathelineau
+- Catsu
+- DarkZaitzev
+- Delapouite
+- Faithtoken
+- Felbrigg
+- GeneralAce135
+- Guard13007
+- HeavenlyDog
+- Irongamer
+- John Colburn
+- John Redman
+- Kier Heyl
+- Lorc
+- Lord Berandas
+- Lucas
+- Pepijn Poolman
+- Pierre Leducq
+- PriorBlue
+- Quoting
+- Rihlsul
+- Sbed
+- Seregacthtuf
+- Skoll
+- Sparker
+- SpencerDub
+- Starseeker
+- Various artists
+- Viscious Speed
+- Willdabeast
+- Zajkonur
+- Zeromancer

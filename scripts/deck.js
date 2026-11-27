@@ -2,7 +2,11 @@ import { MODULE_ID, t } from "./constants.js";
 import { Bridge } from "./bridge.js";
 import { KeyRenderer } from "./renderer.js";
 import { piData, defaultColor } from "./actions.js";
-import { UserError, failPro } from "./helpers.js";
+import { UserError, failPro, safeData } from "./helpers.js";
+
+/** Tracé SVG d'une icône (viewBox 512 × 512) : commandes et nombres seulement, 30 000 caractères au plus */
+const GLYPH_RE = /^[MmLlHhVvCcSsQqTtAaZz0-9eE.,\s+-]+$/;
+export const validGlyph = (d) => (typeof d === "string" && d.length <= 30000 && GLYPH_RE.test(d) ? d : null);
 
 /**
  * Cœur du module : registre des touches visibles, file de rendu,
@@ -243,7 +247,7 @@ export class Deck {
 			if (err instanceof UserError) ui.notifications.warn(err.message);
 			else {
 				console.error("VTT Deck | erreur sur appui", err);
-				ui.notifications.error(t("Errors.Generic", { msg: err?.message ?? err }));
+				ui.notifications.error(t("Errors.Generic", safeData({ msg: err?.message ?? err })));
 			}
 			this.bridge.send({ type: "feedback", context: msg.context, ok: false });
 		}
@@ -397,9 +401,23 @@ export class Deck {
 			return spec;
 		}
 		spec.bg = s.bgColor || spec.bg || defaultColor(key.action);
+		// texte en haut de la touche : plus lisible sur un Stream Deck incliné (reflets en bas des boutons)
+		if (s.textPos === "top") spec.textTop = true;
 		if (s.customImage) {
 			spec.image = s.customImage;
 			spec.fit = spec.fit ?? "cover";
+		}
+		// Icône de la bibliothèque game-icons.net (tracé SVG enregistré dans la touche par l'inspecteur)
+		const glyph = validGlyph(s.gameIconPath);
+		if (glyph) {
+			const color = /^#[0-9a-f]{6}$/i.test(s.iconColor ?? "") ? s.iconColor : "#ffffff";
+			// touche qui affiche un nombre (PV, minuteur…) : l'icône passe derrière, en filigrane
+			if (spec.big && !spec.icon && !spec.image) Object.assign(spec, { glyphBack: glyph, glyphColor: color });
+			else {
+				delete spec.icon;
+				delete spec.image;
+				Object.assign(spec, { glyph, glyphColor: color });
+			}
 		}
 		// Extensions (ex. couleurs selon des seuils, mode joueur)
 		for (const decorate of this.api.decorators ?? []) {

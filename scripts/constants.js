@@ -2,7 +2,7 @@ export const MODULE_ID = "vtt-deck";
 export const PROTOCOL = 2;
 export const PRO_ID = "vtt-deck-premium";
 /** Page de vente de VTT Deck Premium (à remplir : itch.io, Patreon…). Vide = pas de lien. */
-export const PRO_URL = "";
+export const PRO_URL = "https://www.foundryvtt.store/products/vtt-deck-premium";
 
 /** Couleurs de fond par défaut (identiques aux icônes du plugin) */
 export const COLORS = {
@@ -16,7 +16,9 @@ export const COLORS = {
 	ambiance: "#1d4a52",
 	page: "#4a4320",
 	sequence: "#3c2a52",
-	dial: "#2b2b33"
+	dial: "#2b2b33",
+	character: "#5c1f28",
+	pf2e: "#3d2a5c"
 };
 
 export const BORDER = {

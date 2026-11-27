@@ -29,3 +29,19 @@ textarea:focus { outline: none; border-color: #6a8ad8; }
 .capture { display: flex; align-items: center; gap: 6px; min-width: 0; flex: 1 1 auto; }
 .capture-label { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #c8c8c8; }
 .capture button { flex: none; }
+.iconpick { display: flex; align-items: center; gap: 6px; min-width: 0; flex: 1 1 auto; }
+.iconprev { flex: none; width: 24px; height: 24px; border-radius: 3px; background: #1f1f1f; display: flex; align-items: center; justify-content: center; }
+.iconprev svg { width: 20px; height: 20px; fill: #e8e8e8; }
+.iconname { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #c8c8c8; }
+.iconpick button { flex: none; }
+.iconpanel { margin: 2px 0 6px 106px; padding: 6px; background: #262626; border: 1px solid #3f3f3f; border-radius: 4px; }
+.iconpanel input[type=search] { width: 100%; height: 24px; box-sizing: border-box; background: #3d3d3d; color: #d8d8d8; border: 1px solid #4a4a4a; border-radius: 3px; padding: 0 6px; font: inherit; }
+.iconcats { display: flex; flex-wrap: wrap; gap: 3px; margin: 5px 0; }
+.iconcats .chip { height: 20px; padding: 0 6px; font-size: 8pt; border-radius: 10px; background: #383838; }
+.iconcats .chip.on { background: #4f6db8; border-color: #6a8ad8; }
+.icongrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(34px, 1fr)); gap: 3px; max-height: 260px; overflow-y: auto; }
+.iconcell { height: 34px; padding: 3px; background: #333; border: 1px solid #444; display: flex; align-items: center; justify-content: center; }
+.iconcell svg { width: 26px; height: 26px; fill: #e8e8e8; }
+.iconcell:hover { background: #4a4a4a; }
+.iconcell.on { border-color: #6a8ad8; background: #3d4a66; }
+.iconpanel .note { padding-left: 0; margin: 4px 0 0 0; }

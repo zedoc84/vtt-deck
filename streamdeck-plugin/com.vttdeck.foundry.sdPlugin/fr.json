@@ -41,6 +41,14 @@
     "Name": "Séquence",
     "Tooltip": "Enchaîne plusieurs actions Foundry VTT avec une seule touche, sans code"
   },
+  "com.vttdeck.foundry.character": {
+    "Name": "Personnage (D&D 5e)",
+    "Tooltip": "D&D 5e : objets et sorts, jets de compétence et de sauvegarde, emplacements de sorts, repos, jets de groupe"
+  },
+  "com.vttdeck.foundry.pf2e": {
+    "Name": "Personnage (PF2e)",
+    "Tooltip": "Pathfinder 2e : frappes avec pénalité d'attaques multiples, actions du tour, états à valeur, points d'héroïsme et de focalisation, jets, demandes au groupe"
+  },
   "com.vttdeck.foundry.dial": {
     "Name": "Molette",
     "Tooltip": "Molettes pour Foundry VTT : volumes, obscurité, tours, PV, zoom, groupe, scènes, cibles, musiques, dés et macros (Stream Deck + et + XL)"

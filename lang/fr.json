@@ -79,7 +79,9 @@
       "ambiance": "Ambiance",
       "page": "Page dynamique",
       "sequence": "Séquence",
-      "dial": "Molette"
+      "dial": "Molette",
+      "character": "Personnage (D&D 5e)",
+      "pf2e": "Personnage (PF2e)"
     },
     "Notify": {
       "Connected": "VTT Deck : Stream Deck connecté.",
@@ -139,7 +141,18 @@
       "ChooseTable": "Table ?",
       "ChooseMessage": "Message ?",
       "Door": "Porte",
-      "Light": "Lumière"
+      "Light": "Lumière",
+      "PullView": "Vue des joueurs",
+      "Timer": "Minuteur",
+      "Stopwatch": "Chrono",
+      "TimerReset": "Remise à zéro",
+      "TimerPaused": "En pause",
+      "TimerDoneShort": "Terminé",
+      "TimerDone": "Temps écoulé ! {name}",
+      "Fog": "Brouillard",
+      "FogReset": "réinitialiser",
+      "ResetFogTitle": "Réinitialiser le brouillard",
+      "ResetFogConfirm": "Réinitialiser le brouillard de « {scene} » pour tous les joueurs ? Ce qu'ils ont exploré sera de nouveau caché."
     },
     "Tabs": {
       "chat": "Messages",

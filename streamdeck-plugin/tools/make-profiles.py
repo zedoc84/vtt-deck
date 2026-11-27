@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Fabrique les profils Stream Deck prêts à l'emploi fournis avec le plugin :
-  com.vttdeck.foundry.sdPlugin/profiles/vtt-deck-<exploration|combat>-<15|xl|plus|plusxl|neo|mini>.streamDeckProfile
+  com.vttdeck.foundry.sdPlugin/profiles/vtt-deck-<exploration|combat>-<15|xl|plus|plusxl|neo|mini|mobile|vsd>.streamDeckProfile
 
 Format « Version 2.0 » des profils exportés par l'application Stream Deck (archive zip) :
   <UUID>.sdProfile/manifest.json                    nom, modèle d'appareil, pages
@@ -37,7 +37,16 @@ DEVICES = {
     # Stream Deck + XL : 36 touches (9 × 4), 6 molettes. Modèle déduit de la référence 10GBX9901 :
     # à confirmer en exportant un profil depuis un vrai Stream Deck + XL.
     13: ("20GBX9901", 9, 4, "plusxl"),
+    # Stream Deck Mobile (iPhone, iPad, Android) : 6 touches dans l'app gratuite, 15 ou plus avec l'abonnement.
+    # Profil en 5 × 3 dont le coin 3 × 2 (en haut à gauche) reprend la disposition du Mini.
+    # Modèle « VSD/WiFi » relevé dans d'anciens exports : À CONFIRMER avec un export de l'app Stream Deck 7.
+    3: ("VSD/WiFi", 5, 3, "mobile"),
+    # Virtual Stream Deck (Stream Deck 7.0 et plus) : grille réglable jusqu'à 8 × 8 = « écran du MJ » de 64 touches.
+    # Modèle inconnu : À REMPLACER par la valeur « Device.Model » d'un profil exporté depuis un Virtual Stream Deck.
+    11: (os.environ.get("VSD_MODEL", "VSD/Virtual"), 8, 8, "vsd"),
 }
+# modèles encore à confirmer par un export réel (le script le rappelle à chaque génération)
+UNCONFIRMED = {3: "Stream Deck Mobile", 11: "Virtual Stream Deck"}
 # appareils avec molettes et écran tactile
 ENCODER_DEVICES = {7, 13}
 
@@ -158,6 +167,38 @@ LAYOUTS = {
         [cfn("next"), cfn("round"), folder(NUMPAD_6)],
     ],
 }
+# Stream Deck Mobile (5 × 3). Le coin 3 × 2 en haut à gauche = disposition du Mini (app gratuite, 6 touches).
+LAYOUTS[("mobile", "exploration")] = [
+    [scene_item(), scene_item(), scene_next(), scene_item(), scene_item()],
+    [macro_item(), macro_item(), macro_next(), macro_item(), macro_item()],
+    [token(), pl_item(), pl_item(), pl_next(), pause()],
+]
+LAYOUTS[("mobile", "combat")] = [
+    [auto()] * 5,
+    [cfn("next"), cfn("round"), folder(NUMPAD_15), cfn("prev"), cfn("rollNPC")],
+    [token("bar1"), cfn("start"), cfn("end"), cfn("toggleCombat"), pause()],
+]
+# Virtual Stream Deck 8 × 8 : « écran du MJ » sur un second écran (64 touches)
+LAYOUTS[("vsd", "exploration")] = [
+    [scene_item()] * 8,
+    [scene_item()] * 7 + [scene_next()],
+    [macro_item()] * 8,
+    [macro_item()] * 7 + [macro_next()],
+    [party()] * 4 + [pl_item()] * 3 + [pl_next()],
+    [pl_item()] * 7 + [pl_next()],
+    [ambiance()] * 4 + [stop_all(), A("system", fn="darkness"), A("system", fn="weather"), A("system", fn="time")],
+    [token(), A("system", fn="pullView"), A("system", fn="timer", timerType="countdown", minutes=5), cfn("start"), clear_targets(), A("system", fn="targetNext"), pool(), pause()],
+]
+LAYOUTS[("vsd", "combat")] = [
+    [auto()] * 8,
+    [auto()] * 8,
+    [cfn("prev"), cfn("round"), cfn("next"), cfn("rollNPC"), cfn("rollAll"), cfn("toggleCombat"), cfn("end"), pause()],
+    [party()] * 4 + [token("bar1"), clear_targets(), A("system", fn="targetNext"), pool()],
+    [num(7), num(8), num(9), num("display"), num("damage"), num("heal"), num("clear"), num("back")],
+    [num(4), num(5), num(6), num(0), inc(1), inc(5), inc(10), token("bar1")],
+    [num(1), num(2), num(3), A("system", fn="turnTimer", turnSeconds=60, turnWarn=15), macro_item(), macro_item(), macro_item(), macro_next()],
+    [ambiance()] * 3 + [stop_all(), pl_item(), pl_item(), pl_next(), A("system", fn="alerts")],
+]
 LAYOUTS[("neo", "exploration")] = LAYOUTS[("plus", "exploration")]
 LAYOUTS[("neo", "combat")] = LAYOUTS[("plus", "combat")]
 
@@ -252,6 +293,8 @@ def write_profile(device_type, kind):
 
 def main():
     os.makedirs(OUT, exist_ok=True)
+    for device_type, name in UNCONFIRMED.items():
+        print(f"⚠ {name} : modèle « {DEVICES[device_type][0]} » à confirmer par un profil exporté depuis cet appareil")
     for device_type in DEVICES:
         for kind in ("exploration", "combat"):
             print("✔", os.path.relpath(write_profile(device_type, kind), PLUGIN))

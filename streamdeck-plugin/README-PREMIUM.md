@@ -13,13 +13,14 @@ Current version: **1.3.1** · works with the VTT Deck plugin **1.5.1** or later.
 | ★ Premium feature | On the Stream Deck |
 |---|---|
 | **Automatic initiative tracker** | a row of identical keys that fills itself in combat order, active combatant first |
+| **Combat carousel** | Token keys by place in the initiative (previous, active, next…), turning at every turn, with a coloured frame for each role |
 | **Party view** | one key per player character, assigned automatically, with HP, gauge and conditions |
 | **Damage & Healing Pad** | type an amount, apply it to every selected token in one press |
 | **Conditions on keys** | small icons of the active conditions (prone, poisoned…) in a corner of token keys |
 | **Quick targeting** | "Clear targets" and "Target next enemy" |
 | **Token movement** | arrows to move the selected tokens one square, rotation and elevation keys |
 | **Scene levels (Foundry v14)** | view the level above/below, move a token up or down a level |
-| **Dials (Stream Deck +, Stream Deck + XL)** | volumes, scene lighting, combat turns, token HP, zoom — and dials to browse the party, scenes, targets (with Shift-target), tracks, dice and macros, with a picture and the value on the touch strip |
+| **Dials (Stream Deck +, Stream Deck + XL)** | volumes, scene lighting, combat turns, token HP or another gauge, zoom — and dials to browse the party, scenes, targets (with Shift-target), tracks, dice and macros, or switch the scene's background image, with a picture and the value on the touch strip |
 | **Any action on a dial** | put a Macro, Scene, Combat, Token… action on a dial: pressing does the same as the key |
 | **Ambience** | one key sets scene, music (with crossfade), darkness and weather |
 | **Soundboard** | a page of keys filled with the audio files of a Foundry folder |
@@ -29,10 +30,12 @@ Current version: **1.3.1** · works with the VTT Deck plugin **1.5.1** or later.
 | **Show to players** | show an image or a journal page to the whole table |
 | **Doors and lights** | open, close or lock a specific door; switch a light on or off |
 | **Alerts** | a key that lights up and blinks on a natural 20, a natural 1 or a whisper |
+| **Session tools** | a session log of timestamped notes, a combat turn timer that blinks and rings, fog areas revealed with one key |
 | **Dynamic Page** | keys filled with the macros, scenes, playlists or tracks of a folder, or a character's items |
 | **Colour thresholds** | a key turns orange, then red, as HP drop — with an optional image |
 | **Player mode** | the GM chooses which actions players may use on their own Stream Deck (sheet, attacks, spells…) |
 | **Sequences** | several actions in one key, without code — plus a GM-only script step |
+| **Character keys (D&D 5e, Pathfinder 2e)** | items, spells and strikes with their picture, rolls with the bonus on the key, spell slots, turn actions, conditions, hero points, party roll requests |
 | **Automatic profile switching** | the Stream Deck shows the Combat profile when a combat starts, and switches back at the end |
 | **Full Token and Combat keys** | specific characters, HP / bar 2 / any attribute, conditions, ±HP, hide, combatant #N… |
 
@@ -46,7 +49,9 @@ You can set up ★ Premium keys before buying: they show a padlock until VTT Dec
 
 ## Combat and tokens
 
-**Automatic initiative tracker** — *Combat* action → *Automatic initiative tracker*. Copy the key along a row: every such key on the same Stream Deck forms one row, read line by line. *Order*: active combatant first, or initiative order. When there are more combatants than keys, the last key becomes **More** (`1/3`…). Yellow border = their turn, ☠ = defeated, 🙈 = hidden, initiative in the top-left corner.
+**Automatic initiative tracker** — *Combat* action → *Automatic initiative tracker*. Copy the key along a row: every such key on the same Stream Deck forms one row, read line by line. *Order*: active combatant first, initiative order, or **carousel** (previous, active, next…). When there are more combatants than keys, the last key becomes **More** (`1/3`…). Yellow border = their turn, ☠ = defeated, 🙈 = hidden, initiative in the top-left corner. With *Frame* ticked (on by default in carousel order), the frame shows each combatant's role: previous blue, active red, next yellow, others grey (colours adjustable). *On press*: select + centre, centre, sheet, **target**, nothing.
+
+**Combat carousel with Token keys** — *Token* action → *Token: Place in the initiative (carousel)*. *Place*: 0 = active combatant, -1 = previous, 1 = next, 2, 3… Copy the key and change the number to build a row, e.g. -1, 0, 1, 2, 3: it turns at every turn. Each key keeps every Token setting (HP, conditions) and every press function (select, target, ±HP, toggle a condition…). The frame shows the role: previous blue, active red, next yellow, others grey (colours adjustable, or no frame). When there are fewer combatants than keys, the extra keys stay empty instead of repeating someone.
 
 **Party view** — *Token* action → *Token: Party (party characters)*. Copy the key: each key takes one party character. *Party*: *Automatic* (the game system's party — PF2e active party, D&D 5e primary party — otherwise the characters assigned to your players), *A Group actor*, or *An actor folder*. It shows HP, the gauge and the active conditions; a yellow border marks the character whose turn it is.
 
@@ -68,7 +73,7 @@ Drag the **Dial** action onto a dial and choose its function:
 |---|---|---|---|
 | Music / Ambience / Interface volume | adjust the volume | mute / unmute | same as press |
 | Scene lighting (darkness, GM) | darker / lighter | day ↔ night | same as press |
-| Selected token HP | change HP (applied after a short pause, the change shows first) | apply now | same as press |
+| Selected token: HP or another gauge | change HP — or bar 2, or any sheet attribute given by its path (e.g. `resources.legact`, `attributes.hd`) — applied after a short pause, the change shows first | apply now | same as press |
 | Combat turns | next / previous turn | centre on the active combatant | same as press |
 | Map zoom | zoom in / out | normal zoom, centred on the selected token | same as press |
 | **Party** | select the next party character's token and centre on it | open/close sheet, target, or select (your choice) | same as press |
@@ -77,8 +82,11 @@ Drag the **Dial** action onto a dial and choose its function:
 | **Music** | browse the tracks of every playlist (or one playlist) | play the track shown, or stop it if it is playing (GM) | same as press |
 | **Dice** | change die type (d4 … d100); turn while pressed: bonus ±1 | add one die of that type | empty the pool |
 | **Macros** | browse the macros (all, or one folder) | run the macro shown | same as press |
+| **Scene background** (GM) | switch the background image of the scene you are viewing among the images of a folder (applied for everyone once the dial stops); tokens, walls and lights stay in place | back to the original image | same as press |
 
 The touch strip shows the title (with the position, e.g. `Targets 2/5`), a picture (portrait, scene thumbnail, macro image…), the value and a gauge. *Step* sets how much one notch changes.
+
+**Scene background** — for the variants of one place (building / on fire / in ruins, street by day / by night / overrun by rats): put the variant images in one folder of your Foundry data, at the same size as the original, and type that folder in the dial settings (e.g. `worlds/my-world/maps/tavern`). The scene's original image always comes first; the previous image is remembered, so pressing the dial brings it back. On Foundry 14 the level you are viewing changes.
 
 **Rolling the dice pool** — add a *System* key → *Roll the dice pool (Dice dial)*. It shows the pool (`2d6 + 2`) and rolls it in the chat (visibility of your choice), then empties it — or keeps it with *keep the pool after rolling*.
 
@@ -104,9 +112,40 @@ The touch strip shows the title (with the position, e.g. `Targets 2/5`), a pictu
 
 **Alerts** — *System* action → *Alerts*: the key blinks on a natural 20, a natural 1 or a whisper (each can be turned off; players' rolls only by default). A press clears it and opens the chat.
 
+**Session log** — *System* action → *Session log*: one press adds a timestamped note ("Memorable moment", or your own text) to a "Session log" journal, one page per game day, with the scene, the round and the active combatant. Other presses: write the note in a Foundry window, or open the log. The GM creates the journal with the first press; a player can write in it if they own it.
+
+**Combat turn timer** — *System* action → *Combat turn timer*: the time left in the current turn (60 s by default), restarting at every turn change. The key turns orange near the end, then blinks red; a sound plays (for you or the whole table) and the combatant's player can get a private message. Press: pause / resume; once time is up, a press restarts it.
+
+**Fog area** — *System* action → *Fog area*: place a light that covers a room or an area, select it and click **Use selection**. The key switches it on with *Provides vision* (players see the area through the fog) or off.
+
+## D&D 5e character
+
+The **Character (D&D 5e)** key works with the dnd5e system (5.3 on Foundry 13 and 14, 6.x on Foundry 14), with the 2014 and 2024 rules. Pick the character it follows: selected token, *my character* (for players), a specific character, the active combatant, or *party* (copy the key: each identical key takes the next party member).
+
+- **Use an item, spell or feature**: type its name as it appears on the sheet. The key shows its picture and the uses left, the spell slots of its level, or the quantity.
+- **Spell slots** of a level, or pact magic: remaining / maximum and a gauge.
+- **Rolls**: skill check, ability check, saving throw, initiative, death saving throw — normal, with advantage or with disadvantage. Tick *Fast* to skip the roll window.
+- **Hit dice**, **short or long rest**, **inspiration** (lit when the character has it), **concentration** (lit while concentrating; press to end it).
+- **Party requests** (GM): ask the whole party for a skill check or a saving throw, with an optional DC, or for a rest. With a primary party set in D&D 5e, dnd5e's own request card shows who succeeded; otherwise a roll button is posted in the chat.
+
+Players can put these keys on their own Stream Deck in player mode: they only act on the characters they own.
+
+## Pathfinder 2e character
+
+The **Character (PF2e)** key works with the pf2e system (7.x on Foundry 13, 8.x on Foundry 14). Pick the character it follows the same way as the D&D 5e key: selected token, *my character*, a specific character, the active combatant, or *party*.
+
+- **Strike**: type the weapon or attack name. Choose the 1st, 2nd or 3rd attack (the system applies the multiple attack penalty, agile included), damage or critical damage. The key shows the weapon picture and the attack bonus.
+- **Item, action, feat or spell**: a consumable is used (potion, scroll…); anything else posts its card in the chat.
+- **Checks**: skills and Perception, saving throws, initiative. Tick *Fast* to skip the roll window.
+- **Turn actions**: one key per action (1, 2, 3, a 4th when quickened, and the reaction). Press to tick it off; all of them come back at the start of the character's turn. Slowed and quickened are taken into account.
+- **Valued conditions**: frightened, sickened, clumsy, drained, slowed, stunned… The key shows the value; a press adds or removes 1. Conditions without a value (prone, off-guard…) are switched on or off.
+- **Hero points** and **focus points**: value / maximum and a gauge; a press spends or regains one.
+- **Recovery check** (dying value on the key) and **rest for the night**.
+- **Party requests** (GM): a check or a saving throw for the whole party with an optional DC (a check button is posted in the chat), or rest for the night for every party character.
+
 ## Customisation
 
-**Dynamic Page** — macros, scenes or playlists of a folder, tracks of a playlist, sounds of a file folder, or **a character's items** (*My character* or *Selected token*, filtered by type: weapons, spells…). Copy the *Item* key; add *Next page* / *Previous page* keys for the same content.
+**Dynamic Page** — macros, scenes or playlists of a folder, tracks of a playlist, sounds of a file folder, or **a character's items** (*My character*, *Selected token*, a **specific character** that stays fixed whatever token is selected, or the **active combatant**; filtered by type: weapons, spells…). Players only see the items of characters they can observe, and only use their own. Copy the *Item* key; add *Next page* / *Previous page* keys for the same content.
 
 **Colour thresholds** — in every key's *Appearance*: *Below (%)* + colour (e.g. 50 → orange) and a critical threshold (e.g. 25 → red), with an optional image. Works on any key showing a value and a maximum (HP, bars).
 
@@ -163,13 +202,14 @@ Version actuelle : **1.3.1** · fonctionne avec le plugin VTT Deck **1.5.1** ou 
 | Fonction ★ Premium | Sur le Stream Deck |
 |---|---|
 | **Suivi d'initiative automatique** | une rangée de touches identiques qui se remplit dans l'ordre du combat, combattant actif en premier |
+| **Carrousel de combat** | des touches Jeton selon la place dans l'initiative (précédent, actif, suivant…), qui tournent à chaque tour, avec un cadre de couleur pour chaque rôle |
 | **Vue du groupe** | une touche par personnage joueur, attribuée automatiquement, avec PV, jauge et états |
 | **Pavé dégâts & soins** | taper un montant, l'appliquer à tous les jetons sélectionnés en un appui |
 | **États sur les touches** | petites icônes des états actifs (à terre, empoisonné…) dans un coin des touches de jeton |
 | **Ciblage rapide** | « Effacer les cibles » et « Cibler l'ennemi suivant » |
 | **Déplacement des jetons** | des flèches pour déplacer les jetons sélectionnés case par case, des touches de rotation et d'altitude |
 | **Niveaux de scène (Foundry v14)** | afficher le niveau au-dessus / en dessous, faire monter ou descendre un jeton d'un niveau |
-| **Molettes (Stream Deck +, Stream Deck + XL)** | volumes, lumière de la scène, tours de combat, PV du jeton, zoom — et des molettes pour parcourir le groupe, les scènes, les cibles (avec ciblage Maj), les pistes, les dés et les macros, avec une image et la valeur sur l'écran tactile |
+| **Molettes (Stream Deck +, Stream Deck + XL)** | volumes, lumière de la scène, tours de combat, PV du jeton ou autre jauge, zoom — et des molettes pour parcourir le groupe, les scènes, les cibles (avec ciblage Maj), les pistes, les dés et les macros, ou changer l'image de fond de la scène, avec une image et la valeur sur l'écran tactile |
 | **Toutes les actions sur une molette** | posez une action Macro, Scène, Combat, Jeton… sur une molette : l'appui fait comme la touche |
 | **Ambiance** | une touche règle scène, musique (avec fondu), obscurité et météo |
 | **Table de bruitages** | une page de touches remplie avec les fichiers audio d'un dossier Foundry |
@@ -179,10 +219,12 @@ Version actuelle : **1.3.1** · fonctionne avec le plugin VTT Deck **1.5.1** ou 
 | **Montrer aux joueurs** | afficher une image ou une page de journal à toute la table |
 | **Portes et lumières** | ouvrir, fermer ou verrouiller une porte précise ; allumer ou éteindre une lumière |
 | **Alertes** | une touche qui s'allume et clignote sur un 20 naturel, un 1 naturel ou un message privé |
+| **Outils de séance** | journal de séance à notes datées, minuteur du tour de combat qui clignote et sonne, zones de brouillard révélées d'une touche |
 | **Page dynamique** | des touches remplies avec les macros, scènes, playlists ou pistes d'un dossier, ou les objets d'un personnage |
 | **Couleurs selon des seuils** | une touche qui passe à l'orange puis au rouge quand les PV baissent — avec image facultative |
 | **Mode joueur** | le MJ choisit les actions que les joueurs peuvent utiliser sur leur propre Stream Deck (fiche, attaques, sorts…) |
 | **Séquences** | plusieurs actions sur une touche, sans code — plus une étape « script » réservée au MJ |
+| **Touches Personnage (D&D 5e, Pathfinder 2e)** | objets, sorts et frappes avec leur image, jets avec le bonus sur la touche, emplacements de sorts, actions du tour, états, points d'héroïsme, demandes de jet au groupe |
 | **Changement automatique de profil** | le Stream Deck affiche le profil Combat quand un combat commence, et revient en arrière à la fin |
 | **Touches Jeton et Combat complètes** | personnages précis, PV / barre 2 / attribut, états, ±PV, cacher, combattant n°X… |
 
@@ -196,7 +238,9 @@ Vous pouvez préparer vos touches ★ Premium avant l'achat : elles affichent un
 
 ## Combat et jetons
 
-**Suivi d'initiative automatique** — action *Combat* → *Suivi d'initiative automatique*. Copiez la touche le long d'une rangée : toutes ces touches d'un même Stream Deck forment une seule rangée, lue ligne par ligne. *Ordre* : combattant actif en premier, ou ordre d'initiative. Quand il y a plus de combattants que de touches, la dernière devient **Suite** (`1/3`…). Cadre jaune = son tour, ☠ = vaincu, 🙈 = caché, initiative en haut à gauche.
+**Suivi d'initiative automatique** — action *Combat* → *Suivi d'initiative automatique*. Copiez la touche le long d'une rangée : toutes ces touches d'un même Stream Deck forment une seule rangée, lue ligne par ligne. *Ordre* : combattant actif en premier, ordre d'initiative, ou **carrousel** (précédent, actif, suivants…). Quand il y a plus de combattants que de touches, la dernière devient **Suite** (`1/3`…). Cadre jaune = son tour, ☠ = vaincu, 🙈 = caché, initiative en haut à gauche. Avec *Cadre* coché (par défaut en ordre carrousel), le cadre montre le rôle de chaque combattant : précédent en bleu, actif en rouge, suivant en jaune, autres en gris (couleurs réglables). *Appui* : sélectionner + centrer, centrer, fiche, **cibler**, rien.
+
+**Carrousel de combat avec des touches Jeton** — action *Jeton* → *Jeton : Place dans l'initiative (carrousel)*. *Place* : 0 = combattant actif, -1 = précédent, 1 = suivant, 2, 3… Copiez la touche et changez le nombre pour faire une rangée, par exemple -1, 0, 1, 2, 3 : elle tourne à chaque tour. Chaque touche garde tous les réglages du Jeton (PV, états) et toutes les fonctions d'appui (sélectionner, cibler, ±PV, basculer un état…). Le cadre montre le rôle : précédent en bleu, actif en rouge, suivant en jaune, autres en gris (couleurs réglables, ou sans cadre). Quand il y a moins de combattants que de touches, les touches en trop restent vides au lieu de répéter quelqu'un.
 
 **Vue du groupe** — action *Jeton* → *Jeton : Groupe (personnages du groupe)*. Copiez la touche : chaque touche prend un personnage du groupe. *Groupe* : *Automatique* (le groupe du système de jeu — groupe actif de PF2e, groupe principal de D&D 5e — sinon les personnages attribués à vos joueurs), *Un acteur Groupe*, ou *Un dossier d'acteurs*. Elle affiche les PV, la jauge et les états actifs ; un cadre jaune signale le personnage dont c'est le tour.
 
@@ -218,7 +262,7 @@ Glissez l'action **Molette** sur une molette et choisissez sa fonction :
 |---|---|---|---|
 | Volume de la musique / de l'ambiance / de l'interface | régler le volume | couper / rétablir | comme l'appui |
 | Lumière de la scène (obscurité, MJ) | plus sombre / plus clair | jour ↔ nuit | comme l'appui |
-| PV du jeton sélectionné | modifier les PV (appliqués après un court arrêt, la variation s'affiche d'abord) | appliquer tout de suite | comme l'appui |
+| Jeton sélectionné : PV ou autre jauge | modifier les PV — ou la barre 2, ou tout attribut de la fiche donné par son chemin (ex. `resources.legact`, `attributes.hd`) — appliqués après un court arrêt, la variation s'affiche d'abord | appliquer tout de suite | comme l'appui |
 | Tours de combat | tour suivant / précédent | centrer sur le combattant actif | comme l'appui |
 | Zoom de la carte | zoomer / dézoomer | zoom normal, centré sur le jeton sélectionné | comme l'appui |
 | **Groupe** | sélectionner le jeton du personnage suivant du groupe et centrer la vue | ouvrir/fermer la fiche, cibler ou sélectionner (au choix) | comme l'appui |
@@ -227,8 +271,11 @@ Glissez l'action **Molette** sur une molette et choisissez sa fonction :
 | **Musique** | faire défiler les pistes de toutes les playlists (ou d'une seule) | jouer la piste montrée, ou l'arrêter si elle joue (MJ) | comme l'appui |
 | **Dés** | changer de dé (d4 … d100) ; tourner en appuyant : bonus ±1 | ajouter un dé de ce type | vider la réserve |
 | **Macros** | faire défiler les macros (toutes, ou celles d'un dossier) | exécuter la macro montrée | comme l'appui |
+| **Fond de scène** (MJ) | changer l'image de fond de la scène affichée parmi les images d'un dossier (appliquée pour tous quand la molette s'arrête) ; jetons, murs et lumières restent en place | revenir à l'image d'origine | comme l'appui |
 
 L'écran tactile affiche le titre (avec la position, ex. `Cibles 2/5`), une image (portrait, vignette de la scène, image de la macro…), la valeur et une jauge. *Pas* règle l'effet d'un cran.
+
+**Fond de scène** — pour les déclinaisons d'un même lieu (bâtiment / en flammes / en ruines, rue de jour / de nuit / envahie de rats) : mettez les images dans un dossier de vos données Foundry, à la même taille que l'image d'origine, et tapez ce dossier dans les réglages de la molette (ex. `worlds/mon-monde/cartes/taverne`). L'image d'origine de la scène est toujours la première ; elle est mémorisée, et un appui sur la molette la remet. Sur Foundry 14, c'est le niveau affiché qui change.
 
 **Lancer la réserve de dés** — ajoutez une touche *Système* → *Lancer la réserve de dés (molette Dés)*. Elle affiche la réserve (`2d6 + 2`) et la lance dans le chat (visibilité au choix), puis la vide — ou la garde avec *garder la réserve après le lancer*.
 
@@ -254,9 +301,40 @@ L'écran tactile affiche le titre (avec la position, ex. `Cibles 2/5`), une imag
 
 **Alertes** — action *Système* → *Alertes* : la touche clignote sur un 20 naturel, un 1 naturel ou un message privé (chacun désactivable ; seulement les jets des joueurs par défaut). Un appui l'éteint et ouvre le chat.
 
+**Journal de séance** — action *Système* → *Journal de séance* : un appui ajoute une note datée (« Moment marquant », ou votre texte) dans un journal « Journal de séance », une page par jour de jeu, avec la scène, le round et le combattant actif. Autres appuis possibles : écrire la note dans une fenêtre de Foundry, ou ouvrir le journal. Le MJ crée le journal au premier appui ; un joueur peut y écrire s'il en est propriétaire.
+
+**Minuteur du tour de combat** — action *Système* → *Minuteur du tour de combat* : le temps qui reste au tour en cours (60 s par défaut), remis à zéro à chaque changement de tour. La touche passe à l'orange vers la fin, puis clignote en rouge ; un son est joué (pour vous ou pour toute la table) et le joueur du combattant peut recevoir un message privé. Appui : pause / reprise ; une fois le temps écoulé, un appui le relance.
+
+**Zone de brouillard** — action *Système* → *Zone de brouillard* : placez une lumière qui couvre une salle ou une zone, sélectionnez-la et cliquez sur **Utiliser la sélection**. La touche l'allume avec *Fournit la vision* (les joueurs voient la zone à travers le brouillard) ou l'éteint.
+
+## Personnage D&D 5e
+
+La touche **Personnage (D&D 5e)** fonctionne avec le système dnd5e (5.3 sur Foundry 13 et 14, 6.x sur Foundry 14), règles 2014 et 2024. Choisissez le personnage suivi : jeton sélectionné, *mon personnage* (pour les joueurs), un personnage précis, le combattant actif, ou *groupe* (copiez la touche : chaque touche identique prend le membre suivant du groupe).
+
+- **Utiliser un objet, un sort ou une aptitude** : tapez son nom tel qu'il est écrit sur la fiche. La touche montre son image et les utilisations restantes, les emplacements de son niveau ou la quantité.
+- **Emplacements de sorts** d'un niveau, ou magie de pacte : restants / maximum et une jauge.
+- **Jets** : compétence, test de caractéristique, sauvegarde, initiative, jet contre la mort — normal, avec avantage ou avec désavantage. Cochez *Rapide* pour lancer sans fenêtre.
+- **Dés de vie**, **repos court ou long**, **inspiration** (allumée quand le personnage l'a), **concentration** (allumée pendant la concentration ; un appui y met fin).
+- **Demandes au groupe** (MJ) : demander à tout le groupe un jet de compétence ou de sauvegarde, avec un DD facultatif, ou un repos. Avec un groupe principal défini dans D&D 5e, la carte de demande de dnd5e indique qui a réussi ; sinon, un bouton de jet est posté dans le chat.
+
+Les joueurs peuvent placer ces touches sur leur propre Stream Deck en mode joueur : ils n'agissent que sur les personnages qui leur appartiennent.
+
+## Personnage Pathfinder 2e
+
+La touche **Personnage (PF2e)** fonctionne avec le système pf2e (7.x sur Foundry 13, 8.x sur Foundry 14). Le personnage suivi se choisit comme pour la touche D&D 5e : jeton sélectionné, *mon personnage*, un personnage précis, le combattant actif, ou *groupe*.
+
+- **Frappe** : tapez le nom de l'arme ou de l'attaque. Choisissez la 1re, la 2e ou la 3e attaque (le système applique la pénalité d'attaques multiples, armes agiles comprises), les dégâts ou les dégâts critiques. La touche montre l'image de l'arme et le bonus d'attaque.
+- **Objet, action, don ou sort** : un consommable est utilisé (potion, parchemin…) ; le reste poste sa carte dans le chat.
+- **Jets** : compétences et Perception, sauvegardes, initiative. Cochez *Rapide* pour lancer sans fenêtre.
+- **Actions du tour** : une touche par action (1, 2, 3, une 4e si Accéléré, et la réaction). Un appui la coche ; tout redevient disponible au début du tour du personnage. Ralenti et Accéléré sont pris en compte.
+- **États à valeur** : effrayé, nauséeux, maladroit, drainé, ralenti, étourdi… La touche affiche la valeur ; un appui ajoute ou retire 1. Les états sans valeur (à terre, pris au dépourvu…) s'activent ou se retirent.
+- **Points d'héroïsme** et **de focalisation** : valeur / maximum et une jauge ; un appui en dépense ou en regagne un.
+- **Test de récupération** (valeur de mourant sur la touche) et **repos pour la nuit**.
+- **Demandes au groupe** (MJ) : un test ou une sauvegarde pour tout le groupe avec un DD facultatif (un bouton de test est posté dans le chat), ou le repos pour la nuit de tous les personnages du groupe.
+
 ## Personnalisation
 
-**Page dynamique** — macros, scènes ou playlists d'un dossier, pistes d'une playlist, sons d'un dossier de fichiers, ou **objets d'un personnage** (*Mon personnage* ou *Jeton sélectionné*, filtrés par type : armes, sorts…). Copiez la touche *Élément* ; ajoutez des touches *Page suivante* / *Page précédente* pour le même contenu.
+**Page dynamique** — macros, scènes ou playlists d'un dossier, pistes d'une playlist, sons d'un dossier de fichiers, ou **objets d'un personnage** (*Mon personnage*, *Jeton sélectionné*, un **personnage précis** qui reste fixe quel que soit le jeton sélectionné, ou le **combattant actif** ; filtrés par type : armes, sorts…). Un joueur ne voit que les objets des personnages qu'il peut observer et n'utilise que les siens. Copiez la touche *Élément* ; ajoutez des touches *Page suivante* / *Page précédente* pour le même contenu.
 
 **Couleurs selon des seuils** — dans l'*Apparence* de chaque touche : *Sous (%)* + couleur (ex. 50 → orange) et un seuil critique (ex. 25 → rouge), avec image facultative. Fonctionne sur toute touche qui affiche une valeur et un maximum (PV, barres).
 

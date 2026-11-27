@@ -1,7 +1,7 @@
 {
 	"$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
 	"Name": "VTT Deck",
-	"Version": "1.5.2.0",
+	"Version": "1.6.0.0",
 	"Author": "Paul",
 	"Description": "Control Foundry VTT (v13/v14) from your Stream Deck: macros, scenes, tokens, combat, music and more. Requires the free \"VTT Deck\" Foundry VTT module.",
 	"UUID": "com.vttdeck.foundry",
@@ -292,6 +292,40 @@
 			}
 		},
 		{
+			"UUID": "com.vttdeck.foundry.character",
+			"Name": "Character (D&D 5e)",
+			"Tooltip": "D&D 5e: use items and spells, roll checks and saves, spell slots, rests, group rolls",
+			"Icon": "imgs/actions/character",
+			"Controllers": [
+				"Keypad"
+			],
+			"SupportedInMultiActions": true,
+			"States": [
+				{
+					"Image": "imgs/keys/character",
+					"TitleAlignment": "bottom",
+					"ShowTitle": true
+				}
+			]
+		},
+		{
+			"UUID": "com.vttdeck.foundry.pf2e",
+			"Name": "Character (PF2e)",
+			"Tooltip": "Pathfinder 2e: strikes with multiple attack penalty, turn actions, valued conditions, hero and focus points, checks and saves, group checks",
+			"Icon": "imgs/actions/pf2e",
+			"Controllers": [
+				"Keypad"
+			],
+			"SupportedInMultiActions": true,
+			"States": [
+				{
+					"Image": "imgs/keys/pf2e",
+					"TitleAlignment": "bottom",
+					"ShowTitle": true
+				}
+			]
+		},
+		{
 			"UUID": "com.vttdeck.foundry.dial",
 			"Name": "Dial",
 			"Tooltip": "Foundry VTT volumes, darkness, token HP, initiative or map zoom on a Stream Deck + dial",
@@ -397,6 +431,34 @@
 		{
 			"Name": "profiles/vtt-deck-combat-plusxl",
 			"DeviceType": 13,
+			"Readonly": false,
+			"DontAutoSwitchWhenInstalled": true,
+			"AutoInstall": true
+		},
+		{
+			"Name": "profiles/vtt-deck-exploration-mobile",
+			"DeviceType": 3,
+			"Readonly": false,
+			"DontAutoSwitchWhenInstalled": true,
+			"AutoInstall": true
+		},
+		{
+			"Name": "profiles/vtt-deck-combat-mobile",
+			"DeviceType": 3,
+			"Readonly": false,
+			"DontAutoSwitchWhenInstalled": true,
+			"AutoInstall": true
+		},
+		{
+			"Name": "profiles/vtt-deck-exploration-vsd",
+			"DeviceType": 11,
+			"Readonly": false,
+			"DontAutoSwitchWhenInstalled": true,
+			"AutoInstall": true
+		},
+		{
+			"Name": "profiles/vtt-deck-combat-vsd",
+			"DeviceType": 11,
 			"Readonly": false,
 			"DontAutoSwitchWhenInstalled": true,
 			"AutoInstall": true

@@ -13,8 +13,15 @@ export const list = (x) => (Array.isArray(x) ? x : Object.values(x ?? {}));
 /** Erreur « normale » : affichée en avertissement, pas en erreur rouge */
 export class UserError extends Error {}
 
+/** Texte HTML sûr (les notifications de Foundry sont du HTML) */
+export const escapeText = (v) =>
+	globalThis.foundry?.utils?.escapeHTML?.(String(v ?? "")) ?? String(v ?? "").replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+
+/** Valeurs insérées dans un message de notification (noms de documents, réglages de touche…) : échappées */
+export const safeData = (data) => (data ? Object.fromEntries(Object.entries(data).map(([k, v]) => [k, typeof v === "number" ? v : escapeText(v)])) : data);
+
 export function fail(key, data) {
-	throw new UserError(t(key, data));
+	throw new UserError(t(key, safeData(data)));
 }
 
 export function requireGM() {

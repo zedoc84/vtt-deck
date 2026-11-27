@@ -9119,7 +9119,7 @@ const streamDeck = {
  */
 
 const PROTOCOL = 2;
-const PLUGIN_VERSION = "1.5.2";
+const PLUGIN_VERSION = "1.6.0";
 /** Délai pour s'authentifier après l'ouverture de la connexion */
 const AUTH_TIMEOUT = 5000;
 /** Après 10 refus en une minute depuis une même origine, cette origine est bloquée une minute
@@ -9142,7 +9142,9 @@ const PROFILES = {
 	2: { exploration: "profiles/vtt-deck-exploration-xl", combat: "profiles/vtt-deck-combat-xl" }, // XL
 	7: { exploration: "profiles/vtt-deck-exploration-plus", combat: "profiles/vtt-deck-combat-plus" }, // Stream Deck +
 	9: { exploration: "profiles/vtt-deck-exploration-neo", combat: "profiles/vtt-deck-combat-neo" }, // Neo
-	13: { exploration: "profiles/vtt-deck-exploration-plusxl", combat: "profiles/vtt-deck-combat-plusxl" } // Stream Deck + XL
+	13: { exploration: "profiles/vtt-deck-exploration-plusxl", combat: "profiles/vtt-deck-combat-plusxl" }, // Stream Deck + XL
+	3: { exploration: "profiles/vtt-deck-exploration-mobile", combat: "profiles/vtt-deck-combat-mobile" }, // Stream Deck Mobile
+	11: { exploration: "profiles/vtt-deck-exploration-vsd", combat: "profiles/vtt-deck-combat-vsd" } // Virtual Stream Deck (8 × 8)
 };
 
 const log = streamDeck.logger.createScope("Bridge");

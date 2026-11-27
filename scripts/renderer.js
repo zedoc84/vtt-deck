@@ -10,6 +10,7 @@
  *   big: "R3",                gros texte central (si pas d'image ni d'icône)
  *   bigSize: 80,              taille maximale du gros texte (58 par défaut)
  *   text: ["ligne 1", "…"],   bandeau de texte en bas (2 lignes max)
+ *   textTop: true,            bandeau de texte en haut (le contenu passe dessous, les badges sous le bandeau)
  *   bar: { value, max },      jauge (PV)
  *   border: "#ffcc33",        cadre coloré
  *   dim: true,                assombrit / grise la touche
@@ -73,6 +74,31 @@ export class KeyRenderer {
 		this.images.clear();
 	}
 
+	/** Tracés déjà analysés (Path2D) */
+	#paths = new Map();
+
+	/** Dessine un tracé SVG 512 × 512 centré dans la zone de contenu (entre top et bottom) */
+	#glyph(d, color, bottom, top, alpha) {
+		if (typeof Path2D !== "function") return;
+		let path = this.#paths.get(d);
+		if (!path) {
+			path = new Path2D(d);
+			this.#paths.set(d, path);
+			if (this.#paths.size > 200) this.#paths.delete(this.#paths.keys().next().value);
+		}
+		const c = this.ctx;
+		const inset = Math.min(top, S - bottom);
+		const box = Math.max(24, Math.min(S - 2 * inset - 30, bottom - top - 14));
+		const cy = (bottom + top) / 2 + 2;
+		c.save();
+		c.globalAlpha = alpha;
+		c.fillStyle = color || "#fff";
+		c.translate(S / 2 - box / 2, cy - box / 2);
+		c.scale(box / 512, box / 512);
+		c.fill(path);
+		c.restore();
+	}
+
 	async draw(spec) {
 		try {
 			return await this.#draw(spec, true);
@@ -98,8 +124,12 @@ export class KeyRenderer {
 		// Quand la touche a un cadre, tout le contenu (jauge, texte) est dessiné à l'intérieur.
 		const inset = spec.border ? 9 : 0;
 		const bandH = lines.length === 0 ? 0 : lines.length === 1 ? 30 : 50;
-		const bandY = S - inset - bandH;
-		const contentH = bandY;
+		const top = !!spec.textTop && bandH > 0;
+		const bandY = top ? inset : S - inset - bandH;
+		// zone de contenu (image « contain », icône, gros texte, jauge) : entre contentTop et contentH
+		const contentTop = top ? inset + bandH : inset;
+		const contentH = top ? S - inset : bandY;
+		const mid = (contentH + contentTop) / 2;
 		const textW = S - 2 * inset - 10;
 
 		// 1. image
@@ -110,27 +140,32 @@ export class KeyRenderer {
 			if (spec.fit === "contain") {
 				const pad = 12 + inset;
 				const boxW = S - pad * 2;
-				const boxH = Math.max(20, contentH - pad - 6);
+				const boxTop = top ? contentTop + 6 : pad;
+				const boxH = Math.max(20, contentH - boxTop - (top ? pad : 6));
 				const r = Math.min(boxW / w, boxH / h);
-				c.drawImage(img, (S - w * r) / 2, pad + (boxH - h * r) / 2, w * r, h * r);
+				c.drawImage(img, (S - w * r) / 2, boxTop + (boxH - h * r) / 2, w * r, h * r);
 			} else {
 				const r = Math.max(S / w, S / h);
 				c.drawImage(img, (S - w * r) / 2, (S - h * r) / 2, w * r, h * r);
 			}
 			if ("filter" in c) c.filter = "none";
+		} else if (spec.glyph) {
+			// 2. icône de la bibliothèque (tracé SVG)
+			this.#glyph(spec.glyph, spec.glyphColor, contentH, contentTop, 1);
 		} else if (spec.icon) {
 			// 2. icône emoji
 			c.font = `${spec.iconSize ?? (bandH > 30 ? 52 : 60)}px ${EMOJI_FONT}`;
 			c.textAlign = "center";
 			c.textBaseline = "middle";
 			c.fillStyle = "#fff";
-			c.fillText(spec.icon, S / 2, (contentH + inset) / 2 + 4);
+			c.fillText(spec.icon, S / 2, mid + 4);
 		} else if (spec.big) {
+			if (spec.glyphBack) this.#glyph(spec.glyphBack, spec.glyphColor, contentH, contentTop, 0.3);
 			c.fillStyle = "#fff";
 			c.textAlign = "center";
 			c.textBaseline = "middle";
 			c.font = `700 ${this.#fitSize(spec.big, spec.bigSize ?? 58, S - 16 - 2 * inset, 700)}px ${FONT}`;
-			c.fillText(spec.big, S / 2, (contentH + inset) / 2 + 3);
+			c.fillText(spec.big, S / 2, mid + 3);
 		}
 
 		// 3. voiles : teinte (seuils) puis assombrissement
@@ -194,8 +229,8 @@ export class KeyRenderer {
 			c.shadowBlur = 0;
 		}
 
-		// 6. badges
-		const by = 22 + inset / 2;
+		// 6. badges (sous le bandeau quand le texte est en haut)
+		const by = top ? contentTop + 20 : 22 + inset / 2;
 		if (spec.badge) this.#badge(String(spec.badge), S - 24 - inset / 2, by, spec.badgeColor ?? "rgba(0,0,0,0.72)");
 		if (spec.badgeLeft !== undefined && spec.badgeLeft !== null && spec.badgeLeft !== "")
 			this.#badge(String(spec.badgeLeft), 24 + inset / 2, by, "rgba(0,0,0,0.72)");

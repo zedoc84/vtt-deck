@@ -5,7 +5,8 @@ const esc = (s) => foundry.utils.escapeHTML?.(String(s ?? "")) ?? String(s ?? ""
 
 const DEVICE_TYPES = {
 	0: "Stream Deck", 1: "Stream Deck Mini", 2: "Stream Deck XL", 3: "Stream Deck Mobile", 4: "Corsair G-Keys",
-	5: "Stream Deck Pedal", 6: "Corsair Voyager", 7: "Stream Deck +", 8: "SCUF", 9: "Stream Deck Neo", 10: "Stream Deck Studio"
+	5: "Stream Deck Pedal", 6: "Corsair Voyager", 7: "Stream Deck +", 8: "SCUF", 9: "Stream Deck Neo", 10: "Stream Deck Studio",
+	11: "Virtual Stream Deck", 12: "Galleon 100 SD", 13: "Stream Deck + XL"
 };
 
 /** Fenêtre « État du Stream Deck » (bouton dans les paramètres du module) */
@@ -40,9 +41,8 @@ export class StatusApp extends ApplicationV2 {
 		else if (b.refused) state = `<span class="warn">● ${t(`Status.Refused.${b.refused}`)}</span>`;
 		else state = `<span class="ko">● ${t("Status.Waiting")}</span>`;
 
-		const DEVICE_TYPES_X = { ...DEVICE_TYPES, 13: "Stream Deck + XL" };
 		const devices = [...deck.devices.values()]
-			.map((d) => `<li>${esc(d.name)} <small>(${esc(DEVICE_TYPES_X[d.type] ?? d.type)}, ${Number(d.size?.columns) || "?"}×${Number(d.size?.rows) || "?"})</small></li>`)
+			.map((d) => `<li>${esc(d.name)} <small>(${esc(DEVICE_TYPES[d.type] ?? d.type)}, ${Number(d.size?.columns) || "?"}×${Number(d.size?.rows) || "?"})</small></li>`)
 			.join("");
 		const counts = {};
 		for (const k of deck.keys.values()) counts[k.action] = (counts[k.action] ?? 0) + 1;

@@ -79,7 +79,9 @@
       "ambiance": "Ambience",
       "page": "Dynamic page",
       "sequence": "Sequence",
-      "dial": "Dial"
+      "dial": "Dial",
+      "character": "Character (D&D 5e)",
+      "pf2e": "Character (PF2e)"
     },
     "Notify": {
       "Connected": "VTT Deck: Stream Deck connected.",
@@ -139,7 +141,18 @@
       "ChooseTable": "Table?",
       "ChooseMessage": "Message?",
       "Door": "Door",
-      "Light": "Light"
+      "Light": "Light",
+      "PullView": "Players' view",
+      "Timer": "Timer",
+      "Stopwatch": "Stopwatch",
+      "TimerReset": "Reset",
+      "TimerPaused": "Paused",
+      "TimerDoneShort": "Time's up",
+      "TimerDone": "Time's up! {name}",
+      "Fog": "Fog",
+      "FogReset": "reset",
+      "ResetFogTitle": "Reset fog of war",
+      "ResetFogConfirm": "Reset the fog of war of \"{scene}\" for all players? What they explored will be hidden again."
     },
     "Tabs": {
       "chat": "Chat",

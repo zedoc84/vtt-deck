@@ -27,16 +27,19 @@ Nothing is sent over the internet. By default the plugin only accepts connection
 
 | Stream Deck action | Free | ★ With VTT Deck Premium |
 |---|---|---|
-| Macro, Scene, Music & Sounds, System | everything | — |
-| Token | selected token: image, name; select, centre, open the sheet | specific characters, active combatant, HP / bar 2 / any attribute + gauge, conditions, ±HP, target, hide, add to combat |
-| Combat | next/previous turn and round, start/end, initiative, round display | **automatic initiative tracker**, combatant #N, active combatant, add/remove selected tokens |
+| Macro, Scene, Music & Sounds, System | everything, including the session tools: pull the players' view to yours, timer / stopwatch on the key, reset fog of war | — |
+| Token | selected token: image, name; select, centre, open the sheet | specific characters, active combatant, **combat carousel** (place in the initiative: previous, active, next…, coloured frames), HP / bar 2 / any attribute + gauge, conditions, ±HP, target, hide, add to combat |
+| Combat | next/previous turn and round, start/end, initiative, round display | **automatic initiative tracker** (also in carousel order), combatant #N, active combatant, add/remove selected tokens |
 | Damage & Healing Pad | — | ★ type an amount, apply damage or healing to every selected token |
 | Ambience | — | ★ scene + music + darkness + weather (+ macro) in one press |
-| Dynamic Page | — | ★ keys that fill themselves with the macros, scenes or music of a Foundry folder, a sound folder or a character's items |
+| Dynamic Page | — | ★ keys that fill themselves with the macros, scenes or music of a Foundry folder, a sound folder or a character's items (yours, the selected token's, a specific character's or the active combatant's) |
 | Sequence | — | ★ several actions in one key, without code (plus a GM-only script step) |
-| Dial (Stream Deck +, + XL) | — | ★ volumes, lighting, combat turns, token HP, zoom; browse the party, scenes, targets (Shift-target), tracks, dice, macros |
+| Character (D&D 5e) | — | ★ use items, spells and features; skill checks, ability checks, saves, initiative, death saves (advantage / disadvantage); spell slots, hit dice, rests, inspiration, concentration; party roll requests and rests (GM) |
+| Character (PF2e) | — | ★ strikes (1st/2nd/3rd attack, damage, critical), items and spells, skill checks, saves, initiative; turn actions and reaction; valued conditions; hero and focus points; recovery, rest for the night; party check requests (GM) |
+| Dial (Stream Deck +, + XL) | — | ★ volumes, lighting, combat turns, token HP or another gauge (bar 2, any sheet attribute), zoom; browse the party, scenes, targets (Shift-target), tracks, dice, macros; switch the scene's background image |
 | Any action on a dial (Stream Deck +, + XL) | — | ★ pressing the dial does what the key does |
-| System extras | — | ★ weather, game time, show to players, doors, lights, alerts, quick targeting |
+| System extras | — | ★ weather, game time, show to players, doors, lights, alerts, quick targeting, session log, combat turn timer, fog areas |
+| Appearance (every action) | text, image, background colour, **icon library** (4,000+ game-icons.net icons, tint) | ★ colour thresholds |
 | Token extras | — | ★ party view, conditions on keys, movement, rotation, elevation, scene levels (v14) |
 | Ready-made profiles | open them from the inspector | ★ automatic switch to the Combat profile when a combat starts |
 
@@ -45,12 +48,12 @@ In the Stream Deck inspector, Premium options are marked ★ Premium. Without VT
 ## 1. Install the Stream Deck plugin
 
 1. Install **VTT Deck** from the Elgato Marketplace, or double-click `com.vttdeck.foundry.streamDeckPlugin`.
-2. A **VTT Deck** category appears in the action list with 11 actions: Macro, Scene, Token, Combat, Music & Sounds, System, Damage & Healing Pad, Ambience, Dynamic Page, Sequence and Dial (Stream Deck +, + XL).
+2. A **VTT Deck** category appears in the action list with 13 actions: Macro, Scene, Token, Combat, Music & Sounds, System, Damage & Healing Pad, Ambience, Dynamic Page, Sequence, Character (D&D 5e), Character (PF2e) and Dial (Stream Deck +, + XL).
 3. Test: open <http://127.0.0.1:3006> in a browser. The plugin replies `VTT Deck bridge 1.5.1 — OK`.
 
 Requirements: Stream Deck app 6.9 or later, macOS 12+ or Windows 10+. The inspector follows the language of the Stream Deck app (English or French).
 
-If the old **Material Deck** plugin is installed, you can keep it: the two plugins don't use the same port.
+If the old **Material Deck** plugin is installed, you can keep it: the two plugins don't use the same port. Coming from Material Deck? See [Moving from Material Deck to VTT Deck](docs/migrating-from-material-deck.md): steps and an action-by-action table.
 
 ## 2. Install the Foundry module
 
@@ -90,7 +93,9 @@ Drag an action onto a key, then set it in the inspector at the bottom of the Str
 
 - **Text**: replaces the automatic text. `|` = line break. Variables: `{name}`, `{value}`, `{max}`, `{round}`. Example: `HP {value}/{max}`.
 - **Hide**: no text at all.
+- **Position**: text at the bottom (default) or at the top of the key. At the top, it avoids the reflections on the lower part of the buttons when the Stream Deck is tilted.
 - **Image**: path to a Foundry image (e.g. `icons/svg/sun.svg`) that replaces the automatic image.
+- **Icon**: the built-in library of over 4,000 [game-icons.net](https://game-icons.net) icons. **Choose…** opens a search (English or French: *sword*, *épée*, *dragon*, *door*…) and categories (combat, magic, creatures, conditions, items, places, weather, music, dice, characters). The icon replaces the key's picture or emoji; on a key that shows a number (HP, timer) it goes behind it as a watermark. **Tint** sets its colour.
 - **Background**: background colour (↺ = default colour).
 
 ## 4. The actions
@@ -113,10 +118,13 @@ Drag an action onto a key, then set it in the inspector at the bottom of the Str
 
 ## 5. Ready-made profiles
 
-The plugin comes with two Stream Deck profiles for the Stream Deck (15 keys), XL, Stream Deck +, Stream Deck + XL, Neo and Mini:
+The plugin comes with two Stream Deck profiles for the Stream Deck (15 keys), XL, Stream Deck +, Stream Deck + XL, Neo, Mini, **Stream Deck Mobile** (phone or tablet) and **Virtual Stream Deck** (on-screen keys, Stream Deck 7.0 or later):
 
 - **VTT Deck – Exploration**: rows of scenes and macros (and playlists on the XL and + XL) that fill themselves from your world, with next-page keys;
 - **VTT Deck – Combat**: automatic initiative row, turn controls and the damage & healing pad (in a folder on the smaller models).
+
+- **Stream Deck Mobile**: 5 × 3 profiles whose top-left 3 × 2 corner works with the 6 keys of the free app;
+- **Virtual Stream Deck**: a 64-key "GM screen" (8 × 8) for a second monitor — set the Virtual Stream Deck to 8 columns × 8 rows.
 
 Open them from any VTT Deck key: inspector → **Ready-made profiles** → *Exploration* or *Combat*. They are ordinary profiles: rearrange them as you like. Many of their keys use Premium features and show a padlock without VTT Deck Premium.
 
@@ -145,7 +153,7 @@ Bugs and suggestions: [Issues](https://github.com/zedoc84/vtt-deck/issues).
 | `module.json`, `scripts/`, `lang/`, `styles/` | Foundry module |
 | `streamdeck-plugin/src/plugin.js` | plugin source (WebSocket relay) |
 | `streamdeck-plugin/com.vttdeck.foundry.sdPlugin/` | plugin folder: manifest, inspector (`ui/`), icons, profiles, translations |
-| `streamdeck-plugin/tools/` | `make-profiles.py` (bundled profiles), `make-icons.py` (action icons) |
+| `streamdeck-plugin/tools/` | `make-profiles.py` (bundled profiles), `make-icons.py` (action icons), `make-game-icons.py` (icon library `ui/game-icons.js`) |
 | `.github/workflows/release.yml` | builds and attaches the module and the plugin to each GitHub release |
 
 ### Build the plugin (Node.js 20+)
@@ -188,6 +196,8 @@ Adding a feature usually doesn't require changing the plugin itself: add the opt
 
 MIT — see [LICENSE](LICENSE).
 
+The icon library comes from [game-icons.net](https://game-icons.net) (Lorc, Delapouite and other authors) under the [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) licence; authors and changes are listed in `streamdeck-plugin/com.vttdeck.foundry.sdPlugin/GAME-ICONS-CREDITS.txt`.
+
 Stream Deck and Elgato are trademarks of Corsair Memory, Inc. Foundry Virtual Tabletop is a trademark of Foundry Gaming LLC. VTT Deck is an independent project, not affiliated with either company.
 
 ---
@@ -221,16 +231,19 @@ Rien n'est envoyé sur Internet. Par défaut, le plugin n'accepte que les connex
 
 | Action Stream Deck | Gratuit | ★ Avec VTT Deck Premium |
 |---|---|---|
-| Macro, Scène, Musique & sons, Système | tout | — |
-| Jeton | jeton sélectionné : image, nom ; sélectionner, centrer, ouvrir la fiche | personnages précis, combattant actif, PV / barre 2 / attribut + jauge, états, ±PV, cibler, cacher, ajout au combat |
-| Combat | tour et round suivant/précédent, début/fin, initiative, affichage du round | **suivi d'initiative automatique**, combattant n°X, combattant actif, ajout/retrait des jetons sélectionnés |
+| Macro, Scène, Musique & sons, Système | tout, y compris les outils de séance : ramener la vue des joueurs sur la vôtre, minuteur / chronomètre sur la touche, réinitialiser le brouillard | — |
+| Jeton | jeton sélectionné : image, nom ; sélectionner, centrer, ouvrir la fiche | personnages précis, combattant actif, **carrousel de combat** (place dans l'initiative : précédent, actif, suivant…, cadres de couleur), PV / barre 2 / attribut + jauge, états, ±PV, cibler, cacher, ajout au combat |
+| Combat | tour et round suivant/précédent, début/fin, initiative, affichage du round | **suivi d'initiative automatique** (aussi en carrousel), combattant n°X, combattant actif, ajout/retrait des jetons sélectionnés |
 | Pavé dégâts & soins | — | ★ taper un montant, appliquer dégâts ou soins à tous les jetons sélectionnés |
 | Ambiance | — | ★ scène + musique + obscurité + météo (+ macro) en un appui |
-| Page dynamique | — | ★ des touches qui se remplissent avec les macros, scènes ou musiques d'un dossier Foundry, un dossier de sons ou les objets d'un personnage |
+| Page dynamique | — | ★ des touches qui se remplissent avec les macros, scènes ou musiques d'un dossier Foundry, un dossier de sons ou les objets d'un personnage (le sien, celui du jeton, un personnage précis ou le combattant actif) |
 | Séquence | — | ★ plusieurs actions sur une touche, sans code (plus une étape « script » réservée au MJ) |
-| Molette (Stream Deck +, + XL) | — | ★ volumes, lumière, tours de combat, PV d'un jeton, zoom ; parcourir le groupe, les scènes, les cibles (ciblage Maj), les pistes, les dés, les macros |
+| Personnage (D&D 5e) | — | ★ utiliser objets, sorts et aptitudes ; jets de compétence, tests de caractéristique, sauvegardes, initiative, jets contre la mort (avantage / désavantage) ; emplacements de sorts, dés de vie, repos, inspiration, concentration ; demandes de jet et de repos au groupe (MJ) |
+| Personnage (PF2e) | — | ★ frappes (1re/2e/3e attaque, dégâts, critique), objets et sorts, compétences, sauvegardes, initiative ; actions du tour et réaction ; états à valeur ; points d'héroïsme et de focalisation ; récupération, repos pour la nuit ; demandes de test au groupe (MJ) |
+| Molette (Stream Deck +, + XL) | — | ★ volumes, lumière, tours de combat, PV d'un jeton, zoom ; parcourir le groupe, les scènes, les cibles (ciblage Maj), les pistes, les dés, les macros ; changer l'image de fond de la scène |
 | Toutes les actions sur une molette (Stream Deck +, + XL) | — | ★ appuyer sur la molette fait comme la touche |
-| Système, en plus | — | ★ météo, temps de jeu, montrer aux joueurs, portes, lumières, alertes, ciblage rapide |
+| Système, en plus | — | ★ météo, temps de jeu, montrer aux joueurs, portes, lumières, alertes, ciblage rapide, journal de séance, minuteur du tour de combat, zones de brouillard |
+| Apparence (toutes les actions) | texte, image, couleur de fond, **bibliothèque d'icônes** (plus de 4 000 icônes game-icons.net, teinte) | ★ couleurs selon la valeur |
 | Jeton, en plus | — | ★ vue du groupe, états sur les touches, déplacement, rotation, altitude, niveaux de scène (v14) |
 | Profils prêts à l'emploi | ouverture depuis l'inspecteur | ★ passage automatique au profil Combat quand un combat commence |
 
@@ -239,12 +252,12 @@ Dans l'inspecteur Stream Deck, les options Premium sont marquées ★ Premium. S
 ## 1. Installer le plugin Stream Deck
 
 1. Installez **VTT Deck** depuis l'Elgato Marketplace, ou double-cliquez sur `com.vttdeck.foundry.streamDeckPlugin`.
-2. Une catégorie **VTT Deck** apparaît dans la liste des actions, avec 11 actions : Macro, Scène, Jeton, Combat, Musique & sons, Système, Pavé dégâts & soins, Ambiance, Page dynamique, Séquence et Molette (Stream Deck +, + XL).
+2. Une catégorie **VTT Deck** apparaît dans la liste des actions, avec 13 actions : Macro, Scène, Jeton, Combat, Musique & sons, Système, Pavé dégâts & soins, Ambiance, Page dynamique, Séquence, Personnage (D&D 5e), Personnage (PF2e) et Molette (Stream Deck +, + XL).
 3. Test : ouvrez <http://127.0.0.1:3006> dans un navigateur. Le plugin répond `VTT Deck bridge 1.5.1 — OK`.
 
 Prérequis : application Stream Deck 6.9 ou plus récente, macOS 12+ ou Windows 10+. L'inspecteur suit la langue de l'application Stream Deck (français ou anglais).
 
-Si l'ancien plugin **Material Deck** est installé, vous pouvez le garder : les deux plugins n'utilisent pas le même port.
+Si l'ancien plugin **Material Deck** est installé, vous pouvez le garder : les deux plugins n'utilisent pas le même port. Vous venez de Material Deck ? Voir [Passer de Material Deck à VTT Deck](docs/migrating-from-material-deck.md#francais) : étapes et tableau action par action.
 
 ## 2. Installer le module Foundry
 
@@ -284,7 +297,9 @@ Section **Apparence**, commune à toutes les actions :
 
 - **Texte** : remplace le texte automatique. `|` = retour à la ligne. Variables : `{name}`, `{value}`, `{max}`, `{round}`. Exemple : `PV {value}/{max}`.
 - **Masquer** : aucune inscription.
+- **Position** : texte en bas (par défaut) ou en haut de la touche. En haut, il échappe aux reflets du bas des boutons quand le Stream Deck est incliné.
 - **Image** : chemin d'une image de Foundry (ex. `icons/svg/sun.svg`), qui remplace l'image automatique.
+- **Icône** : la bibliothèque intégrée de plus de 4 000 icônes [game-icons.net](https://game-icons.net). **Choisir…** ouvre une recherche (en français ou en anglais : *épée*, *dragon*, *porte*, *sword*…) et des catégories (combat, magie, créatures, états, objets, lieux, météo, musique, dés, personnages). L'icône remplace l'image ou l'emoji de la touche ; sur une touche qui affiche un nombre (PV, minuteur), elle passe derrière, en filigrane. **Teinte** règle sa couleur.
 - **Fond** : couleur de fond (↺ = couleur par défaut).
 
 ## 4. Les actions
@@ -307,10 +322,13 @@ Section **Apparence**, commune à toutes les actions :
 
 ## 5. Profils prêts à l'emploi
 
-Le plugin est livré avec deux profils Stream Deck, pour le Stream Deck (15 touches), le XL, le Stream Deck +, le Stream Deck + XL, le Neo et le Mini :
+Le plugin est livré avec deux profils Stream Deck, pour le Stream Deck (15 touches), le XL, le Stream Deck +, le Stream Deck + XL, le Neo, le Mini, **Stream Deck Mobile** (téléphone ou tablette) et le **Virtual Stream Deck** (touches à l'écran, Stream Deck 7.0 ou plus) :
 
 - **VTT Deck – Exploration** : des rangées de scènes et de macros (et de playlists sur le XL et le + XL) qui se remplissent avec le contenu de votre monde, avec des touches « page suivante » ;
 - **VTT Deck – Combat** : rangée d'initiative automatique, commandes de tour et pavé dégâts & soins (rangé dans un dossier sur les petits modèles).
+
+- **Stream Deck Mobile** : profils 5 × 3 dont le coin 3 × 2 en haut à gauche fonctionne avec les 6 touches de l'app gratuite ;
+- **Virtual Stream Deck** : un « écran du MJ » de 64 touches (8 × 8) pour un second écran — réglez le Virtual Stream Deck sur 8 colonnes × 8 lignes.
 
 Ouvrez-les depuis n'importe quelle touche VTT Deck : inspecteur → **Profils prêts à l'emploi** → *Exploration* ou *Combat*. Ce sont des profils ordinaires : réorganisez-les comme vous voulez. Beaucoup de leurs touches utilisent des fonctions Premium et affichent un cadenas sans VTT Deck Premium.
 
@@ -339,7 +357,7 @@ Bugs et suggestions : [Issues](https://github.com/zedoc84/vtt-deck/issues).
 | `module.json`, `scripts/`, `lang/`, `styles/` | module Foundry |
 | `streamdeck-plugin/src/plugin.js` | source du plugin (relais WebSocket) |
 | `streamdeck-plugin/com.vttdeck.foundry.sdPlugin/` | dossier du plugin : manifeste, inspecteur (`ui/`), icônes, profils, traductions |
-| `streamdeck-plugin/tools/` | `make-profiles.py` (profils fournis), `make-icons.py` (icônes des actions) |
+| `streamdeck-plugin/tools/` | `make-profiles.py` (profils fournis), `make-icons.py` (icônes des actions), `make-game-icons.py` (bibliothèque d'icônes `ui/game-icons.js`) |
 | `.github/workflows/release.yml` | fabrique et joint le module et le plugin à chaque release GitHub |
 
 ### Compiler le plugin (Node.js 20 ou plus)
@@ -381,5 +399,7 @@ Ajouter une fonction se fait en général sans modifier le plugin lui-même : aj
 ## Licence
 
 MIT — voir [LICENSE](LICENSE).
+
+La bibliothèque d'icônes vient de [game-icons.net](https://game-icons.net) (Lorc, Delapouite et d'autres auteurs), sous licence [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) ; auteurs et modifications dans `streamdeck-plugin/com.vttdeck.foundry.sdPlugin/GAME-ICONS-CREDITS.txt`.
 
 Stream Deck et Elgato sont des marques de Corsair Memory, Inc. Foundry Virtual Tabletop est une marque de Foundry Gaming LLC. VTT Deck est un projet indépendant, sans lien avec ces sociétés.

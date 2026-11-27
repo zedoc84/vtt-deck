@@ -6,7 +6,7 @@ import math, os, sys
 from PIL import Image, ImageDraw
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "com.vttdeck.foundry.sdPlugin", "imgs")
-COLORS = {"numpad": (160, 72, 48), "ambiance": (36, 118, 128), "page": (134, 118, 44), "sequence": (98, 66, 140), "dial": (70, 74, 88)}
+COLORS = {"character": (122, 34, 44), "pf2e": (84, 58, 128), "numpad": (160, 72, 48), "ambiance": (36, 118, 128), "page": (134, 118, 44), "sequence": (98, 66, 140), "dial": (70, 74, 88)}
 U = 512  # dessin en haute résolution puis réduction (anticrénelage)
 W = (255, 255, 255, 255)
 
@@ -51,13 +51,30 @@ def dial(d):
     d.ellipse([196, 196, 316, 316], fill=W)
     d.rounded_rectangle([236, 40, 276, 170], radius=18, fill=W)
 
+def character(d):
+    # dé à 20 faces vu de face : hexagone, triangle central et arêtes vers les sommets
+    cx, cy, R = 256, 256, 205
+    hexa = [(cx + R * math.cos(math.pi / 3 * i - math.pi / 2), cy + R * math.sin(math.pi / 3 * i - math.pi / 2)) for i in range(6)]
+    d.polygon(hexa, outline=W, width=30)
+    tri = [(cx, cy - 120), (cx + 112, cy + 72), (cx - 112, cy + 72)]
+    d.polygon(tri, fill=W)
+    for a, b in ((tri[0], hexa[0]), (tri[1], hexa[2]), (tri[2], hexa[4]), (tri[0], hexa[1]), (tri[0], hexa[5]),
+                 (tri[1], hexa[3]), (tri[2], hexa[3]), (tri[1], hexa[1]), (tri[2], hexa[5])):
+        d.line([a, b], fill=W, width=22)
+
+def pf2e(d):
+    # trois losanges côte à côte : les trois actions du tour
+    for cx in (104, 256, 408):
+        r = 84
+        d.polygon([(cx, 256 - r * 1.35), (cx + r, 256), (cx, 256 + r * 1.35), (cx - r, 256)], fill=W)
+
 def glyph(fn):
     im = Image.new("RGBA", (U, U), (0, 0, 0, 0))
     fn(ImageDraw.Draw(im))
     return im
 
 def main():
-    for name, fn in (("numpad", numpad), ("ambiance", ambiance), ("page", page), ("sequence", sequence), ("dial", dial)):
+    for name, fn in (("character", character), ("pf2e", pf2e), ("numpad", numpad), ("ambiance", ambiance), ("page", page), ("sequence", sequence), ("dial", dial)):
         g = glyph(fn)
         for size, suffix in ((20, ""), (40, "@2x")):
             g.resize((size, size), Image.LANCZOS).save(os.path.join(ROOT, "actions", f"{name}{suffix}.png"))
