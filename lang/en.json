@@ -170,7 +170,15 @@
     },
     "Pro": {
       "Locked": "Premium",
-      "Required": "VTT Deck: this feature is part of VTT Deck Premium."
+      "Required": "VTT Deck: this feature is part of VTT Deck Premium.",
+      "RequiredPlayer": "VTT Deck: this feature needs VTT Deck Premium, which the GM enables in this world.",
+      "Outdated": "VTT Deck: this feature needs a newer version of VTT Deck Premium. Update it from Foundry's setup screen (Add-on Modules → Update).",
+      "OfferTitle": "VTT Deck Premium",
+      "OfferText": "This key uses a feature of <strong>VTT Deck Premium</strong>, VTT Deck's paid add-on: a one-time purchase, no subscription, on the official Foundry store.",
+      "OfferFeatures": "It adds the automatic initiative row, HP and conditions on keys, the damage & healing pad, one-press ambiences, D&D 5e and PF2e character keys, Stream Deck + dials and the automatic switch to the Combat profile.",
+      "OfferStore": "View on the Foundry store",
+      "OfferLater": "Later",
+      "OfferNever": "Don't ask again"
     }
   }
 }

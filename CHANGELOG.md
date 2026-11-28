@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.6.1 — lien vers VTT Deck Premium sur les touches verrouillées
+Module Foundry seulement. Le plugin Stream Deck ne change pas (seul son numéro passe en 1.6.1) : le plugin 1.6.0 convient.
+- **Touche ★ Premium sans VTT Deck Premium** : au premier appui de la séance, le MJ voit une petite fenêtre qui présente VTT Deck Premium, avec un bouton « Voir sur la boutique Foundry ». « Plus tard » la referme jusqu'à la prochaine séance, « Ne plus proposer » la coupe pour ce navigateur. Les appuis suivants affichent le message habituel.
+- Joueurs : le message précise que c'est le MJ qui active VTT Deck Premium dans le monde (pas de fenêtre d'achat).
+- VTT Deck Premium actif mais trop ancien pour l'action (par exemple Personnage, qui demande la 1.4) : le message invite à le mettre à jour au lieu de proposer l'achat.
+- API : `api.helpers.ProError` (sous-classe de `UserError`), levée par `failPro()`.
+- Fiche du module : cover et deux captures déclarées dans `module.json` (`media`), images dans le dossier `media/` (elles ne vont pas dans module.zip). Elles s'affichent dans les catalogues qui lisent ce champ, comme The Forge.
+
 ## 1.6.0 — Stream Deck Mobile, Virtual Stream Deck, bibliothèque d'icônes, touches « Personnage » D&D 5e et PF2e
 Module Foundry et plugin Stream Deck 1.6.0. Le plugin passe par une nouvelle revue Elgato.
 - **Stream Deck Mobile** : profils « VTT Deck – Exploration » et « VTT Deck – Combat » en 5 × 3 ; le coin 3 × 2 en haut à gauche reprend la disposition du Mini, pour l'app gratuite à 6 touches.

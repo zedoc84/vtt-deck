@@ -74,6 +74,14 @@ Hooks.once("init", () => {
 		default: true
 	});
 
+	// Fenêtre « VTT Deck Premium » au premier appui sur une touche verrouillée (MJ) ; « Ne plus proposer » la coupe
+	game.settings.register(MODULE_ID, "proOffer", {
+		scope: "client",
+		config: false,
+		type: Boolean,
+		default: true
+	});
+
 	// API disponible dès l'init, pour que les extensions puissent s'y greffer
 	const api = createApi(BUILTIN_ACTIONS);
 	game.modules.get(MODULE_ID).api = api;

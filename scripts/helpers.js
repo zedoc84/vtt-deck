@@ -78,8 +78,11 @@ export function lockedSpec() {
 	return { locked: true, icon: "🔒", text: [t("Pro.Locked")], bg: "#3b2f12", badge: "★", badgeColor: "rgba(200,140,20,.95)" };
 }
 
+/** Fonction de VTT Deck Premium demandée sans le module payant (affichée comme une UserError, avec le lien vers la boutique) */
+export class ProError extends UserError {}
+
 export function failPro() {
-	throw new UserError(t("Pro.Required"));
+	throw new ProError(t("Pro.Required"));
 }
 
 /** Empreinte SHA-256 d'un texte (ex. reconnaître un script déjà approuvé) */

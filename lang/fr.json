@@ -170,7 +170,15 @@
     },
     "Pro": {
       "Locked": "Premium",
-      "Required": "VTT Deck : cette fonction fait partie de VTT Deck Premium."
+      "Required": "VTT Deck : cette fonction fait partie de VTT Deck Premium.",
+      "RequiredPlayer": "VTT Deck : cette fonction demande VTT Deck Premium, que le MJ doit activer dans ce monde.",
+      "Outdated": "VTT Deck : cette fonction demande une version plus récente de VTT Deck Premium. Mettez-le à jour depuis l'écran de configuration de Foundry (Modules → Mettre à jour).",
+      "OfferTitle": "VTT Deck Premium",
+      "OfferText": "Cette touche utilise une fonction de <strong>VTT Deck Premium</strong>, le module payant de VTT Deck : un achat unique, sans abonnement, sur la boutique officielle de Foundry.",
+      "OfferFeatures": "Il ajoute la rangée d'initiative automatique, les PV et les états sur les touches, le pavé dégâts et soins, les ambiances en une touche, les fiches D&D 5e et PF2e, les molettes du Stream Deck + et le passage automatique au profil Combat.",
+      "OfferStore": "Voir sur la boutique Foundry",
+      "OfferLater": "Plus tard",
+      "OfferNever": "Ne plus proposer"
     }
   }
 }

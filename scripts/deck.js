@@ -1,8 +1,8 @@
-import { MODULE_ID, t } from "./constants.js";
+import { MODULE_ID, PRO_URL, t } from "./constants.js";
 import { Bridge } from "./bridge.js";
 import { KeyRenderer } from "./renderer.js";
 import { piData, defaultColor } from "./actions.js";
-import { UserError, failPro, safeData } from "./helpers.js";
+import { UserError, ProError, failPro, safeData } from "./helpers.js";
 
 /** Tracé SVG d'une icône (viewBox 512 × 512) : commandes et nombres seulement, 30 000 caractères au plus */
 const GLYPH_RE = /^[MmLlHhVvCcSsQqTtAaZz0-9eE.,\s+-]+$/;
@@ -31,6 +31,8 @@ export class Deck {
 	/** avertissement d'appairage affiché (permanent) : retiré dès que l'appairage réussit ou que l'on réessaie */
 	#authNotice = null;
 	#legacyWarned = false;
+	/** fenêtre « VTT Deck Premium » déjà proposée pendant cette séance */
+	#proOffered = false;
 
 	constructor(api) {
 		this.api = api;
@@ -244,7 +246,8 @@ export class Deck {
 			const now = Date.now();
 			if (throttle && last && last.msg === err?.message && now - last.at < 1500) return;
 			this.#lastError.set(msg.context, { msg: err?.message, at: now });
-			if (err instanceof UserError) ui.notifications.warn(err.message);
+			if (err instanceof ProError) this.#offerPro(err);
+			else if (err instanceof UserError) ui.notifications.warn(err.message);
 			else {
 				console.error("VTT Deck | erreur sur appui", err);
 				ui.notifications.error(t("Errors.Generic", safeData({ msg: err?.message ?? err })));
@@ -254,6 +257,43 @@ export class Deck {
 		// Les hooks rafraîchissent normalement, mais on force la touche elle-même.
 		this.signatures.delete(msg.context);
 		this.queue(msg.context);
+	}
+
+	/**
+	 * Appui sur une touche ★ Premium sans VTT Deck Premium.
+	 * Joueur : message (c'est le MJ qui active VTT Deck Premium dans le monde).
+	 * MJ : une fois par séance, fenêtre avec le lien vers la boutique Foundry ; ensuite, simple message.
+	 * « Ne plus proposer » est retenu pour ce navigateur.
+	 */
+	async #offerPro(err) {
+		// VTT Deck Premium est actif mais trop ancien pour cette action (ex. Personnage, qui demande la 1.4)
+		if (this.api.isPro) return ui.notifications.warn(t("Pro.Outdated"));
+		if (!game.user.isGM) return ui.notifications.warn(t("Pro.RequiredPlayer"));
+		let offer = false;
+		try {
+			offer = !!PRO_URL && !this.#proOffered && game.settings.get(MODULE_ID, "proOffer");
+		} catch {
+			offer = false;
+		}
+		if (!offer) return ui.notifications.warn(err.message);
+		this.#proOffered = true;
+		try {
+			const choice = await foundry.applications.api.DialogV2.wait({
+				window: { title: t("Pro.OfferTitle"), icon: "fa-solid fa-star" },
+				content: `<p>${t("Pro.OfferText")}</p><p>${t("Pro.OfferFeatures")}</p>`,
+				buttons: [
+					{ action: "store", label: t("Pro.OfferStore"), icon: "fa-solid fa-cart-shopping", default: true },
+					{ action: "later", label: t("Pro.OfferLater") },
+					{ action: "never", label: t("Pro.OfferNever") }
+				],
+				rejectClose: false
+			});
+			if (choice === "store") window.open(PRO_URL, "_blank", "noopener");
+			else if (choice === "never") await game.settings.set(MODULE_ID, "proOffer", false);
+		} catch (e) {
+			console.error("VTT Deck | fenêtre Premium", e);
+			ui.notifications.warn(err.message);
+		}
 	}
 
 	/* ---------------------------------------------------------------- */
